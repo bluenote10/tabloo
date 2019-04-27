@@ -1,0 +1,24 @@
+filesets:
+  default:
+    include:
+      - ".watchcode.yaml"
+      - "*.nim"
+      - "*.scss"
+      - "*.html"
+      - "nim.cfg"
+    exclude:
+    match_mode: "fnmatch"
+    exclude_gitignore: true
+
+tasks:
+  default:
+    fileset: default
+    commands:
+      - "npm start"
+    clear_screen: true
+    queue_events: false
+
+default_task: default
+log: false
+sound: true
+notifications: true

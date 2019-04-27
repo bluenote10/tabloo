@@ -1,0 +1,13 @@
+nimcache/
+node_modules/
+
+package-lock.json
+build/main.js
+build/renderer.js
+
+.watchcode.log
+
+/data/
+
+*.pyc
+/.idea/
