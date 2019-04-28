@@ -2,10 +2,13 @@ import vandom
 import vandom/dom
 import vandom/js_utils
 
+bundleModules([
+  "../node_modules/axios/dist/axios.js",
+])
+
 import vandom/jsmod_axios
 import jsffi
 
-# embedModule("axios/dist/axios.js")
 
 let req = axios.get("http://localhost:5000/api/get_data", JsObject{
     params: JsObject{
