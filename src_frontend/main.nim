@@ -6,26 +6,7 @@ bundleModules([
   "../node_modules/axios/dist/axios.js",
 ])
 
-import vandom/jsmod_axios
-import jsffi
-
-
-let req = axios.get("http://localhost:5000/api/get_data", JsObject{
-    params: JsObject{
-      ID: 12345
-    }
-  })
-  .then(proc (response: JsObject) =
-    echo "Received response..."
-    debug(response.data)
-  )
-  .catch(proc (error: JsObject) =
-    echo "error:"
-    debug(error)
-  )
-  .then(proc () =
-    echo "finally"
-  )
+import widget_table
 
 
 proc run(unit: Unit) =
@@ -37,9 +18,5 @@ proc run(unit: Unit) =
   unit.setFocus()
 
 
-unitDefs:
-  let mainUnit = ep.container([
-    ep.tag("div").text("Hello world"),
-  ])
-
-run(mainUnit)
+let mainWidget = WidgetTable.init()
+run(mainWidget)
