@@ -11,15 +11,28 @@ import jsffi
 type
   TableData = JDict[cstring, JSeq[JsObject]]
 
+type
+  WidgetTableUnits = ref object
+    main: Element
+    tableHeader: Container
+    tableBody: Container
+
 
 class(WidgetTable of Widget):
   ctor proc() =
-    unitDefs:
-      let container = ep.container([])
+    var units = WidgetTableUnits()
+
+    unitDefs: discard
+      ep.tag("table").classes("table").container([
+        ep.tag("thead").container([
+          ep.tag("tr").container([]) as units.tableHeader
+        ]),
+        ep.tag("tbody").container([]) as units.tableBody
+      ]) as units.main
 
     self:
-      base(container)
-      container
+      base(units.main)
+      units
 
     let req = axios.get("http://localhost:5000/api/get_data", JsObject{
         params: JsObject{
