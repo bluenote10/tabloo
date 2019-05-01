@@ -1,63 +1,93 @@
+import sugar
+import sequtils
+
 import oop_utils/standard_class
 
 import vandom
 import vandom/dom
 import vandom/js_utils
 
-import vandom/jsmod_axios
-import jsffi
+#import vandom/jsmod_axios
+#import jsffi
 
 
 type
-  TableData = JDict[cstring, JSeq[JsObject]]
+  TableData* = ref object
+    colNames*: JSeq[cstring]
+    colData*: JDict[cstring, JSeq[JsObject]]
 
 type
   WidgetTableUnits = ref object
     main: Element
     tableHeader: Container
     tableBody: Container
+    renderHeader: cstring -> Element
+    renderCell: cstring -> Element
 
 
-class(WidgetTable of Widget):
-  ctor proc() =
-    var units = WidgetTableUnits()
+proc defaultTableUnits(): WidgetTableUnits =
+  var units = WidgetTableUnits()
 
-    unitDefs: discard
-      ep.tag("table").classes("table").container([
-        ep.tag("thead").container([
-          ep.tag("tr").container([]) as units.tableHeader
-        ]),
-        ep.tag("tbody").container([]) as units.tableBody
-      ]) as units.main
+  unitDefs: discard
+    ep.tag("table").classes("table").container([
+      ep.tag("thead").container([
+        ep.tag("tr").container([]) as units.tableHeader
+      ]),
+      ep.tag("tbody").container([]) as units.tableBody
+    ]) as units.main
+
+  unitDefs:
+    units.renderHeader = proc(s: cstring): Element =
+      ep.tag("th").text(s)
+
+    units.renderCell = proc(s: cstring): Element =
+      ep.tag("td").text(s)
+
+  units
+
+
+class(WidgetTable[H, C] of Widget):
+  ctor proc(units = defaultTableUnits()) =
 
     self:
       base(units.main)
-      units
+      units: WidgetTableUnits = units
 
-    let req = axios.get("http://localhost:5000/api/get_data", JsObject{
-        params: JsObject{
-          ID: 12345
-        }
-      })
-      .then(proc (response: JsObject) =
-        echo "Received response..."
-        let tableData = response.data.to(TableData)
-        self.updateData(tableData)
-      )
-      .catch(proc (error: JsObject) =
-        echo "error:"
-        debug(error)
-      )
-      .then(proc () =
-        echo "finally"
-      )
-
-
-  proc updateData(data: TableData) =
-    var maxLen = 0
+  proc setData*(data: TableData) =
     debug(data)
-    let columns = data.keys()
-    for k, v in data:
+    self.units.tableHeader.replaceChildren(
+      data.colNames.mapIt(self.units.renderHeader(it).Unit)
+    )
+
+    var maxLen = 0
+    for k, v in data.colData:
       if v.len > maxLen:
         maxLen = v.len
     echo maxLen
+
+    #self.units.tableBody.replaceChildren(
+    #  newSeqWith
+    #)
+
+
+
+#[
+let req = axios.get("http://localhost:5000/api/get_data", JsObject{
+    params: JsObject{
+      ID: 12345
+    }
+  })
+  .then(proc (response: JsObject) =
+    echo "Received response..."
+    let tableData = response.data.to(TableData)
+    self.updateData(tableData)
+  )
+  .catch(proc (error: JsObject) =
+    echo "error:"
+    debug(error)
+  )
+  .then(proc () =
+    echo "finally"
+  )
+]#
+

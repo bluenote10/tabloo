@@ -14,9 +14,9 @@ tasks:
   default:
     fileset: default
     commands:
-      - "npm start"
-    clear_screen: true
-    queue_events: false
+      #- "npm start"
+      #- "nim js -o:./build/main.js ./src_frontend/main.nim"
+      - "nim js -d:debugOOP -o:./build/main.js ./src_frontend/dev/test_table.nim"
 
 default_task: default
 log: false
