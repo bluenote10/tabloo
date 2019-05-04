@@ -16,7 +16,8 @@ tasks:
     commands:
       #- "npm start"
       #- "nim js -o:./build/main.js ./src_frontend/main.nim"
-      - "nim js -d:debugOOP -o:./build/main.js ./src_frontend/dev/test_table.nim"
+      #- "nim js -d:debugOOP -o:./build/main.js ./src_frontend/dev/test_table.nim"
+      - "nim js -o:./build/main.js ./src_frontend/dev/react_test.nim"
 
 default_task: default
 log: false
