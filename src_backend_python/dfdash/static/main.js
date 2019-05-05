@@ -1,1 +1,1 @@
-../../../build/main.js
+../../../dist/main.js

@@ -6,7 +6,10 @@ filesets:
       - "*.scss"
       - "*.html"
       - "nim.cfg"
+      - "*.js"
+      - "*.ts"
     exclude:
+      - "dist/main.js"
     match_mode: "fnmatch"
     exclude_gitignore: true
 
@@ -14,11 +17,9 @@ tasks:
   default:
     fileset: default
     commands:
-      #- "npm start"
-      #- "nim js -o:./build/main.js ./src_frontend/main.nim"
-      - "nim js -d:debugOOP -o:./build/main.js ./src_frontend/dev/test_table.nim"
+      - "npx webpack"
 
 default_task: default
-log: false
-sound: true
+log: true
+sound: false
 notifications: true
