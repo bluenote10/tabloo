@@ -12,9 +12,23 @@ import vandom/js_utils
 
 
 type
-  TableData* = ref object
-    colNames*: JSeq[cstring]
-    colData*: JDict[cstring, JSeq[JsObject]]
+  #TableData* = ref object
+  #  colNames*: JSeq[cstring]
+  #  colData*: JDict[cstring, JSeq[cstring]]
+  TableCol = ref object
+    key: cstring
+    name: cstring
+    values: seq[cstring]
+  TableData* = seq[TableCol]
+
+  #[
+  # Maybe later we switch to explicit types -- more flexible, but memory overhead...
+  ColumnDesc* = ref object
+    name: cstring
+  CellDesc* = ref object
+    value: cstring
+  ]#
+
 
 type
   WidgetTableUnits = ref object
@@ -46,15 +60,18 @@ proc defaultTableUnits(): WidgetTableUnits =
   units
 
 
-class(WidgetTable[H, C] of Widget):
+class(WidgetTable of Widget):
   ctor proc(units = defaultTableUnits()) =
 
     self:
       base(units.main)
       units: WidgetTableUnits = units
+      oldTableData = newSeq[TableColumn]()
 
   proc setData*(data: TableData) =
     debug(data)
+
+    #[
     self.units.tableHeader.replaceChildren(
       data.colNames.mapIt(self.units.renderHeader(it).Unit)
     )
@@ -64,6 +81,7 @@ class(WidgetTable[H, C] of Widget):
       if v.len > maxLen:
         maxLen = v.len
     echo maxLen
+    ]#
 
     #self.units.tableBody.replaceChildren(
     #  newSeqWith

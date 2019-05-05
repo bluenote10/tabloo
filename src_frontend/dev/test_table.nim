@@ -16,7 +16,7 @@ proc run(unit: Unit) =
 
 import vandom/dom_utils
 
-let table = WidgetTable[int, int].init()
+let table = WidgetTable.init()
 
 setTimeout(100) do:
   echo "test"
