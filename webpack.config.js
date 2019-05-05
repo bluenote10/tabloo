@@ -10,11 +10,12 @@ module.exports = {
   },
   module: {
     rules: [
-      { test: /\.tsx?$/, loader: 'ts-loader' }
+      //{test: /\.ts$/, use: 'ts-loader'},
+      {test: /\.tsx?$/, loader: 'ts-loader' }
     ]
   },
   resolve: {
-      extensions: [ '.ts', '.tsx', '.js' ]
+    extensions: [ '.ts', '.tsx', '.js' ]
   },
 	optimization: {
 		// We no not want to minimize our code.

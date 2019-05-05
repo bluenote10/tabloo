@@ -18,6 +18,7 @@ export function forEach<V>(obj: {[key: string]: V}, f: (k: string, v: V) => void
   }
 }
 
+/*
 export function mapEntries<A, B>(obj: {[key: string]: A}, f: (k: string, v: A) => [string, B]): {[key: string]: B} {
   let result: {[key: string]: B} = {}
   for (let key in obj) {
@@ -27,6 +28,17 @@ export function mapEntries<A, B>(obj: {[key: string]: A}, f: (k: string, v: A) =
   }
   return result;
 }
+*/
+
+export function mapEntries<A, B>(obj: {[key: string]: A}, f: (k: string, v: A) => B): Array<B> {
+  let result = Array<B>();
+  for (let key in obj) {
+    let value = obj[key];
+    result.push(f(key, value))
+  }
+  return result;
+}
+
 
 /*
 export function forEach<V>(arr: Array<V>, f: (v: V) => void) {

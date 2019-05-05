@@ -1,6 +1,6 @@
 import { el, mount, list, List } from 'redom';
 import axios from 'axios';
-import fn from "fn";
+import * as fn from "./fn";
 
 console.log(el);
 
@@ -98,9 +98,13 @@ window.setTimeout(function () {
   }).then((response: any) => {
     console.log("Received response...");
     let tableData = response.data;
-    tableData.map()
     console.log(tableData)
-    //self.updateData(tableData)
+    let transformedData = fn.mapEntries(tableData, (k, v) => ({
+      columnName: k,
+      values: v,
+    }))
+    console.log(transformedData)
+    table.update(transformedData)
   }).catch((error: any) => {
     console.log(error);
   })
