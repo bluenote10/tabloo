@@ -1,11 +1,22 @@
-import { el, mount, list, List } from 'redom';
+import { el, mount, list, List, RedomComponent } from 'redom';
 import axios from 'axios';
 import * as fn from "./fn";
 
-console.log(el);
 
-class Td {
-  el: HTMLElement;
+class Th implements RedomComponent {
+  el: HTMLElement
+
+  constructor () {
+    this.el = el('th');
+  }
+
+  update(value: string) {
+    this.el.textContent = value;
+  }
+}
+
+class Td implements RedomComponent {
+  el: HTMLElement
 
   constructor () {
     this.el = el('td');
@@ -16,30 +27,30 @@ class Td {
   }
 }
 
-class Tr {
-  el: HTMLElement;
-  list: List;
+class Tr implements RedomComponent {
+  el: HTMLElement
+  tr: List
 
   constructor () {
-    this.list = list('tr', Td);
-    this.el = this.list.el;
+    this.tr = list('tr', Td);
+    this.el = this.tr.el;
   }
 
   update(values: string[]) {
-    this.list.update(values);
+    this.tr.update(values);
   }
 }
 
 
 export class TableWidget {
-  el: HTMLElement;
-  table: List;
+  el: HTMLElement
+  thead: List
+  tbody: List
 
   constructor() {
-    this.table = list('table', Tr);
-    this.el = el("div", [
-      "Hello World",
-      this.table,
+    this.el = el("table", [
+      this.thead = list("thead", Th),
+      this.tbody = list('tbody', Tr),
     ])
   }
 
@@ -56,7 +67,9 @@ export class TableWidget {
       }
       transposedData[i] = rowData;
     }
-    this.table.update(transposedData);
+    let columnNames = data.map((x: any) => x.columnName)
+    this.thead.update(columnNames)
+    this.tbody.update(transposedData);
   }
 
 }
