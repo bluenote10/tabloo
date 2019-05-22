@@ -16,6 +16,18 @@ app = Flask(
 )
 CORS(app)
 
+@app.after_request
+def add_header(response):
+    # https://stackoverflow.com/a/23115561
+    # https://stackoverflow.com/questions/34066804/disabling-caching-in-flask#comment94259421_34067710
+    # https://werkzeug.palletsprojects.com/en/0.14.x/datastructures/#werkzeug.datastructures.ResponseCacheControl.no_cache
+    response.cache_control.max_age = 300
+    response.cache_control.public = True
+    response.cache_control.no_cache = True
+    response.cache_control.no_store = True
+    return response
+
+
 backend = None
 
 

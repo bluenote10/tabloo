@@ -1,0 +1,234 @@
+@charset "utf-8";
+
+// https://fonts.google.com/?sort=popularity
+// TODO: use https://google-webfonts-helper.herokuapp.com
+//@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+$family-sans-serif: "Roboto", sans-serif;
+
+@import "../node_modules/bulma/bulma.sass";
+
+
+/*
+https://css-tricks.com/snippets/css/truncate-string-with-ellipsis/
+
+see https://stackoverflow.com/questions/9789723/css-text-overflow-in-a-table-cell for better solutions.
+*/
+.truncate {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.compact-table {
+  font-size: 12px;
+}
+
+
+/* -------------------------------------------------------------------------
+ * General style
+ * ------------------------------------------------------------------------- */
+
+.font-mono {
+  font-family: "monospace";
+}
+
+.is-hidden {
+  display: none;
+}
+
+.is-tiny {
+  font-size: 0.5rem;
+}
+
+/* -------------------------------------------------------------------------
+ * Navbar
+ * ------------------------------------------------------------------------- */
+
+$ui-navbar-height: 3.25rem;
+$ui-width-col-left: 12%;
+$ui-width-col-right: 3.25rem;
+
+.ui-navbar {
+  height: $ui-navbar-height;
+  display: flex;
+  background: #F4F3F2;
+  align-items: center;
+}
+.ui-navbar-left {
+  flex: none;
+  width: $ui-width-col-left;
+}
+.ui-navbar-right {
+  flex: none;
+  width: $ui-width-col-right;
+}
+.ui-navbar-middle {
+  flex: 1;
+}
+.ui-navbar-button {
+  margin-left: 0.75rem;
+}
+
+/* -------------------------------------------------------------------------
+ * General layout
+ * ------------------------------------------------------------------------- */
+
+.has-margin-top {
+  margin-top: 0.75rem;
+}
+
+.navbar.color-light-gray {
+  background: #F4F3F2;
+}
+.navbar.color-dark-gray {
+  background: #21252B;
+}
+
+/* https://stackoverflow.com/questions/51467546/make-column-fill-vertical-space-in-bulma */
+/* https://github.com/jgthms/bulma/issues/860 */
+.is-fullheight {
+  /*height: calc(100vh - ( 3.25rem - .75rem - .75rem) );*/
+  /*height: calc(100vh - ( 3.25rem - .75rem ) );*/
+}
+
+.ui-main-container {
+  height: calc(100vh - #{$ui-navbar-height});
+  display: flex;
+}
+
+.ui-column-left {
+  background: #F4F3F2;
+
+  flex: none;
+  width: $ui-width-col-left;
+
+  display: table-cell;
+  border-collapse: collapse;
+  border-right: 1px solid #DADADA;
+
+  overflow: auto;
+}
+
+.ui-column-right {
+  background: #F4F3F2;
+
+  flex: none;
+  width: $ui-width-col-right;
+
+  display: table-cell;
+  border-collapse: collapse;
+  border-left: 1px solid #DADADA;
+
+  overflow: auto;
+}
+
+.ui-column-middle {
+  padding: 0;
+  //margin-top: 0.75rem;
+  overflow: scroll;
+  border-top: 1px solid #DADADA;
+
+  min-height: 100%;
+}
+
+/* -------------------------------------------------------------------------
+ * Table stuff
+ * ------------------------------------------------------------------------- */
+
+/* For cell truncation / avoiding line breaks */
+.table-fixed {
+  table-layout: fixed; /* https://stackoverflow.com/questions/5932018/fluid-table-with-td-nowrap-text-overflow */
+}
+
+.truncate {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;  /* https://stackoverflow.com/questions/22260240/width-of-element-with-white-space-nowrap-doesnt-adjust-to-child-content */
+  /* consider switching to box-sizing: border-box */
+
+  /* overflow: hidden seems to affect the height: https://stackoverflow.com/questions/32190967/why-does-overflow-hidden-affect-height-and-how-can-i-fix-it-in-this-example   */
+  /* Apparently we have to mess with vertical-align to fix it... */
+  vertical-align: top;
+}
+
+.ui-note-header-table {
+  line-height: 1.7;
+}
+table.ui-note-header-table td {
+  padding-right: 15px;
+}
+
+/* -------------------------------------------------------------------------
+ * Input helpers
+ * ------------------------------------------------------------------------- */
+
+.complete-selection {
+  background: rgb(196, 227, 255);
+}
+
+/* -------------------------------------------------------------------------
+ * Text area helpers
+ * ------------------------------------------------------------------------- */
+
+/* https://stackoverflow.com/questions/6795981/textarea-to-fill-a-parent-container-exactly-with-padding/6796064 */
+.is-maximized {
+  width:100%;
+  height:100%;
+  box-sizing: border-box;         /* For IE and modern versions of Chrome */
+  -moz-box-sizing: border-box;    /* For Firefox                          */
+  -webkit-box-sizing: border-box; /* For Safari                           */
+}
+
+.ui-text-area:not([rows]) { // need to overrule Bulma's text-area:not([rows])
+  height: 100%;
+  min-height: 600px;
+}
+
+/* -------------------------------------------------------------------------
+ * Dropdowns
+ * ------------------------------------------------------------------------- */
+
+.ui-compact-dropdown-item {
+  font-size: 0.75rem;
+}
+
+/* -------------------------------------------------------------------------
+ * Float overlays
+ * ------------------------------------------------------------------------- */
+
+.float-wrapper {
+  position: relative;
+  overflow-x: visible;
+  overflow-y: visible;
+}
+
+.float-box {
+  width: 100%;
+  position: absolute;
+  top: calc(100% - 10px);
+  left: 0;
+  z-index: 999;
+  /* card has only light box-shadow => make more pronounced */
+  box-shadow: 0 10px 30px rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.1);
+  /* display: inline-block; */
+  /* position: absolute; */
+  /* float: left; */
+}
+
+
+/* -------------------------------------------------------------------------
+ * Scrollbar styling
+ * ------------------------------------------------------------------------- */
+
+::-webkit-scrollbar {
+  background-color: #fff;
+  width: .4em
+}
+::-webkit-scrollbar-thumb:window-inactive,
+::-webkit-scrollbar-thumb {
+  background:  black
+}

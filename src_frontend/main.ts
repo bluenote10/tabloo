@@ -1,17 +1,31 @@
-import { el, mount, list, List, RedomComponent } from 'redom';
+import '@fortawesome/fontawesome-free/js/fontawesome'
+import '@fortawesome/fontawesome-free/js/solid'
+import '@fortawesome/fontawesome-free/js/regular'
+import '@fortawesome/fontawesome-free/js/brands'
+
+
+import { el, text, mount, list, List, RedomComponent } from 'redom';
 import axios from 'axios';
 import * as fn from "./fn";
 
 
 class Th implements RedomComponent {
   el: HTMLElement
+  node: Node
 
   constructor () {
-    this.el = el('th');
+    let span: HTMLElement
+    this.el = el('th',
+      this.node = text(""),
+      span = el("a", {onclick: (event: Event) => {console.log("clicked")}},
+        el("i.fas.fa-sort-amount-down", ),
+      ),
+    );
+    //span.onclick =  (event: Event) => {console.log("clicked")};
   }
 
   update(value: string) {
-    this.el.textContent = value;
+    this.node.nodeValue = value;
   }
 }
 
@@ -48,7 +62,7 @@ export class TableWidget {
   tbody: List
 
   constructor() {
-    this.el = el("table", [
+    this.el = el("table.table.is-striped.is-narrow.is-hoverable.compact-table", [
       this.thead = list("thead", Th),
       this.tbody = list('tbody', Tr),
     ])
