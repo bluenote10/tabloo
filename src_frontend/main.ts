@@ -8,89 +8,58 @@ import { el, text, mount, list, List, RedomComponent } from 'redom';
 import axios from 'axios';
 import * as fn from "./fn";
 
+import { TableWidget } from "./table";
 
-class Th implements RedomComponent {
+
+class App implements RedomComponent {
   el: HTMLElement
-  node: Node
-
-  constructor () {
-    let span: HTMLElement
-    this.el = el('th',
-      this.node = text(""),
-      span = el("a", {onclick: (event: Event) => {console.log("clicked")}},
-        el("i.fas.fa-sort-amount-down", ),
-      ),
-    );
-    //span.onclick =  (event: Event) => {console.log("clicked")};
-  }
-
-  update(value: string) {
-    this.node.nodeValue = value;
-  }
-}
-
-class Td implements RedomComponent {
-  el: HTMLElement
-
-  constructor () {
-    this.el = el('td');
-  }
-
-  update(value: string) {
-    this.el.textContent = value;
-  }
-}
-
-class Tr implements RedomComponent {
-  el: HTMLElement
-  tr: List
-
-  constructor () {
-    this.tr = list('tr', Td);
-    this.el = this.tr.el;
-  }
-
-  update(values: string[]) {
-    this.tr.update(values);
-  }
-}
-
-
-export class TableWidget {
-  el: HTMLElement
-  thead: List
-  tbody: List
+  table: TableWidget
 
   constructor() {
-    this.el = el("table.table.is-striped.is-narrow.is-hoverable.compact-table", [
-      this.thead = list("thead", Th),
-      this.tbody = list('tbody', Tr),
-    ])
+    this.table = new TableWidget();
+    this.el = el("div", this.table)
+    /*
+    this.el = el(
+      this.table
+    );
+    */
+    /*
+    this.el = el(
+      //this.table = new TableWidget()
+      //this.table
+      this.table = el(TableWidget as any) as any as TableWidget
+    );
+    */
+    console.log("starting fetch");
+    this.fetchData();
+  }
+
+  async fetchData() {
+    let response = await axios.get("http://localhost:5000/api/get_data", {
+      params: {
+        ID: 12345
+      }
+    })
+    console.log("Received response...");
+    let tableData = response.data;
+    console.log(tableData)
+    let transformedData = fn.mapEntries(tableData, (k, v) => ({
+      columnName: k,
+      values: v,
+    }))
+    console.log(transformedData)
+    this.table.update(transformedData)
   }
 
   update(data: any) {
-    console.log(data);
-    const numCols = data.length;
-    const numRows = data[0].values.length;
-    console.log(numRows, numCols);
-    let transposedData = Array(numRows);
-    for (let i=0; i<numRows; i++) {
-      let rowData = Array(numCols);
-      for (let j=0; j<numCols; j++) {
-        rowData[j] = data[j].values[i].toString();
-      }
-      transposedData[i] = rowData;
-    }
-    let columnNames = data.map((x: any) => x.columnName)
-    this.thead.update(columnNames)
-    this.tbody.update(transposedData);
   }
 
 }
 
-const table = new TableWidget();
-mount(document.body, table);
+const main = new App();
+mount(document.body, main);
 
+/*
 table.update([
   {
     columnName: "A",
@@ -137,3 +106,4 @@ window.setTimeout(function () {
   })
 
 }, 1000);
+*/
