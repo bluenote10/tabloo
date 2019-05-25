@@ -10,13 +10,49 @@ import * as fn from "./fn";
 
 import { TableWidget } from "./table";
 
+import { StoreInterface, StoreBackend, DataFetchOptions } from "./store";
+
+
+interface State {
+  sortColumn?: string
+  sortKind: number
+}
 
 class App implements RedomComponent {
   el: HTMLElement
   table: TableWidget
 
-  constructor() {
-    this.table = new TableWidget();
+  state: State
+  dataFetchOptions: DataFetchOptions
+
+  constructor(public store: StoreInterface) {
+    this.dataFetchOptions = {
+      sortKind: 0
+    }
+    this.state = {
+      sortKind: 0
+    }
+
+    let tableProps = {
+      onsort: (column: string) => {
+        console.log(column);
+        if (this.state.sortColumn === column) {
+          if (this.state.sortKind > 0) {
+            this.state.sortKind = -1;
+          } else {
+            this.state.sortColumn = undefined;
+            this.state.sortKind = 0;
+          }
+        } else {
+          this.state.sortKind = +1;
+          this.state.sortColumn = column;
+        }
+        this.dataFetchOptions.sortColumn = this.state.sortColumn;
+        this.dataFetchOptions.sortKind = this.state.sortKind
+        this.fetchData();
+      }
+    }
+    this.table = new TableWidget(tableProps);
     this.el = el("div", this.table)
     /*
     this.el = el(
@@ -35,18 +71,7 @@ class App implements RedomComponent {
   }
 
   async fetchData() {
-    let response = await axios.get("http://localhost:5000/api/get_data", {
-      params: {
-        ID: 12345
-      }
-    })
-    console.log("Received response...");
-    let tableData = response.data;
-    console.log(tableData)
-    let transformedData = fn.mapEntries(tableData, (k, v) => ({
-      columnName: k,
-      values: v,
-    }))
+    let transformedData = await this.store.fetchData(this.dataFetchOptions)
     console.log(transformedData)
     this.table.update(transformedData)
   }
@@ -56,7 +81,7 @@ class App implements RedomComponent {
 
 }
 
-const main = new App();
+const main = new App(new StoreBackend());
 mount(document.body, main);
 
 /*

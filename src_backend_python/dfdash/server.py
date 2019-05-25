@@ -1,6 +1,6 @@
 from __future__ import division, print_function
 
-from flask import Flask, send_from_directory, jsonify, redirect
+from flask import Flask, send_from_directory, jsonify, redirect, request
 from flask_cors import CORS
 
 import random, threading, webbrowser
@@ -33,7 +33,9 @@ backend = None
 
 @app.route('/api/get_data')
 def get_data():
-    return jsonify(backend.get_data())
+    sortColumn = request.args.get("sortColumn")
+    sortKind = int(request.args.get("sortKind", 0))
+    return jsonify(backend.get_data(sortColumn, sortKind))
 
 
 @app.route('/')

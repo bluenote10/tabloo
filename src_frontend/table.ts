@@ -1,26 +1,45 @@
 
-import { el, text, mount, list, List, RedomComponent } from 'redom';
+import { el, text, mount, list, List, RedomComponent, RedomComponentConstructor, setChildren } from 'redom';
 import axios from 'axios';
 import * as fn from "./fn";
+import { TableData, StoreInterface } from 'store';
 
+interface ThUpdate {
+  value: string
+  sortKind: number
+  onsort: () => void
+}
 
 class Th implements RedomComponent {
   el: HTMLElement
   node: Node
+  sortButton: HTMLElement
 
   constructor () {
-    let span: HTMLElement
     this.el = el('th',
       this.node = text(""),
-      span = el("a", {onclick: (event: Event) => {console.log("clicked")}},
-        el("i.fas.fa-sort-amount-down", ),
-      ),
+      this.sortButton = el("a"),
     );
-    //span.onclick =  (event: Event) => {console.log("clicked")};
   }
 
-  update(value: string) {
-    this.node.nodeValue = value;
+  update(data: ThUpdate) {
+    this.node.nodeValue = data.value;
+    this.sortButton.onclick = (event: Event) => {
+      data.onsort();
+    }
+
+    // update sort symbol
+    if (data.sortKind == 0) {
+      setChildren(this.sortButton, [
+        el("i.fas.fa-long-arrow-alt-up"),
+        el("i.fas.fa-long-arrow-alt-down"),
+      ]);
+    } else if (data.sortKind < 0) {
+      setChildren(this.sortButton, [el("i.fas.fa-sort-amount-down")]);
+    } else if (data.sortKind > 0) {
+      setChildren(this.sortButton, [el("i.fas.fa-sort-amount-up")]);
+    }
+
   }
 }
 
@@ -51,34 +70,47 @@ class Tr implements RedomComponent {
 }
 
 
+interface TableWidgetProps {
+  onsort: (column: string) => void
+}
+
 export class TableWidget implements RedomComponent {
   el: HTMLElement
   thead: List
   tbody: List
 
-  constructor() {
+  constructor(public props: TableWidgetProps) {
     this.el = el("table.table.is-striped.is-narrow.is-hoverable.compact-table", [
       this.thead = list("thead", Th),
       this.tbody = list('tbody', Tr),
     ])
   }
 
-  update(data: any) {
-    console.log(data);
+  update(data: TableData[]) {
+
     const numCols = data.length;
     const numRows = data[0].values.length;
     console.log(numRows, numCols);
-    let transposedData = Array(numRows);
+
+    // we need to convert from columnar to row-wise data
+    let rowsData = Array(numRows);
     for (let i=0; i<numRows; i++) {
       let rowData = Array(numCols);
       for (let j=0; j<numCols; j++) {
         rowData[j] = data[j].values[i].toString();
       }
-      transposedData[i] = rowData;
+      rowsData[i] = rowData;
     }
-    let columnNames = data.map((x: any) => x.columnName)
-    this.thead.update(columnNames)
-    this.tbody.update(transposedData);
+    console.log(rowsData);
+
+    let headerData: ThUpdate[] = data.map((x: TableData) => ({
+      value: x.columnName,
+      sortKind: x.sortKind,
+      onsort: () => { this.props.onsort(x.columnName) }
+    }))
+
+    this.thead.update(headerData)
+    this.tbody.update(rowsData);
   }
 
 }
