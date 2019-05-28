@@ -4,7 +4,7 @@ import '@fortawesome/fontawesome-free/js/regular'
 import '@fortawesome/fontawesome-free/js/brands'
 
 
-import { el, text, mount, list, List, RedomComponent } from 'redom';
+import { el, text, mount, list, List, RedomComponent, setChildren } from 'redom';
 import axios from 'axios';
 import * as fn from "./fn";
 
@@ -12,13 +12,78 @@ import { TableWidget } from "./table";
 
 import { StoreInterface, StoreBackend, DataFetchOptions } from "./store";
 
+type TabContent = Array<{
+  name: string
+  component: RedomComponent
+}>
+
+class TabHeaderLi implements RedomComponent {
+  el: HTMLElement
+  constructor(name: string, onclick: () => void) {
+    this.el = el("li",
+      el("a",
+        el("span", name)
+      )
+    )
+  }
+  update(isActive: boolean) {
+    if (isActive) {
+      this.el.classList.add("is-active")
+    } else {
+      this.el.classList.remove("is-active")
+    }
+  }
+}
+
+class Tabs implements RedomComponent {
+  el: HTMLElement
+  container: HTMLElement
+  content: TabContent
+  headerChildren: HTMLElement[]
+  //header: HTMLElement
+
+  constructor(content: TabContent) {
+    this.content = content
+    this.headerChildren = new Array(content.length)
+    this.el = el("div",
+      el("div.tabs.is-boxed.is-small",
+        el("ul",
+          content.map((tab, i) =>
+            this.headerChildren[i] = el("li",
+              el("a",
+                {onclick: (event: Event) => this.setActive(i)},
+                el("span", tab.name)
+              )
+            )
+          )
+        )
+      ),
+      this.container = el("div"),
+    )
+    /*
+    this.el = el("div",
+      this.header = list("ul", TabHeaderLi, null)
+      this.container = el("div"),
+    )
+    */
+
+    this.setActive(0)
+  }
+
+  setActive(i: number) {
+    this.headerChildren.map(li => li.classList.remove("is-active"))
+    this.headerChildren[i].classList.add("is-active")
+    setChildren(this.container, [this.content[i].component])
+  }
+}
+
 
 interface State {
   sortColumn?: string
   sortKind: number
 }
 
-class App implements RedomComponent {
+class TableHandler implements RedomComponent {
   el: HTMLElement
   table: TableWidget
 
@@ -81,54 +146,16 @@ class App implements RedomComponent {
 
 }
 
-const main = new App(new StoreBackend());
-mount(document.body, main);
-
-/*
-table.update([
+// const main = new TableHandler(new StoreBackend());
+//const main = el(Tabs as any, new TableHandler(new StoreBackend()), new TableHandler(new StoreBackend()));
+const main = new Tabs([
   {
-    columnName: "A",
-    values: [1, 2, 3],
+    name: "Table",
+    component: new TableHandler(new StoreBackend()),
   },
   {
-    columnName: "B",
-    values: [2, 4, 6],
+    name: "Plot",
+    component: new TableHandler(new StoreBackend()),
   },
 ])
-
-window.setTimeout(function () {
-  table.update([
-    {
-      columnName: "A",
-      values: [1, 2, 3, 4],
-    },
-    {
-      columnName: "B",
-      values: [2, 4, 6, 8],
-    },
-    {
-      columnName: "C",
-      values: ["A", "B", "C", "D"],
-    },
-  ])
-
-  let req = axios.get("http://localhost:5000/api/get_data", {
-    params: {
-      ID: 12345
-    }
-  }).then((response: any) => {
-    console.log("Received response...");
-    let tableData = response.data;
-    console.log(tableData)
-    let transformedData = fn.mapEntries(tableData, (k, v) => ({
-      columnName: k,
-      values: v,
-    }))
-    console.log(transformedData)
-    table.update(transformedData)
-  }).catch((error: any) => {
-    console.log(error);
-  })
-
-}, 1000);
-*/
+mount(document.body, main);
