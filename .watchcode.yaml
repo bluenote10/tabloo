@@ -2,24 +2,19 @@ filesets:
   default:
     include:
       - ".watchcode.yaml"
-      - "*.nim"
-      - "*.scss"
-      - "*.html"
-      - "nim.cfg"
-      - "*.js"
-      - "*.ts"
+      - "*"
     exclude:
-      - "dist/main.js"
-    match_mode: "fnmatch"
+      - ".watchcode.log"
+
     exclude_gitignore: true
+    match_mode: "gitlike"
 
 tasks:
-  default:
+  tsc:
     fileset: default
     commands:
-      - "npx webpack"
+      - "npm run check-types"
 
-default_task: default
-log: true
+default_task: tsc
 sound: false
 notifications: true

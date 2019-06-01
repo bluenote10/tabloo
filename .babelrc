@@ -1,0 +1,15 @@
+{
+  "presets": [
+    "@babel/preset-typescript"
+  ],
+  "plugins": [
+    [
+      "babel-plugin-jsx-dom-expressions",
+      {
+        "moduleName": "solid-js/dom"
+      }
+    ],
+    "@babel/plugin-proposal-class-properties"
+  ]
+
+}

@@ -5,28 +5,36 @@
   "scripts": {
     "build_css": "node-sass --omit-source-map-url css/styles.scss dist/styles.css",
     "build": "webpack",
-    "start": "npm run build"
+    "start": "npm run build",
+    "check-types": "tsc",
+    "dev-server": "webpack-dev-server"
   },
   "keywords": [],
   "author": "Fabian Keller",
   "license": "MIT",
   "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-typescript": "^7.3.3",
     "@fortawesome/fontawesome-free": "^5.8.2",
     "@types/echarts": "^4.1.9",
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",
-    "bulma": "^0.7.5",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-jsx-dom-expressions": "^0.9.5",
     "eslint": "^5.16.0",
     "node-sass": "^4.12.0",
-    "webpack-cli": "^3.3.2"
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.2",
+    "webpack-dev-server": "^3.5.0"
   },
   "dependencies": {
-    "@types/redom": "^3.12.1",
     "axios": "^0.18.0",
+    "bulma": "^0.7.5",
     "echarts": "^4.2.1",
-    "redom": "^3.20.0",
+    "solid-js": "^0.7.5",
     "ts-loader": "^5.4.5",
-    "typescript": "^3.4.5",
-    "webpack": "^4.30.0"
+    "typescript": "^3.4.5"
   }
 }
