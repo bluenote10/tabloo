@@ -10,6 +10,7 @@ import * as fn from "./fn";
 
 import { TableWidget } from "./table";
 import { Tabs } from "./tabs";
+import { Plot } from "./plot";
 
 import { StoreInterface, StoreBackend, DataFetchOptions } from "./store";
 
@@ -84,14 +85,15 @@ class TableHandler implements RedomComponent {
 
 // const main = new TableHandler(new StoreBackend());
 //const main = el(Tabs as any, new TableHandler(new StoreBackend()), new TableHandler(new StoreBackend()));
+const backend = new StoreBackend()
 const main = new Tabs([
   {
     name: "Table",
-    component: new TableHandler(new StoreBackend()),
+    component: new TableHandler(backend),
   },
   {
     name: "Plot",
-    component: new TableHandler(new StoreBackend()),
+    component: new Plot(backend),
   },
 ])
 mount(document.body, main);

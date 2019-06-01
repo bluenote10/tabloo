@@ -12,6 +12,7 @@
   "license": "MIT",
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.8.2",
+    "@types/echarts": "^4.1.9",
     "@typescript-eslint/eslint-plugin": "^1.7.0",
     "@typescript-eslint/parser": "^1.7.0",
     "bulma": "^0.7.5",
@@ -22,6 +23,7 @@
   "dependencies": {
     "@types/redom": "^3.12.1",
     "axios": "^0.18.0",
+    "echarts": "^4.2.1",
     "redom": "^3.20.0",
     "ts-loader": "^5.4.5",
     "typescript": "^3.4.5",
