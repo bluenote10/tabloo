@@ -1,9 +1,15 @@
+import '@fortawesome/fontawesome-free/js/fontawesome'
+import '@fortawesome/fontawesome-free/js/solid'
+import '@fortawesome/fontawesome-free/js/regular'
+import '@fortawesome/fontawesome-free/js/brands'
+
 import { createRoot, createState, createEffect, onCleanup } from 'solid-js';
 
 import { StoreInterface, StoreBackend, DataFetchOptions, TableData } from "./store";
 
 import { Tabs } from "./Tabs";
 import { TableHandler } from "./TableHandler"
+import { PlotHandler } from "./PlotHandler"
 
 function App() {
 
@@ -16,7 +22,7 @@ function App() {
     },
     {
       name: "Tab B",
-      component: <div>TODO</div>,
+      component: <PlotHandler store={store}/>,
     }
   ]
 
