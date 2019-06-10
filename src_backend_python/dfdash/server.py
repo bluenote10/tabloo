@@ -16,6 +16,7 @@ app = Flask(
 )
 CORS(app)
 
+
 @app.after_request
 def add_header(response):
     # https://stackoverflow.com/a/23115561
@@ -31,11 +32,16 @@ def add_header(response):
 backend = None
 
 
+@app.route('/api/get_columns')
+def get_columns():
+    return jsonify(backend.get_columns())
+
+
 @app.route('/api/get_data')
 def get_data():
-    sortColumn = request.args.get("sortColumn")
-    sortKind = int(request.args.get("sortKind", 0))
-    return jsonify(backend.get_data(sortColumn, sortKind))
+    sort_column = request.args.get("sortColumn")
+    sort_kind = int(request.args.get("sortKind", 0))
+    return jsonify(backend.get_data(sort_column, sort_kind))
 
 
 @app.route('/')

@@ -1,6 +1,7 @@
 import { createRoot, createState, createEffect, onCleanup, sample } from 'solid-js';
 
 import { StoreInterface, StoreBackend, DataFetchOptions, TableData, ColumnData } from "./store";
+import { Combobox } from "./Combobox";
 
 import * as echarts from "echarts";
 import { ECharts } from "echarts";
@@ -107,14 +108,24 @@ export function PlotHandler(props: PlotHandlerProps) {
 
   const { store } = props
 
+  /*
   const dataFetchOptions = {
     sortKind: 0,
   } as DataFetchOptions
+  */
 
   const [state, setState] = createState({
-    tableData: [] as TableData,
+    columns: [] as string[],
     plotData: {} as any,
+    selectedColX: undefined! as number,
+    selectedColY: undefined! as number,
   })
+
+  async function fetchColumns() {
+    let data = await store.fetchColumns()
+    console.log(data)
+    setState({columns: data})
+  }
 
   async function fetchData() {
     let data = await store.fetchData({
@@ -148,7 +159,23 @@ export function PlotHandler(props: PlotHandlerProps) {
     setState({plotData: plotData} as any) // FIXME: why cast needed?
   }
 
+  fetchColumns()
   fetchData()
 
-  return <PlotWrapper plotData={(state.plotData)}/>
+  // TODO: report bug, that caching fragments does not work
+  return (
+    <div>
+      <Combobox
+        items={(state.columns)}
+        selectedIndex={(state.selectedColX)}
+        cbSelect={(index: number) => setState({selectedColX: index})}
+      />
+      <Combobox
+        items={(state.columns)}
+        selectedIndex={(state.selectedColY)}
+        cbSelect={(index: number) => setState({selectedColY: index})}
+      />
+      <PlotWrapper plotData={(state.plotData)}/>
+    </div>
+  )
 }

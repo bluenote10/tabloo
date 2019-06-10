@@ -16,12 +16,18 @@ export interface DataFetchOptions {
 
 export interface StoreInterface {
   //async fetchData(): void
+  fetchColumns(): Promise<string[]>
   fetchData(opts: DataFetchOptions): Promise<TableData>
 }
 
 
 export class StoreBackend implements StoreInterface {
   url = "http://localhost:5000"
+
+  async fetchColumns(): Promise<string[]> {
+    let response = await axios.get(`${this.url}/api/get_columns`)
+    return response.data as string[];
+  }
 
   async fetchData(opts: DataFetchOptions): Promise<TableData> {
     let response = await axios.get(`${this.url}/api/get_data`, {
