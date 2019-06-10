@@ -1,4 +1,4 @@
-import { createRoot, createState, createEffect, onCleanup } from 'solid-js';
+import { createRoot, createState, createEffect, onCleanup, sample } from 'solid-js';
 
 import { StoreInterface, StoreBackend, DataFetchOptions, TableData, ColumnData } from "./store";
 
@@ -24,6 +24,80 @@ declare const $: (attr: {
   afterRender?: () => unknown
 }) => any
 
+/*
+// Eventually we could use something like this
+function PlotWrapper(props) {
+  let el;
+
+  const [state, setState] = createState({
+    mounted: false,
+    cachedPlotData: null,
+  })
+
+  createEffect(() => {
+    // effect to monitor changes to props.plotData
+    let newPlotData = props.plotData;
+    if (sample(() => state.mounted)) {
+      // already mounted => we can call into the external lib directly
+      plottingLibrary.plot(el, newPlotData);
+    } else {
+      // not mounted => need to cache
+      setState({cachedPlotData: newPlotData});
+    }
+  })
+
+  onMounted(() => {
+    if (state.cachedPlotData != null) {
+      plottingLibrary.plot(el, state.cachedPlotData);
+      setState({cachedPlotData: null});
+    }
+    setState({mounted: true})
+ }
+
+  onUnmounted(() => {
+    setState({mounted: false})
+  }
+
+  return <div ref={el}></div>
+}
+*/
+
+export interface PlotWrapperProps {
+  plotData?: any
+}
+
+function PlotWrapper(props: PlotWrapperProps) {
+  let el: HTMLDivElement = null!;
+  let chart: ECharts = null!;
+
+  const [state, setState] = createState({
+    cachedPlotData: null,
+  })
+
+  createEffect(() => {
+    // effect to monitor changes to props.plotData
+    let newPlotData = props.plotData;
+
+    if (newPlotData != null) {
+      setState({cachedPlotData: newPlotData});
+    }
+  })
+
+  setInterval(() => {
+    if (chart == null) {
+      chart = echarts.init(el as HTMLDivElement);
+    }
+
+    if (state.cachedPlotData != null && document.body.contains(el)) {
+      chart.setOption(state.cachedPlotData!)
+      setState({cachedPlotData: null})
+    }
+    document.body.contains(el)
+  }, 100)
+
+  return <div ref={el} style="width: 600px;height:400px;"></div>
+}
+
 
 export interface PlotHandlerProps {
   store: StoreInterface
@@ -33,16 +107,13 @@ export function PlotHandler(props: PlotHandlerProps) {
 
   const { store } = props
 
-  let plot = <div style="width: 600px;height:400px;"></div>
-  //let chart: ECharts = echarts.init(plot as HTMLDivElement);
-  let chart: ECharts
-
   const dataFetchOptions = {
     sortKind: 0,
   } as DataFetchOptions
 
   const [state, setState] = createState({
     tableData: [] as TableData,
+    plotData: {} as any,
   })
 
   async function fetchData() {
@@ -65,7 +136,7 @@ export function PlotHandler(props: PlotHandlerProps) {
     console.log(rowsData);
 
     // specify chart configuration item and data
-    let option = {
+    let plotData = {
       xAxis: {},
       yAxis: {},
       series: [{
@@ -74,18 +145,10 @@ export function PlotHandler(props: PlotHandlerProps) {
         type: 'scatter'
       }]
     };
-    chart = echarts.init(plot as HTMLDivElement);
-    setTimeout(() =>
-      chart.setOption(option), 2000)
+    setState({plotData: plotData} as any) // FIXME: why cast needed?
   }
 
   fetchData()
 
-  onCleanup(() => {
-    console.log("onCleanup of plot")
-  })
-
-  return (
-    plot
-  )
+  return <PlotWrapper plotData={(state.plotData)}/>
 }
