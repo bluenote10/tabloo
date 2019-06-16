@@ -22,7 +22,7 @@ export function Tabs(props: TabsProps) {
 
   return (
     <>
-      <div class="tabs is-boxed is-small">
+      <div class="tabs is-small">
         <ul>
           { props.contents.map((content, index) =>
             <li class={(index === state.activeIndex ? "is-active" : undefined)}>

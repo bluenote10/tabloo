@@ -21,13 +21,13 @@ function App() {
       component: <TableHandler store={store}/>,
     },
     {
-      name: "Tab B",
+      name: "Plot",
       component: <PlotHandler store={store}/>,
     }
   ]
 
   return (
-    <div>
+    <div class="container">
       <Tabs contents={tabContents}/>
     </div>
   )
