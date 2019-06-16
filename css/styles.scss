@@ -1,10 +1,25 @@
 @charset "utf-8";
 
+// -------------------------------------------------------------------------
+// Font
+// -------------------------------------------------------------------------
+
 // https://fonts.google.com/?sort=popularity
 // TODO: use https://google-webfonts-helper.herokuapp.com
 //@import url('https://fonts.googleapis.com/css?family=Open+Sans');
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 $family-sans-serif: "Roboto", sans-serif;
+
+// -------------------------------------------------------------------------
+// Fontawesome
+// -------------------------------------------------------------------------
+
+@import "../node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "../node_modules/@fortawesome/fontawesome-free/scss/solid.scss";
+
+// -------------------------------------------------------------------------
+// Bulma customization/overrides
+// -------------------------------------------------------------------------
 
 @import "../node_modules/bulma/sass/utilities/initial-variables.sass";
 
