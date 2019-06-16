@@ -1,7 +1,7 @@
 import { createRoot, createState, createEffect, onCleanup, sample } from 'solid-js';
 
 import { StoreInterface, StoreBackend, DataFetchOptions, TableData, ColumnData } from "./store";
-import { Combobox } from "./Combobox";
+import { Dropdown } from "./Dropdown";
 
 import * as echarts from "echarts";
 import { ECharts } from "echarts";
@@ -178,12 +178,12 @@ export function PlotHandler(props: PlotHandlerProps) {
 
   return (
     <div>
-      <Combobox
+      <Dropdown
         items={(state.columns)}
         selectedIndex={(state.selectedColX)}
         cbSelect={(index: number) => setState({selectedColX: index})}
       />
-      <Combobox
+      <Dropdown
         items={(state.columns)}
         selectedIndex={(state.selectedColY)}
         cbSelect={(index: number) => setState({selectedColY: index})}

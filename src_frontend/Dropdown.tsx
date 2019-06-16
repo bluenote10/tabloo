@@ -1,12 +1,12 @@
 import { createState, createEffect, onCleanup } from 'solid-js'
 
-interface ComboboxProps {
+interface DropdownProps {
   items: string[],
   selectedIndex?: number,
   cbSelect: (index: number) => void,
 }
 
-export function Combobox(props: ComboboxProps) {
+export function Dropdown(props: DropdownProps) {
 
   const [state, setState] = createState({
     active: false,
