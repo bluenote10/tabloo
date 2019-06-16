@@ -121,13 +121,30 @@ export function PlotHandler(props: PlotHandlerProps) {
     selectedColY: undefined! as number,
   })
 
+  createEffect(() => {
+    // handels updates of selected column indices
+    let xCol = state.selectedColX;
+    let yCol = state.selectedColY;
+    if (xCol != undefined && yCol != undefined) {
+      fetchData(xCol, yCol);
+    }
+  })
+
   async function fetchColumns() {
-    let data = await store.fetchColumns()
-    console.log(data)
-    setState({columns: data})
+    let columns = await store.fetchColumns()
+    console.log(columns)
+    setState({columns: columns})
+
+    if (columns.length >= 2) {
+      setState({
+        selectedColX: 0,
+        selectedColY: 1,
+      })
+    }
   }
 
-  async function fetchData() {
+  async function fetchData(xCol: number, yCol: number) {
+    console.log(`Fetching data for columns ${xCol} vs ${yCol}`)
     let data = await store.fetchData({
       sortKind: 0
     })
@@ -135,16 +152,14 @@ export function PlotHandler(props: PlotHandlerProps) {
 
     const numCols = data.length;
     const numRows = data[0].values.length;
-    console.log(numRows, numCols);
 
     let rowsData = Array(numRows);
     for (let i=0; i<numRows; i++) {
       let rowData = Array(2);
-      rowData[0] = data[1].values[i].toString();
-      rowData[1] = data[2].values[i].toString();
+      rowData[0] = data[xCol].values[i].toString();
+      rowData[1] = data[yCol].values[i].toString();
       rowsData[i] = rowData;
     }
-    console.log(rowsData);
 
     // specify chart configuration item and data
     let plotData = {
@@ -160,9 +175,7 @@ export function PlotHandler(props: PlotHandlerProps) {
   }
 
   fetchColumns()
-  fetchData()
 
-  // TODO: report bug, that caching fragments does not work
   return (
     <div>
       <Combobox
