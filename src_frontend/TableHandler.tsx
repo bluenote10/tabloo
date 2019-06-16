@@ -58,7 +58,8 @@ function Table(props: TableProps) {
     for (let i=0; i<numRows; i++) {
       let rowData = Array(numCols);
       for (let j=0; j<numCols; j++) {
-        rowData[j] = data[j].values[i].toString();
+        let value = data[j].values[i];
+        rowData[j] = (value != undefined ? value.toString() : "");
       }
       rowsData[i] = rowData;
     }

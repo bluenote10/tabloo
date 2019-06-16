@@ -43,8 +43,15 @@ export class StoreBackend implements StoreInterface {
     }))
     console.log(transformedData)
     */
-    let transformedData = response.data as TableData;
-    return transformedData;
+    if (typeof response.data === "string") {
+      // Ugly axios bug: It swallows JSON.parse exceptions...
+      // https://github.com/axios/axios/issues/1723
+      // Try explicit parse to see exception...
+      let parsed = JSON.parse(response.data) as TableData;
+      return parsed;
+    }
+    let parsed = response.data as TableData;
+    return parsed;
   }
 
 }

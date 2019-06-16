@@ -1,7 +1,9 @@
 from __future__ import division, print_function
 
-from flask import Flask, send_from_directory, jsonify, redirect, request
+from flask import Flask, send_from_directory, redirect, request, make_response
 from flask_cors import CORS
+
+import json
 
 import random, threading, webbrowser
 import numpy as np
@@ -32,16 +34,50 @@ def add_header(response):
 backend = None
 
 
+def to_json(obj):
+    """
+    We don't use jsonify from flask because
+    - it doesn't allow to pass options to the JSON encoder
+    - it secretly switches to simplejson when available
+
+    Using simplejson might actually be a good option, because in contrast
+    to the built-in JSON encoder, it has the `ignore_nan` options, which
+    allows to encode NaN/Inf as null. The builtin json encoder actually
+    produces malformed JSON in these cases... And its `allow_nan` option
+    only allows to throw on NaN/Inf, no conversion to null as would be
+    needed by the standard.
+
+    simplejson would solve this issue, but is also not a good option,
+    because it is a non-trivial dependency. It can be used Python-only,
+    but then it is terribly slow. There is a C extension, but this requires
+    native compilers on user side.
+
+    What a mess... The best solution is to handle NaN/Inf within Pandas...
+
+    See:
+      - https://stackoverflow.com/questions/28639953/python-nan-json-encoder
+
+    This reimplements jsonify based on this info:
+      - https://stackoverflow.com/a/16003910/1804173
+      - https://stackoverflow.com/questions/11945523/forcing-application-json-mime-type-in-a-view-flask
+    """
+    # This would be the simplejson variant, but just too slow...
+    # response = make_response(simplejson.dumps(obj, ignore_nan=True))
+    response = make_response(json.dumps(obj, allow_nan=False))
+    response.mimetype = "application/json"
+    return response
+
+
 @app.route('/api/get_columns')
 def get_columns():
-    return jsonify(backend.get_columns())
+    return to_json(backend.get_columns())
 
 
 @app.route('/api/get_data')
 def get_data():
     sort_column = request.args.get("sortColumn")
     sort_kind = int(request.args.get("sortKind", 0))
-    return jsonify(backend.get_data(sort_column, sort_kind))
+    return to_json(backend.get_data(sort_column, sort_kind))
 
 
 @app.route('/')

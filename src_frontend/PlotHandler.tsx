@@ -151,6 +151,11 @@ export function PlotHandler(props: PlotHandlerProps) {
     console.log(data)
 
     const numCols = data.length;
+    if (numCols === 0) {
+      console.log("WARNING: received data with 0 columns, ignoring...");
+      return;
+    }
+    console.log(numCols)
     const numRows = data[0].values.length;
 
     let rowsData = Array(numRows);
