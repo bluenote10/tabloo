@@ -5,7 +5,7 @@ import * as fn from "./fn";
 export interface ColumnData {
   columnName: string;
   sortKind: number;
-  values: string[];
+  values: Array<string|number>;
 }
 export type TableData = ColumnData[]
 
