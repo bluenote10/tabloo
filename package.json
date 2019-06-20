@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "main": "build/main.js",
   "scripts": {
-    "build_css": "node-sass --omit-source-map-url css/styles.scss dist/styles.css",
+    "build-css": "node-sass --omit-source-map-url css/styles.scss dist/styles.css",
     "build": "webpack",
     "start": "npm run build",
     "check-types": "tsc",

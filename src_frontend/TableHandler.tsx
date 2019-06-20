@@ -21,10 +21,114 @@ declare const $: (attr: {
   afterRender?: () => unknown
 }) => any
 
+
+type Value = string | number;
+
+function transformToString(x: Value) {
+  if (x != undefined) {
+    return x.toString();
+  } else {
+    return "-"
+  }
+}
+
+function transformFloatToString(digits: number, x: number) {
+  if (x != undefined) {
+    // TODO: handle limitations of toFixed
+    return x.toFixed(digits);
+  } else {
+    return "-"
+  }
+}
+
+interface ColumnFormatter {
+  format: (x: Value) => string
+  align: number
+}
+
+function analyzeColumn(data: Value[]): ColumnFormatter {
+  let allNull = true;
+  let allNumbers = true;
+  let allInteger = true;
+  let hasExponetials = false;
+
+  let absMax = -Infinity;
+  let absMin = +Infinity;
+
+  let maxDecimalPlacesR = 0;
+  let maxDecimalPlacesL = 0;
+
+  for (let i=0; i<data.length; i++) {
+    let value = data[i];
+
+    if (value != undefined) {
+      allNull = false;
+    }
+
+    if (typeof value === "string") {
+      allNumbers = false;
+      allInteger = false;
+      break;
+    } else if (typeof value === "number") {
+      if (!Number.isInteger(value)) {
+        allInteger = false;
+      }
+
+      let absValue = Math.abs(value as number)
+      if (absValue > absMax) {
+        absMax = absValue;
+      }
+      if (absValue < absMin) {
+        absMin = absValue;
+      }
+
+      let valueString = (value > 0 ? value.toString() : (-value).toString());
+      if (valueString.includes("e")) {
+        hasExponetials = true;
+        // TODO
+      } else if (valueString.includes(".")) {
+        let split = valueString.split(".");
+        let decL = split[0].length;
+        let decR = split[1].length;
+        if (decL > maxDecimalPlacesL) {
+          maxDecimalPlacesL = decL;
+        }
+        if (decR > maxDecimalPlacesR) {
+          maxDecimalPlacesR = decR;
+        }
+      }
+    }
+  }
+  // console.log(maxDecimalPlacesL, maxDecimalPlacesR)
+
+  if (allNumbers && !allInteger && !hasExponetials) {
+    let maxDigits = 6;
+    let digits = maxDigits - maxDecimalPlacesL + 1;
+    if (digits < 1) {
+      digits = 1;
+    }
+    return {
+      format: transformFloatToString.bind(null, digits) as (x: Value) => string,
+      align: +1,
+    }
+  } else if (allInteger) {
+    return {
+      format: transformToString,
+      align: +1,
+    }
+  } else {
+    return {
+      format: transformToString,
+      align: -1,
+    }
+  }
+
+}
+
 /**
  * Transformation from columnar to row-wise data.
  */
-function transformData(data: TableData): string[][] {
+function transformData(data: TableData): Value[][] {
   const numCols = data.length;
   if (numCols === 0) {
     return [];
@@ -32,100 +136,13 @@ function transformData(data: TableData): string[][] {
   const numRows = data[0].values.length;
   console.log(numRows, numCols);
 
-  function transformToString(x: any) {
-    if (x != undefined) {
-      return x.toString();
-    } else {
-      return "-"
-    }
-  }
-
-  function transformFloatToString(digits: number, x: number) {
-    if (x != undefined) {
-      // TODO: handle limitations of toFixed
-      return x.toFixed(digits);
-    } else {
-      return "-"
-    }
-  }
-
-  // infer transformer
-  let transformers = [] as Array<(x: any) => string>;
-  for (let j=0; j<numCols; j++) {
-
-    let allNull = true;
-    let allNumbers = true;
-    let allInteger = true;
-    let hasExponetials = false;
-
-    let absMax = -Infinity;
-    let absMin = +Infinity;
-
-    let maxDecimalPlacesR = 0;
-    let maxDecimalPlacesL = 0;
-
-    for (let i=0; i<numRows; i++) {
-      let value = data[j].values[i];
-
-      if (value != undefined) {
-        allNull = false;
-      }
-
-      if (typeof value === "string") {
-        allNumbers = false;
-        allInteger = false;
-        break;
-      } else if (typeof value === "number") {
-        if (!Number.isInteger(value)) {
-          allInteger = false;
-        }
-
-        let absValue = Math.abs(value as number)
-        if (absValue > absMax) {
-          absMax = absValue;
-        }
-        if (absValue < absMin) {
-          absMin = absValue;
-        }
-
-        let valueString = (value > 0 ? value.toString() : (-value).toString());
-        if (valueString.includes("e")) {
-          hasExponetials = true;
-          // TODO
-        } else if (valueString.includes(".")) {
-          let split = valueString.split(".");
-          let decL = split[0].length;
-          let decR = split[1].length;
-          if (decL > maxDecimalPlacesL) {
-            maxDecimalPlacesL = decL;
-          }
-          if (decR > maxDecimalPlacesR) {
-            maxDecimalPlacesR = decR;
-          }
-        }
-      }
-    }
-    console.log(maxDecimalPlacesL, maxDecimalPlacesR)
-
-    if (allNumbers && !allInteger && !hasExponetials) {
-      let maxDigits = 6;
-      let digits = maxDigits - maxDecimalPlacesL + 1;
-      if (digits < 1) {
-        digits = 1;
-      }
-      transformers.push(transformFloatToString.bind(null, digits))
-    } else {
-      transformers.push(transformToString)
-    }
-  }
-
   // we need to convert from columnar to row-wise data
-  let rowsData = Array(numRows) as string[][];
+  let rowsData = Array(numRows) as Value[][];
   for (let i=0; i<numRows; i++) {
-    let rowData = Array(numCols) as string[];
+    let rowData = Array(numCols) as Value[];
     for (let j=0; j<numCols; j++) {
       let value = data[j].values[i];
-      rowData[j] = transformers[j](value);
+      rowData[j] = value;
     }
     rowsData[i] = rowData;
   }
@@ -146,11 +163,13 @@ interface ColHeader {
 function Table(props: TableProps) {
 
   const [state, setState] = createState({
-    rowsData: [] as string[][],
+    rowsData: [] as Value[][],
     headerData: [] as ColHeader[],
     sortColIndex: undefined as (number | undefined),
     sortColKind: 0,
   })
+
+  let columnFormatters = [] as ColumnFormatter[];
 
   createEffect(() => {
     console.log("Data updated", props.data)
@@ -158,6 +177,13 @@ function Table(props: TableProps) {
     const data = props.data
     if (data.length == 0) {
       return;
+    }
+
+    // update column formatters
+    let numCols = data.length;
+    columnFormatters.length = numCols;
+    for (let j=0; j<numCols; j++) {
+      columnFormatters[j] = analyzeColumn(data[j].values);
     }
 
     let rowsData = transformData(props.data);
@@ -232,8 +258,11 @@ function Table(props: TableProps) {
           {(colHeader: ColHeader, index: number) =>
             <th>
               {colHeader.name}
-              <a onclick={(event) => sortByCol(colHeader.name, index)}>
-              {(renderSymbol(colHeader.name, state.sortColIndex == index ? state.sortColKind : 0))}
+              <a
+                onclick={(event) => sortByCol(colHeader.name, index)}
+                onmousedown={(event) => event.preventDefault()}
+              >
+                {(renderSymbol(colHeader.name, state.sortColIndex == index ? state.sortColKind : 0))}
               </a>
             </th>
           }
@@ -244,8 +273,8 @@ function Table(props: TableProps) {
           { (row: string[]) =>
             <tr>
               <$ each={row} fallback={<div>empty</div>}>
-                { (item: string) =>
-                  <td>{item}</td>
+                { (x: Value, j: number) =>
+                  <td class={(columnFormatters[j].align > 0 ? "has-text-right" : undefined)}>{columnFormatters[j].format(x)}</td>
                 }
               </$>
             </tr>
@@ -275,7 +304,6 @@ export function TableHandler(props: TableHandlerProps) {
   async function fetchData() {
     let opts = dataFetchOptions
     let data = await store.fetchData(opts)
-    console.log(data)
     setState({tableData: data})
   }
 
