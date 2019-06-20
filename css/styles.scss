@@ -194,6 +194,22 @@ table.ui-note-header-table td {
   padding-right: 15px;
 }
 
+.column-header {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+  // border: 1px solid #000;
+}
+.column-header span {
+  // padding-left: 0.2rem;
+}
+
+.th-sort-symbol {
+  padding-left: 0.2rem;
+}
+
 /* -------------------------------------------------------------------------
  * Input helpers
  * ------------------------------------------------------------------------- */

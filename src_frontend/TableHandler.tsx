@@ -254,19 +254,26 @@ function Table(props: TableProps) {
   return (
     <table class={"table is-striped is-narrow is-hoverable compact-table"}>
       <thead>
-        <$ each={state.headerData}>
-          {(colHeader: ColHeader, index: number) =>
-            <th>
-              {colHeader.name}
-              <a
-                onclick={(event) => sortByCol(colHeader.name, index)}
-                onmousedown={(event) => event.preventDefault()}
-              >
-                {(renderSymbol(colHeader.name, state.sortColIndex == index ? state.sortColKind : 0))}
-              </a>
-            </th>
-          }
-        </$>
+        <tr>
+          <$ each={state.headerData}>
+            {(colHeader: ColHeader, index: number) =>
+              <th>
+                <div class="column-header">
+                  <span>
+                    {colHeader.name}
+                  </span>
+                  <a
+                    class="th-sort-symbol"
+                    onclick={(event) => sortByCol(colHeader.name, index)}
+                    onmousedown={(event) => event.preventDefault() /* to prevent header selection*/}
+                  >
+                    {(renderSymbol(colHeader.name, state.sortColIndex == index ? state.sortColKind : 0))}
+                  </a>
+                </div>
+              </th>
+            }
+          </$>
+        </tr>
       </thead>
       <tbody>
         <$ each={state.rowsData} fallback={<div>empty</div>}>
