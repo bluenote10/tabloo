@@ -23,11 +23,11 @@ function App() {
 
   let tabContents = [
     {
-      name: "Table",
+      name: <span><i class="fas fa-database"></i> Table </span>,
       component: <TableHandler store={store}/>,
     },
     {
-      name: "Plot",
+      name: <span><i class="fas fa-chart-bar"></i> Plot </span>,
       component: <PlotHandler store={store}/>,
     }
   ]

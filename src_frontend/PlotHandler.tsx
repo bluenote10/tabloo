@@ -183,16 +183,22 @@ export function PlotHandler(props: PlotHandlerProps) {
 
   return (
     <div>
-      <Dropdown
-        items={(state.columns)}
-        selectedIndex={(state.selectedColX)}
-        cbSelect={(index: number) => setState({selectedColX: index})}
-      />
-      <Dropdown
-        items={(state.columns)}
-        selectedIndex={(state.selectedColY)}
-        cbSelect={(index: number) => setState({selectedColY: index})}
-      />
+      <div class="form-row">
+        <span class="form-label">Dimension x</span>
+        <Dropdown
+          items={(state.columns)}
+          selectedIndex={(state.selectedColX)}
+          cbSelect={(index: number) => setState({selectedColX: index})}
+        />
+      </div>
+      <div class="form-row">
+        <span class="form-label">Dimension y</span>
+        <Dropdown
+          items={(state.columns)}
+          selectedIndex={(state.selectedColY)}
+          cbSelect={(index: number) => setState({selectedColY: index})}
+        />
+      </div>
       <PlotWrapper plotData={(state.plotData)}/>
     </div>
   )

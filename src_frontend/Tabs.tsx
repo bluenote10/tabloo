@@ -1,8 +1,8 @@
 import { createRoot, createState, createEffect, onCleanup } from 'solid-js';
 
 type TabContents = Array<{
-  name: string
-  component: JSX.Element
+  name: JSX.Element,
+  component: JSX.Element,
 }>
 
 interface TabsProps {

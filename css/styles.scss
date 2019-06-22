@@ -10,6 +10,8 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 $family-sans-serif: "Roboto", sans-serif;
 
+$default-font-size: 0.75rem;
+
 // -------------------------------------------------------------------------
 // Fontawesome
 // -------------------------------------------------------------------------
@@ -23,6 +25,7 @@ $family-sans-serif: "Roboto", sans-serif;
 
 @import "../node_modules/bulma/sass/utilities/initial-variables.sass";
 
+// Dropdown customization
 // https://bulma.io/documentation/components/dropdown/#variables
 $dropdown-item-active-background-color: hsl(217, 61%, 19%);
 $dropdown-content-shadow:
@@ -31,32 +34,13 @@ $dropdown-content-shadow:
 // TODO: Maybe adjust radius, but has to be synced with other components
 // $dropdown-content-radius: 8px;
 
+// Button customization (currently optimized for dropdown, maybe we need a special class)
+// https://bulma.io/documentation/elements/button/
+//$control-radius: 6px; // doesn't affect buttons if the "is-small" is used, because it resets the border radius to 2px
+//$button-padding-vertical: calc(0.2rem - 1px);
+//$button-padding-horizontal: 0.5rem;
+
 @import "../node_modules/bulma/bulma.sass";
-
-// -------------------------------------------------------------------------
-// Dropdown
-// -------------------------------------------------------------------------
-
-.dropdown-item.modified {
-  padding: 0.2rem 1rem;
-}
-
-/*
-https://css-tricks.com/snippets/css/truncate-string-with-ellipsis/
-
-see https://stackoverflow.com/questions/9789723/css-text-overflow-in-a-table-cell for better solutions.
-*/
-.truncate {
-  max-width: 200px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.compact-table {
-  font-size: 12px;
-}
-
 
 /* -------------------------------------------------------------------------
  * General style
@@ -165,15 +149,30 @@ $ui-width-col-right: 3.25rem;
   min-height: 100%;
 }
 
-/* -------------------------------------------------------------------------
- * Table stuff
- * ------------------------------------------------------------------------- */
+// -------------------------------------------------------------------------
+// Table
+// -------------------------------------------------------------------------
+
+.compact-table {
+  font-size: $default-font-size;
+}
 
 /* For cell truncation / avoiding line breaks */
 .table-fixed {
   table-layout: fixed; /* https://stackoverflow.com/questions/5932018/fluid-table-with-td-nowrap-text-overflow */
 }
 
+/*
+TODO: decide which of the two I actually want... (copy pasted from other projects...)
+https://css-tricks.com/snippets/css/truncate-string-with-ellipsis/
+see https://stackoverflow.com/questions/9789723/css-text-overflow-in-a-table-cell for better solutions.
+*/
+.truncate {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .truncate {
   width: 100%;
   white-space: nowrap;
@@ -185,13 +184,6 @@ $ui-width-col-right: 3.25rem;
   /* overflow: hidden seems to affect the height: https://stackoverflow.com/questions/32190967/why-does-overflow-hidden-affect-height-and-how-can-i-fix-it-in-this-example   */
   /* Apparently we have to mess with vertical-align to fix it... */
   vertical-align: top;
-}
-
-.ui-note-header-table {
-  line-height: 1.7;
-}
-table.ui-note-header-table td {
-  padding-right: 15px;
 }
 
 .column-header {
@@ -210,17 +202,32 @@ table.ui-note-header-table td {
   padding-left: 0.2rem;
 }
 
-/* -------------------------------------------------------------------------
- * Input helpers
- * ------------------------------------------------------------------------- */
+// -------------------------------------------------------------------------
+// Dropdown
+// -------------------------------------------------------------------------
+
+.dropdown-text {
+  text-align: left;
+  font-size: $default-font-size;
+  min-width: 10rem; // TODO: use the same size as the content popup element
+}
+
+.dropdown-item.modified {
+  padding: 0.2rem 1rem;
+  font-size: $default-font-size;
+}
+
+// -------------------------------------------------------------------------
+// Input helpers
+// -------------------------------------------------------------------------
 
 .complete-selection {
   background: rgb(196, 227, 255);
 }
 
-/* -------------------------------------------------------------------------
- * Text area helpers
- * ------------------------------------------------------------------------- */
+// -------------------------------------------------------------------------
+// Text area helpers
+// -------------------------------------------------------------------------
 
 /* https://stackoverflow.com/questions/6795981/textarea-to-fill-a-parent-container-exactly-with-padding/6796064 */
 .is-maximized {
@@ -236,18 +243,39 @@ table.ui-note-header-table td {
   min-height: 600px;
 }
 
-/* -------------------------------------------------------------------------
- * Dropdowns
- * ------------------------------------------------------------------------- */
+// -------------------------------------------------------------------------
+// Dropdowns
+// -------------------------------------------------------------------------
 
 .ui-compact-dropdown-item {
   font-size: 0.75rem;
 }
 
-/* -------------------------------------------------------------------------
- * Float overlays
- * ------------------------------------------------------------------------- */
+.button.is-small {
+  border-radius: 4px;
+}
 
+// -------------------------------------------------------------------------
+// Form helpers
+// -------------------------------------------------------------------------
+
+.form-row {
+  margin-bottom: 0.2rem;
+}
+
+.form-label {
+  font-size: $default-font-size;
+  font-weight: bold;
+  margin-right: 1rem;
+  min-width: 4.375rem;
+  display: inline-block;
+}
+
+// -------------------------------------------------------------------------
+// Float overlays
+// -------------------------------------------------------------------------
+
+/*
 .float-wrapper {
   position: relative;
   overflow-x: visible;
@@ -260,18 +288,19 @@ table.ui-note-header-table td {
   top: calc(100% - 10px);
   left: 0;
   z-index: 999;
-  /* card has only light box-shadow => make more pronounced */
+  // card has only light box-shadow => make more pronounced
   box-shadow: 0 10px 30px rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.1);
-  /* display: inline-block; */
-  /* position: absolute; */
-  /* float: left; */
+  // display: inline-block;
+  // position: absolute;
+  // float: left;
 }
+*/
 
+// -------------------------------------------------------------------------
+// Scrollbar styling
+// -------------------------------------------------------------------------
 
-/* -------------------------------------------------------------------------
- * Scrollbar styling
- * ------------------------------------------------------------------------- */
-
+/*
 ::-webkit-scrollbar {
   background-color: #fff;
   width: .4em
@@ -280,3 +309,4 @@ table.ui-note-header-table td {
 ::-webkit-scrollbar-thumb {
   background:  black
 }
+*/

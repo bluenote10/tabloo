@@ -26,8 +26,8 @@ export function Dropdown(props: DropdownProps) {
   return (
     <div class={("dropdown" + (state.active ? " is-active" : "") )}>
       <div class="dropdown-trigger">
-        <button class="button" onclick={onClick} onblur={onBlur}>
-          <span style="font-size: 0.875rem;">{(props.selectedIndex != undefined ? props.items[props.selectedIndex] : "")}</span>
+        <button class="button is-small" onclick={onClick} onblur={onBlur}>
+          <span class="dropdown-text">{(props.selectedIndex != undefined ? props.items[props.selectedIndex] : "")}</span>
           <span class="icon is-small">
             <i class="fas fa-angle-down" aria-hidden="true"></i>
           </span>

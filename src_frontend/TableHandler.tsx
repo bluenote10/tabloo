@@ -252,7 +252,7 @@ function Table(props: TableProps) {
   }
 
   return (
-    <table class={"table is-striped is-narrow is-hoverable compact-table"}>
+    <table class={"table is-striped is-narrow is-hoverable is-bordered compact-table"}>
       <thead>
         <tr>
           <$ each={state.headerData}>
