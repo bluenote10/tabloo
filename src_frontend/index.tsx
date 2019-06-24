@@ -10,6 +10,7 @@
 // import '@fortawesome/fontawesome-free/js/brands'
 
 import { createRoot, createState, createEffect, onCleanup } from 'solid-js';
+import './dom_lifecycle';
 
 import { StoreInterface, StoreBackend, DataFetchOptions, TableData } from "./store";
 

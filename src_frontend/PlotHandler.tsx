@@ -25,48 +25,21 @@ declare const $: (attr: {
   afterRender?: () => unknown
 }) => any
 
-/*
-// Eventually we could use something like this
-function PlotWrapper(props) {
-  let el;
 
-  const [state, setState] = createState({
-    mounted: false,
-    cachedPlotData: null,
-  })
-
-  createEffect(() => {
-    // effect to monitor changes to props.plotData
-    let newPlotData = props.plotData;
-    if (sample(() => state.mounted)) {
-      // already mounted => we can call into the external lib directly
-      plottingLibrary.plot(el, newPlotData);
-    } else {
-      // not mounted => need to cache
-      setState({cachedPlotData: newPlotData});
-    }
-  })
-
-  onMounted(() => {
-    if (state.cachedPlotData != null) {
-      plottingLibrary.plot(el, state.cachedPlotData);
-      setState({cachedPlotData: null});
-    }
-    setState({mounted: true})
- }
-
-  onUnmounted(() => {
-    setState({mounted: false})
+declare global {
+namespace JSX {
+  interface HTMLAttributes<T> {
+    onconnected?: () => void
+    ondisconnected?: () => void
   }
-
-  return <div ref={el}></div>
 }
-*/
+}
 
 export interface PlotWrapperProps {
   plotData?: any
 }
 
+/*
 function PlotWrapper(props: PlotWrapperProps) {
   let el: HTMLDivElement = null!;
   let chart: ECharts = null!;
@@ -96,7 +69,65 @@ function PlotWrapper(props: PlotWrapperProps) {
     document.body.contains(el)
   }, 100)
 
-  return <div ref={el} style="width: 600px;height:400px;"></div>
+  return (
+    <div
+      ref={el}
+      style="width: 600px;height:400px;"
+    ></div>
+  )
+}
+*/
+
+
+function PlotWrapper(props: PlotWrapperProps) {
+  let el: HTMLDivElement = null!;
+  let chart: ECharts = null!;
+
+  const [state, setState] = createState({
+    mounted: false,
+    cachedPlotData: null,
+  })
+
+  let updatePlot = (plotData: any) => {
+    if (chart == null) {
+      chart = echarts.init(el as HTMLDivElement);
+    }
+    console.log("updating plot with:", plotData)
+    chart.setOption(plotData)
+  }
+
+  createEffect(() => {
+    // effect to monitor changes to props.plotData
+    let newPlotData = props.plotData;
+    if (sample(() => state.mounted)) {
+      // already mounted => we can call into the external lib directly
+      updatePlot(newPlotData)
+    } else {
+      // not mounted => need to cache
+      setState({cachedPlotData: newPlotData});
+    }
+  })
+
+  let onMounted = () => {
+    if (state.cachedPlotData != null) {
+      updatePlot(state.cachedPlotData!)
+      setState({cachedPlotData: null});
+    }
+    setState({mounted: true})
+ }
+
+  let onUnmounted = () => {
+    setState({mounted: false})
+  }
+
+  return (
+    <div
+      ref={el}
+      style="width: 600px;height:400px;"
+      onconnected={onMounted}
+      ondisconnected={onUnmounted}
+    ></div>
+  )
 }
 
 
