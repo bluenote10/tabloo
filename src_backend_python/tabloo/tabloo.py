@@ -1,6 +1,6 @@
 from __future__ import division, print_function
 
-import server
+from . import server
 
 
 def show(df,

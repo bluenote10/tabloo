@@ -9,14 +9,16 @@ with open("README.md", "r") as f:
 setup(
     name="tabloo",
     version="0.0.3",
-    description="Minimalistic dashboard app for visualizing tabular data",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    keywords=["table", "dataframe", "visualization", "plots", "dashboard"],
+
     license="MIT",
     author="Fabian Keller",
     author_email='pypi.20.fkeller@spamgourmet.com',
     url="https://github.com/bluenote10/tabloo",
+
+    description="Minimalistic dashboard app for visualizing tabular data",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    keywords=["table", "dataframe", "visualization", "plots", "dashboard"],
     # https://pypi.org/pypi?%3Aaction=list_classifiers
     classifiers=[
         'Development Status :: 3 - Alpha',
