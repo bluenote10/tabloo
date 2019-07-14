@@ -1,0 +1,32 @@
+language: python
+
+python:
+  - "2.7"
+  - "3.6"
+
+env:
+  - INSTALL_TYPE="standard"
+  - INSTALL_TYPE="dev"
+  - INSTALL_TYPE="minimal"
+
+install:
+  - |
+    # Python setup
+    cd src_backend_python
+    if [ $REQUIREMENTS = "standard" ]; then
+      python setup.py install
+    elif [ $REQUIREMENTS = "dev" ]; then
+      pip install -I -e .
+    fi
+    elif [ $REQUIREMENTS = "minimal" ]; then
+      python setup.py install
+      pip install flask==1.0.0 flask-cors==3.0.0 pandas==0.19.0
+    fi
+
+    pip install pytest pytest-cov --no-deps
+
+    pip freeze
+
+script:
+  - cd src_backend_python && pytest
+  - tabloo_cli -h
