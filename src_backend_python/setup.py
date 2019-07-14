@@ -8,7 +8,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="tabloo",
-    version="0.0.2",
+    version="0.0.3",
     description="Minimalistic dashboard app for visualizing tabular data",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -44,6 +44,9 @@ setup(
     package_data={"": [
         "static/*",
         "static/**/*",
+    ]},
+    exclude_package_data={"": [
+        "static/*.js.map"
     ]},
     # We need to disable `include_package_data` because we don't
     # have a MANIFEST.in and don't want to depend on source control

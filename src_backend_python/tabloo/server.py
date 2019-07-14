@@ -1,12 +1,13 @@
 from __future__ import division, print_function
 
+import logging
+import os
+import json
+import threading
+import webbrowser
+
 from flask import Flask, send_from_directory, redirect, request, make_response
 from flask_cors import CORS
-
-import json
-
-import random, threading, webbrowser
-import numpy as np
 
 from backend import Backend
 
@@ -85,16 +86,30 @@ def index():
     return redirect("index.html")
 
 
-def serve(df):
-    port = 5000
-    url = "http://127.0.0.1:{0}".format(port)
+def serve(df, open_browser, server_logging, server_port=5000):
+    # TODO: We may add some auto port handling like this: https://stackoverflow.com/a/5089963/1804173
+
+    url = "http://127.0.0.1:{0}".format(server_port)
 
     global backend
     backend = Backend(df)
-    # threading.Timer(1.25, lambda: webbrowser.open(url)).start()
+
+    # Avoid Flask warning about using werkzeug: https://stackoverflow.com/a/53166103/1804173
+    os.environ["FLASK_ENV"] = "development"
+
+    if not server_logging:
+        os.environ['WERKZEUG_RUN_MAIN'] = 'true'
+        logging.getLogger('werkzeug').disabled = True
+
+    if not server_logging and not open_browser:
+        # https://stackoverflow.com/a/56856877/1804173
+        print("Running on {}".format(url))
+
+    if open_browser:
+        threading.Timer(0.25, lambda: webbrowser.open(url)).start()
 
     app.run(
-        port=port,
+        port=server_port,
         debug=True,
         processes=1,
         threaded=False,

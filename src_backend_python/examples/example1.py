@@ -12,4 +12,4 @@ df = pd.DataFrame({
     "ys": np.random.uniform(-1, +1, N),
 })
 
-tabloo.show(df)
+tabloo.show(df, open_browser=False, server_logging=True)

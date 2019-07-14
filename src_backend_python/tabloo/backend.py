@@ -13,7 +13,6 @@ class Backend(object):
     def get_data(self, sort_column, sort_kind):
         if sort_column is not None:
             asc = sort_kind > 0
-            print(asc)
             self.df.sort_values(sort_column, inplace=True, ascending=asc)
         if sort_kind == 0:
             self.df.sort_index(inplace=True)
