@@ -12,20 +12,30 @@ env:
 install:
   - |
     # Python setup
+    set -e
+
+    echo -e "\n *** Updating pip + setuptools"
+    pip install -U pip setuptools
+
     cd src_backend_python
-    if [ $REQUIREMENTS = "standard" ]; then
+    echo -e "\n *** Installing tabloo"
+    if [[ $INSTALL_TYPE = "standard" ]]; then
       python setup.py install
-    elif [ $REQUIREMENTS = "dev" ]; then
+    elif [[ $INSTALL_TYPE = "dev" ]]; then
       pip install -I -e .
-    elif [ $REQUIREMENTS = "minimal" ]; then
+    elif [[ $INSTALL_TYPE = "minimal" ]]; then
       python setup.py install
       pip install flask==1.0.0 flask-cors==3.0.0 pandas==0.19.0
     fi
 
-    pip install pytest pytest-cov --no-deps
+    echo -e "\n *** Installing test dependencies"
+    pip install pytest pytest-cov
 
+    echo -e "\n *** Installed packages:"
     pip freeze
 
 script:
-  - cd src_backend_python && pytest
-  - tabloo_cli -h
+  - cd $TRAVIS_BUILD_DIR
+  - pwd && ls -lh
+  - pwd && cd src_backend_python && py.test && cd $TRAVIS_BUILD_DIR
+  - pwd && tabloo_cli -h

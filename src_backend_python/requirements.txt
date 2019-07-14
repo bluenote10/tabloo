@@ -1,4 +1,5 @@
 flask
 flask-cors
-pandas
-# simplejson
+# temporary work-around for getting broken 0.25.0.rc0 version
+# https://stackoverflow.com/questions/57028142/why-does-pip-install-different-package-version-within-travis
+pandas<0.25
