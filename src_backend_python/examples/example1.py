@@ -3,7 +3,7 @@
 import pandas as pd
 import numpy as np
 
-import dfdash
+import tabloo
 
 N = 100
 df = pd.DataFrame({
@@ -12,4 +12,4 @@ df = pd.DataFrame({
     "ys": np.random.uniform(-1, +1, N),
 })
 
-dfdash.show(df)
+tabloo.show(df)

@@ -3,8 +3,8 @@
 import os
 import pandas as pd
 
-import dfdash
+import tabloo
 
 csv_file = os.path.join(os.path.dirname(__file__), "Bundesliga.csv")
 df = pd.read_csv(csv_file)
-dfdash.show(df)
+tabloo.show(df)

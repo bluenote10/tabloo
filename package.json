@@ -1,6 +1,6 @@
 {
-  "name": "dfdash",
-  "version": "0.1.0",
+  "name": "tabloo",
+  "version": "0.0.1",
   "main": "build/main.js",
   "scripts": {
     "build-css": "node-sass --omit-source-map-url css/styles.scss dist/styles.css",

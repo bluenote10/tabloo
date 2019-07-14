@@ -2,8 +2,6 @@ nimcache/
 node_modules/
 
 package-lock.json
-dist/main.js
-dist/main.js.map
 
 .watchcode.log
 
@@ -11,3 +9,7 @@ dist/main.js.map
 
 *.pyc
 /.idea/
+
+dist/main.js
+dist/main.js.map
+dist/styles.css
