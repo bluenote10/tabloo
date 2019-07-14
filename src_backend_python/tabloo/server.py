@@ -9,7 +9,7 @@ import webbrowser
 from flask import Flask, send_from_directory, redirect, request, make_response
 from flask_cors import CORS
 
-from backend import Backend
+from .backend import Backend
 
 
 app = Flask(

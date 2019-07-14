@@ -14,22 +14,34 @@ install:
     # Python setup
     set -e
 
+    echo -e "\n *** Inspecting travis base environment"
+    pip freeze
+    # Work-around for: https://github.com/pandas-dev/pandas/issues/25316
+    pip uninstall -y -q numpy
+
     echo -e "\n *** Updating pip + setuptools"
     pip install -U pip setuptools
+    pip config list
 
     cd src_backend_python
     echo -e "\n *** Installing tabloo"
     if [[ $INSTALL_TYPE = "standard" ]]; then
-      python setup.py install
+      #  For now neither of the following works:
+      #  - python setup.py install
+      #  - pip install .
+      # The latter seems to be caused by README.md being a symlink, great pip...
+      rm -rf ./dist
+      python setup.py bdist_wheel
+      pip install ./dist/*.whl
     elif [[ $INSTALL_TYPE = "dev" ]]; then
       pip install -I -e .
     elif [[ $INSTALL_TYPE = "minimal" ]]; then
-      python setup.py install
-      pip install flask==1.0.0 flask-cors==3.0.0 pandas==0.19.0
+      pip install -I -e .
+      pip install flask==1.0.0 flask-cors==3.0.0 pandas==0.19.2
     fi
 
     echo -e "\n *** Installing test dependencies"
-    pip install pytest pytest-cov
+    pip install -U pytest pytest-cov
 
     echo -e "\n *** Installed packages:"
     pip freeze

@@ -1,1 +1,1 @@
-from tabloo import show
+from .tabloo import show
