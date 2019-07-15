@@ -8,7 +8,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="tabloo",
-    version="0.0.3",
+    version="0.0.4",
 
     license="MIT",
     author="Fabian Keller",
@@ -48,7 +48,7 @@ setup(
         "static/**/*",
     ]},
     exclude_package_data={"": [
-        "static/*.js.map"
+        #"static/*.js.map"
     ]},
     # We need to disable `include_package_data` because we don't
     # have a MANIFEST.in and don't want to depend on source control

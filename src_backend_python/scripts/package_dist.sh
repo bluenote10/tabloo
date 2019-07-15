@@ -17,6 +17,9 @@ rm -rf .eggs
 rm -rf *.egg-info
 rm -rf **/*.pyc
 
+# cleaning build also seems necessary, otherwise outdated files show up
+rm -rf build
+
 python setup.py sdist bdist_wheel
 
 rm -rf .eggs

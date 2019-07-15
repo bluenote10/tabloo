@@ -1,5 +1,7 @@
 import { createState, createEffect, onCleanup } from 'solid-js'
 
+import { IconAngleDown } from "./Icons"
+
 interface DropdownProps {
   items: string[],
   selectedIndex?: number,
@@ -29,7 +31,7 @@ export function Dropdown(props: DropdownProps) {
         <button class="button is-small" onclick={onClick} onblur={onBlur}>
           <span class="dropdown-text">{(props.selectedIndex != undefined ? props.items[props.selectedIndex] : "")}</span>
           <span class="icon is-small">
-            <i class="fas fa-angle-down" aria-hidden="true"></i>
+            <IconAngleDown/>
           </span>
         </button>
       </div>
