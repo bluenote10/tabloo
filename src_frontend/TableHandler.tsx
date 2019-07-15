@@ -2,24 +2,10 @@ import { createRoot, createState, createEffect, onCleanup } from 'solid-js';
 
 import { StoreInterface, StoreBackend, DataFetchOptions, TableData, ColumnData } from "./store";
 
-import * as _ from 'babel-plugin-jsx-dom-expressions'
-
-// https://github.com/ryansolid/babel-plugin-jsx-dom-expressions/pull/10
-declare const $: (attr: {
-  children?: {}
-  each?: unknown[]
-  when?: boolean
-  suspend?: boolean
-  fallback?: unknown
-  portal?: unknown
-  useShadow?: boolean
-  provide?: {
-    id: symbol
-    initFn: () => any
-  }
-  value?: any
-  afterRender?: () => unknown
-}) => any
+import {
+  IconLongArrowAltUp, IconLongArrowAltDown,
+  IconSortAmountUp, IconSortAmountDown,
+} from "./Icons";
 
 
 type Value = string | number;
@@ -241,13 +227,13 @@ function Table(props: TableProps) {
   function renderSymbol(name: string, sortKind: number) {
     if (sortKind == 0) {
       return <>
-        <i class="fas fa-long-arrow-alt-up"></i>
-        <i class="fas fa-long-arrow-alt-down"></i>
+        <IconLongArrowAltUp/>
+        <IconLongArrowAltDown/>
       </>
     } else if (sortKind < 0) {
-      return <i class="fas fa-sort-amount-down"></i>
+      return <IconSortAmountDown/>
     } else {
-      return <i class="fas fa-sort-amount-up"></i>
+      return <IconSortAmountUp/>
     }
   }
 

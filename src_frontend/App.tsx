@@ -5,6 +5,7 @@ import { Tabs } from "./Tabs";
 import { TableHandler } from "./TableHandler"
 import { PlotHandler } from "./PlotHandler"
 
+import { IconDatabase, IconChartBar } from "./Icons"
 
 export function App() {
 
@@ -12,11 +13,11 @@ export function App() {
 
   let tabContents = [
     {
-      name: <span><i class="fas fa-database"></i> Table </span>,
+      name: <span><IconDatabase/> Table </span>,
       component: <TableHandler store={store}/>,
     },
     {
-      name: <span><i class="fas fa-chart-bar"></i> Plot </span>,
+      name: <span><IconChartBar/> Plot </span>,
       component: <PlotHandler store={store}/>,
     }
   ]
