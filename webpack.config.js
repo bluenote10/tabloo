@@ -52,9 +52,6 @@ module.exports = {
     // }),
     // new webpack.HotModuleReplacementPlugin()
   ],
-  optimization: {
-    minimize: false
-  },
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     watchContentBase: true,

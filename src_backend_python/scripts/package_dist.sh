@@ -9,6 +9,10 @@
 
 cd $(dirname $0)/..
 
+cd ..
+npm run build
+cd src_backend_python
+
 rm -rf .eggs
 rm -rf *.egg-info
 rm -rf **/*.pyc
