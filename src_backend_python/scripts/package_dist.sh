@@ -10,7 +10,9 @@
 cd $(dirname $0)/..
 
 cd ..
+npm run build-css
 npm run build
+npm run build-standalone
 cd src_backend_python
 
 rm -rf .eggs

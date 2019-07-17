@@ -12,4 +12,9 @@ package-lock.json
 
 dist/main.js
 dist/main.js.map
+dist/main_standalone.js
+dist/main_standalone.js.map
 dist/styles.css
+
+test.html
+Bundesliga.csv

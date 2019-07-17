@@ -6,6 +6,9 @@
     "build-css": "node-sass --omit-source-map-url css/styles.scss dist/styles.css",
     "watch-css": "npm run build-css && npm run build-css -- -w",
     "build": "webpack --mode=production",
+    "build-dev": "webpack",
+    "build-standalone": "webpack --config webpack.config.standalone.js --mode=production",
+    "build-standalone-dev": "webpack --config webpack.config.standalone.js",
     "start": "npm run build",
     "check-types": "tsc",
     "dev-server": "webpack-dev-server"
