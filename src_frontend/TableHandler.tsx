@@ -1,6 +1,6 @@
 import { createRoot, createState, createEffect, onCleanup } from 'solid-js';
 
-import { StoreInterface, StoreBackend, DataFetchOptions, TableData, ColumnData } from "./store";
+import { StoreInterface, DataFetchOptions, TableData, ColumnData } from "./store";
 
 import {
   IconLongArrowAltUp, IconLongArrowAltDown,

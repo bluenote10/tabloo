@@ -1,5 +1,5 @@
 
-import { StoreBackend } from "./store";
+import { StoreInterface } from "./store";
 
 import { Tabs } from "./Tabs";
 import { TableHandler } from "./TableHandler"
@@ -7,9 +7,7 @@ import { PlotHandler } from "./PlotHandler"
 
 import { IconDatabase, IconChartBar } from "./Icons"
 
-export function App() {
-
-  let store = new StoreBackend()
+export function App({store} : {store: StoreInterface}) {
 
   let tabContents = [
     {

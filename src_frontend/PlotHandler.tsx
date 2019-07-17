@@ -1,38 +1,18 @@
 import { createRoot, createState, createEffect, onCleanup, sample } from 'solid-js';
 
-import { StoreInterface, StoreBackend, DataFetchOptions, TableData, ColumnData } from "./store";
+import { StoreInterface, DataFetchOptions, TableData, ColumnData } from "./store";
 import { Dropdown } from "./Dropdown";
 
 import * as echarts from "echarts";
 import { ECharts } from "echarts";
 
-import * as _ from 'babel-plugin-jsx-dom-expressions'
-
-// https://github.com/ryansolid/babel-plugin-jsx-dom-expressions/pull/10
-declare const $: (attr: {
-  children?: {}
-  each?: unknown[]
-  when?: boolean
-  suspend?: boolean
-  fallback?: unknown
-  portal?: unknown
-  useShadow?: boolean
-  provide?: {
-    id: symbol
-    initFn: () => any
-  }
-  value?: any
-  afterRender?: () => unknown
-}) => any
-
-
 declare global {
-namespace JSX {
-  interface HTMLAttributes<T> {
-    onconnected?: () => void
-    ondisconnected?: () => void
+  namespace JSX {
+    interface HTMLAttributes<T> {
+      onconnected?: () => void
+      ondisconnected?: () => void
+    }
   }
-}
 }
 
 export interface PlotWrapperProps {
