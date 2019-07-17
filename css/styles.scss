@@ -40,6 +40,22 @@ $dropdown-content-shadow:
 //$button-padding-vertical: calc(0.2rem - 1px);
 //$button-padding-horizontal: 0.5rem;
 
+// Navbar
+//$navbar-background-color: #1B1D1F;
+//$navbar-height: 4.0rem;
+//$navbar-box-shadow-size: 0 10px 0 0;
+//$navbar-box-shadow-color: #1B1D1F;
+
+.navbar.is-spaced.nav-customized {
+  padding-top: 0.05rem;
+  padding-bottom: 0.05rem;
+  padding-right: 2rem;
+  padding-left: 2rem;
+}
+.nav-customized {
+  box-shadow: 0 3px 3px rgba(12,13,14,0.1),0 1px 6px rgba(59,64,69,0.1);
+}
+
 @import "../node_modules/bulma/bulma.sass";
 
 /* -------------------------------------------------------------------------
