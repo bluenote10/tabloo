@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 // -------------------------------------------------------------------------
-// Font
+// Fonts
 // -------------------------------------------------------------------------
 
 // https://fonts.google.com/?sort=popularity
@@ -9,6 +9,12 @@
 //@import url('https://fonts.googleapis.com/css?family=Open+Sans');
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 $family-sans-serif: "Roboto", sans-serif;
+
+// https://fonts.google.com/specimen/Open+Sans+Condensed?selection.family=Open+Sans+Condensed:300
+@import url('https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300&display=swap');
+
+// https://fonts.google.com/specimen/Open+Sans?selection.family=Open+Sans
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
 
 $default-font-size: 0.75rem;
 
@@ -40,22 +46,6 @@ $dropdown-content-shadow:
 //$button-padding-vertical: calc(0.2rem - 1px);
 //$button-padding-horizontal: 0.5rem;
 
-// Navbar
-//$navbar-background-color: #1B1D1F;
-//$navbar-height: 4.0rem;
-//$navbar-box-shadow-size: 0 10px 0 0;
-//$navbar-box-shadow-color: #1B1D1F;
-
-.navbar.is-spaced.nav-customized {
-  padding-top: 0.05rem;
-  padding-bottom: 0.05rem;
-  padding-right: 2rem;
-  padding-left: 2rem;
-}
-.nav-customized {
-  box-shadow: 0 3px 3px rgba(12,13,14,0.1),0 1px 6px rgba(59,64,69,0.1);
-}
-
 @import "../node_modules/bulma/bulma.sass";
 
 /* -------------------------------------------------------------------------
@@ -78,29 +68,79 @@ $dropdown-content-shadow:
  * Navbar
  * ------------------------------------------------------------------------- */
 
-$ui-navbar-height: 3.25rem;
-$ui-width-col-left: 12%;
-$ui-width-col-right: 3.25rem;
+$ui-navbar-height: 3rem;
+
+.ui-has-navbar-fixed-top {
+  padding-top: $ui-navbar-height + 1rem;
+}
 
 .ui-navbar {
-  height: $ui-navbar-height;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 30;
+
+  padding-top: 0.03rem;
+  padding-bottom: 0.03rem;
+  padding-right: 2rem;
+  padding-left: 2rem;
+
+  min-height: $ui-navbar-height;
+
+  box-shadow:
+    0 3px 3px rgba(12,13,14,0.1),
+    0 1px 6px rgba(59,64,69,0.1);
+  background: #1B1D1F;
+
   display: flex;
-  background: #F4F3F2;
   align-items: center;
 }
-.ui-navbar-left {
-  flex: none;
-  width: $ui-width-col-left;
-}
-.ui-navbar-right {
-  flex: none;
-  width: $ui-width-col-right;
-}
-.ui-navbar-middle {
-  flex: 1;
-}
+
 .ui-navbar-button {
+  border-radius: 0.25rem;
+  background: #25282C;
+  padding: 0.3rem 1.0rem;
+  font-size: 0.9rem;
+  font-family: 'Open Sans Condensed', sans-serif;
+  font-weight: 900;
+
+  transition: 0.1s;
+  color: #3273dc;
+
   margin-left: 0.75rem;
+}
+
+.ui-navbar-button:hover {
+  background: rgb(59, 63, 70);
+  color: #337aec;
+}
+
+.ui-navbar-button.is-active {
+  box-shadow:
+    0px 0px 3px 0px #080808,
+    0px 0px 0px 1px #888888; // the spread is used to generate a border
+}
+
+.ui-navbar-logo {
+  float: left;
+  position: absolute;
+
+  font-family: 'Open Sans Condensed', sans-serif;
+  font-weight: bold;
+  font-size: 1.7rem;
+
+  border-radius: 0.25rem;
+  background: #25282C;
+  padding: 0rem 1.0rem;
+
+  color: #F0F1F1;
+
+  transition: 0.1s;
+}
+.ui-navbar-logo:hover {
+  color: #F0F1F1;
+  background: rgb(59, 63, 70);
 }
 
 /* -------------------------------------------------------------------------
@@ -123,46 +163,6 @@ $ui-width-col-right: 3.25rem;
 .is-fullheight {
   /*height: calc(100vh - ( 3.25rem - .75rem - .75rem) );*/
   /*height: calc(100vh - ( 3.25rem - .75rem ) );*/
-}
-
-.ui-main-container {
-  height: calc(100vh - #{$ui-navbar-height});
-  display: flex;
-}
-
-.ui-column-left {
-  background: #F4F3F2;
-
-  flex: none;
-  width: $ui-width-col-left;
-
-  display: table-cell;
-  border-collapse: collapse;
-  border-right: 1px solid #DADADA;
-
-  overflow: auto;
-}
-
-.ui-column-right {
-  background: #F4F3F2;
-
-  flex: none;
-  width: $ui-width-col-right;
-
-  display: table-cell;
-  border-collapse: collapse;
-  border-left: 1px solid #DADADA;
-
-  overflow: auto;
-}
-
-.ui-column-middle {
-  padding: 0;
-  //margin-top: 0.75rem;
-  overflow: scroll;
-  border-top: 1px solid #DADADA;
-
-  min-height: 100%;
 }
 
 // -------------------------------------------------------------------------

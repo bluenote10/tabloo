@@ -22,77 +22,26 @@ export function Tabs(props: TabsProps) {
 
   return (
     <>
-      <nav class="navbar is-fixed-top is-dark nav-customized is-spaced" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-          <a class="navbar-item" href="https://bulma.io">
-            Tabloo
-          </a>
+      <nav class="ui-navbar">
 
-          <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-          </a>
-        </div>
+        <a class="ui-navbar-logo" href="https://github.com/bluenote10/tabloo">
+          Tabloo
+        </a>
 
-        <div id="navbarBasicExample" class="navbar-menu">
-          <div class="navbar-start">
-            <a class="navbar-item">
-              Home
-            </a>
+        <div class="container">
 
-            <a class="navbar-item">
-              Documentation
-            </a>
-
-            <div class="navbar-item has-dropdown is-hoverable">
-              <a class="navbar-link">
-                More
-              </a>
-
-              <div class="navbar-dropdown">
-                <a class="navbar-item">
-                  About
-                </a>
-                <a class="navbar-item">
-                  Jobs
-                </a>
-                <a class="navbar-item">
-                  Contact
-                </a>
-                <hr class="navbar-divider"/>
-                <a class="navbar-item">
-                  Report an issue
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div class="navbar-end">
-            <div class="navbar-item">
-              <div class="buttons">
-                <a class="button is-primary">
-                  <strong>Sign up</strong>
-                </a>
-                <a class="button is-light">
-                  Log in
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-      <div class="tabs is-small">
-        <ul>
           { props.contents.map((content, index) =>
-            <li class={(index === state.activeIndex ? "is-active" : undefined)}>
-              <a onclick={(event) => setState({activeIndex: index})}>
-                {content.name}
-              </a>
-            </li>
+            <a
+              class={("ui-navbar-button " + (index === state.activeIndex ? "is-active" : ""))}
+              onclick={(event) => setState({activeIndex: index})}
+            >
+              {content.name}
+            </a>
           )}
-        </ul>
-      </div>
+
+        </div>
+
+      </nav>
       {( props.contents[state.activeIndex].component )}
     </>
   )
