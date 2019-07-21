@@ -16,3 +16,12 @@ export interface StoreInterface {
   fetchColumns(): Promise<string[]>
   fetchData(opts: DataFetchOptions): Promise<TableData>
 }
+
+export function clone(data: TableData): TableData {
+  let newData = new Array(data.length).map((x, i) => ({
+    columnName: data[i].columnName,
+    sortKind: data[i].sortKind,
+    values: data[i].values.slice(),
+  }))
+  return newData;
+}
