@@ -18,7 +18,7 @@ export interface StoreInterface {
 }
 
 export function clone(data: TableData): TableData {
-  let newData = new Array(data.length).map((x, i) => ({
+  let newData = [...Array(data.length)].map((x, i) => ({
     columnName: data[i].columnName,
     sortKind: data[i].sortKind,
     values: data[i].values.slice(),
