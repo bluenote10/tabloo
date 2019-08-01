@@ -2,6 +2,8 @@
 
 Minimalistic dashboard app for visualizing tabular data -- WIP.
 
+![demo](/../examples/examples/basic_demo.gif)
+
 ## Installation
 
 ```sh
