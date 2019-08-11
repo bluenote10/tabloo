@@ -1,4 +1,6 @@
 import { createRoot, createState, createEffect, onCleanup } from 'solid-js';
+import { For } from 'solid-js/dom';
+import { ForIndex } from './ForIndex';
 
 import { StoreInterface, DataFetchOptions, TableData, ColumnData } from "./store";
 
@@ -241,8 +243,8 @@ function Table(props: TableProps) {
     <table class={"table is-striped is-narrow is-hoverable is-bordered compact-table"}>
       <thead>
         <tr>
-          <$ each={state.headerData}>
-            {(colHeader: ColHeader, index: number) =>
+          <ForIndex each={(state.headerData)}>
+            {(colHeader: ColHeader, index: () => number) =>
               <th>
                 <div class="column-header">
                   <span>
@@ -250,29 +252,29 @@ function Table(props: TableProps) {
                   </span>
                   <a
                     class="th-sort-symbol"
-                    onclick={(event) => sortByCol(colHeader.name, index)}
+                    onclick={(event) => sortByCol(colHeader.name, index())}
                     onmousedown={(event) => event.preventDefault() /* to prevent header selection*/}
                   >
-                    {(renderSymbol(colHeader.name, state.sortColIndex == index ? state.sortColKind : 0))}
+                    {(renderSymbol(colHeader.name, state.sortColIndex == index() ? state.sortColKind : 0))}
                   </a>
                 </div>
               </th>
             }
-          </$>
+          </ForIndex>
         </tr>
       </thead>
       <tbody>
-        <$ each={state.rowsData} fallback={<div>empty</div>}>
+        <For each={(state.rowsData as string[][] /* FIXME, why does the wrapper type fail with nested array? */)} fallback={<div>empty</div>}>
           { (row: string[]) =>
             <tr>
-              <$ each={row} fallback={<div>empty</div>}>
-                { (x: Value, j: number) =>
-                  <td class={(columnFormatters[j].align > 0 ? "has-text-right" : undefined)}>{columnFormatters[j].format(x)}</td>
+              <ForIndex each={(row)}>
+                { (x: Value, j: () => number) =>
+                  <td class={(columnFormatters[j()].align > 0 ? "has-text-right" : undefined)}>{columnFormatters[j()].format(x)}</td>
                 }
-              </$>
+              </ForIndex>
             </tr>
           }
-        </$>
+        </For>
       </tbody>
     </table>
   )

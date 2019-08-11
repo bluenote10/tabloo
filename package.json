@@ -5,14 +5,11 @@
   "scripts": {
     "build-css": "node-sass --omit-source-map-url css/styles.scss dist/styles.css",
     "watch-css": "npm run build-css && npm run build-css -- -w",
-
     "build": "webpack --mode=production",
     "build-dev": "webpack",
-
     "build-standalone-prod": "webpack --config webpack.config.standalone.js --mode=production",
     "build-standalone": "webpack --config webpack.config.standalone.js",
     "watch-standalone": "webpack --config webpack.config.standalone.js --watch",
-
     "start": "npm run build",
     "check-types": "tsc",
     "dev-server": "webpack-dev-server"
@@ -32,7 +29,7 @@
     "@typescript-eslint/eslint-plugin": "^1.10.2",
     "@typescript-eslint/parser": "^1.10.2",
     "babel-loader": "^8.0.6",
-    "babel-plugin-jsx-dom-expressions": "^0.9.11",
+    "babel-plugin-jsx-dom-expressions": "^0.11.2",
     "eslint": "^5.16.0",
     "node-sass": "^4.12.0",
     "webpack": "^4.33.0",
@@ -43,7 +40,7 @@
     "axios": "^0.18.1",
     "bulma": "^0.7.5",
     "echarts": "^4.2.1",
-    "solid-js": "^0.7.8",
+    "solid-js": "^0.9.8",
     "ts-loader": "^5.4.5",
     "typescript": "^3.5.1"
   }

@@ -1,4 +1,5 @@
 import { createState, createEffect, onCleanup } from 'solid-js'
+import { Show } from "solid-js/dom"
 
 import { IconAngleDown } from "./Icons"
 
@@ -35,7 +36,7 @@ export function Dropdown(props: DropdownProps) {
           </span>
         </button>
       </div>
-      <$ when={state.active}>
+      <Show when={(state.active)}>
         <div class="dropdown-menu">
           <div class="dropdown-content">
             {(props.items.map((item, index) =>
@@ -50,7 +51,7 @@ export function Dropdown(props: DropdownProps) {
             )}
           </div>
         </div>
-      </$>
+      </Show>
     </div>
   )
 }

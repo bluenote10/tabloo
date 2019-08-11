@@ -1,11 +1,12 @@
 // Needs to be imported once to enable lifecycle hooks
 import './dom_lifecycle';
 
-import { createRoot } from 'solid-js';
+import { render } from 'solid-js/dom';
 import { App } from "./App";
 import { StoreBackend } from "./store_backend";
 
 let store = new StoreBackend()
 
 let el = document.getElementById('ROOT')!;
-createRoot(() => el.appendChild(<App store={store}/>));
+let app = <App store={store}/>
+render(() => app, el);
