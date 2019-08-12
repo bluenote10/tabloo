@@ -74,11 +74,26 @@ def get_columns():
     return to_json(backend.get_columns())
 
 
+@app.route('/api/get_num_pages')
+def get_num_pages():
+    pagination_size = int(request.args.get("paginationSize", 20))
+    return to_json(backend.get_num_pages(pagination_size))
+
+
 @app.route('/api/get_data')
 def get_data():
     sort_column = request.args.get("sortColumn")
     sort_kind = int(request.args.get("sortKind", 0))
-    return to_json(backend.get_data(sort_column, sort_kind))
+
+    page = request.args.get("page")
+    pagination_size = request.args.get("paginationSize")
+    if page is not None:
+        page = int(page)
+    if pagination_size is not None:
+        pagination_size = int(pagination_size)
+
+    return to_json(backend.get_data(
+        sort_column, sort_kind, page, pagination_size))
 
 
 @app.route('/')

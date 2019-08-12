@@ -11,6 +11,15 @@ export class StoreBackend implements StoreInterface {
     return response.data as string[];
   }
 
+  async fetchNumPages(paginationSize: number): Promise<number> {
+    let response = await axios.get(`${this.url}/api/get_num_pages`, {
+      params: {
+        paginationSize: paginationSize,
+      },
+    })
+    return response.data as number;
+  }
+
   async fetchData(opts: DataFetchOptions): Promise<TableData> {
     let response = await axios.get(`${this.url}/api/get_data`, {
       params: opts

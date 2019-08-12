@@ -9,11 +9,14 @@ export type TableData = ColumnData[]
 export interface DataFetchOptions {
   sortColumn?: string
   sortKind: number
+  paginationSize?: number
+  page?: number
 }
 
 export interface StoreInterface {
   //async fetchData(): void
   fetchColumns(): Promise<string[]>
+  fetchNumPages(paginationSize: number): Promise<number>
   fetchData(opts: DataFetchOptions): Promise<TableData>
 }
 

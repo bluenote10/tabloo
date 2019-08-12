@@ -138,17 +138,17 @@ function transformData(data: TableData): Value[][] {
   return rowsData;
 }
 
-export interface TableProps {
-  data: TableData,
-  cbSort: (sortKind: number, columnIndex?: number) => void,
-}
 
 interface ColHeader {
   name: string,
   sortKind: number,
 }
 
-function Table(props: TableProps) {
+
+function Table(props: {
+    data: TableData,
+    cbSort: (sortKind: number, columnIndex?: number) => void,
+  }) {
 
   const [state, setState] = createState({
     rowsData: [] as Value[][],
@@ -280,39 +280,92 @@ function Table(props: TableProps) {
   )
 }
 
-export interface TableHandlerProps {
-  store: StoreInterface
+
+interface PaginationData {
+  numPages: number
+  currentPage: number
 }
 
-export function TableHandler(props: TableHandlerProps) {
+
+export function TableHandler(props: {
+    store: StoreInterface
+  }) {
 
   const { store } = props
 
-  const dataFetchOptions = {
-    sortKind: 0,
-  } as DataFetchOptions
 
   const [state, setState] = createState({
     tableData: [] as TableData,
+    sortKind: 0,
+    sortColumn: undefined as (string|undefined),
+    pagination: {
+      numPages: 0,
+      currentPage: 0
+    } as PaginationData
   })
 
+  initialize()
+
+  async function initialize() {
+    await fetchNumPages()
+    await fetchData()
+  }
+
+  async function fetchNumPages() {
+    let numPages = await store.fetchNumPages(20)
+    console.log("num pages:", numPages)
+    setState({
+      pagination: {
+        numPages: numPages,
+        currentPage: 0,
+      }
+    })
+  }
+
   async function fetchData() {
-    let opts = dataFetchOptions
-    let data = await store.fetchData(opts)
+    const dataFetchOptions = {
+      sortKind: state.sortKind,
+      sortColumn: state.sortColumn,
+      paginationSize: 20,
+      page: state.pagination.currentPage,
+    }
+    let data = await store.fetchData(dataFetchOptions)
     setState({tableData: data})
   }
 
-  fetchData()
-
   function cbSort(sortKind: number, columnIndex?: number) {
+    setState({sortKind: sortKind})
     if (columnIndex != null) {
-      dataFetchOptions.sortColumn = state.tableData[columnIndex].columnName
+      setState({sortColumn: state.tableData[columnIndex].columnName})
     }
-    dataFetchOptions.sortKind = sortKind
     fetchData()
   }
 
-  return (
+  return (<>
     <Table data={(state.tableData)} cbSort={cbSort}/>
-  )
+    <div>
+      {(
+        Array.from(Array(state.pagination.numPages).keys()).map((i: number) =>
+          <a
+            onclick={() => {
+              setState({pagination: {currentPage: i}})
+              fetchData()
+            }}
+          >
+            {i+1}
+          </a>
+        )
+      )}
+    </div>
+    {/*
+    <For each={(Array.from(Array(state.pagination.numPages).keys()))}>{
+      (i) =>
+      <a
+        onclick={() => setState({pagination: {currentPage: i}})}
+      >
+        {i+1}
+      </a>
+    }</For>
+    */}
+  </>)
 }
