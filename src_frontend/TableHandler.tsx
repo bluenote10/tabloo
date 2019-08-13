@@ -293,7 +293,6 @@ export function TableHandler(props: {
 
   const { store } = props
 
-
   const [state, setState] = createState({
     tableData: [] as TableData,
     sortKind: 0,
@@ -344,11 +343,17 @@ export function TableHandler(props: {
   return (<>
     <Table data={(state.tableData)} cbSort={cbSort}/>
     <div>
+      {/*
       {(
         Array.from(Array(state.pagination.numPages).keys()).map((i: number) =>
           <a
             onclick={() => {
-              setState({pagination: {currentPage: i}})
+              setState({
+                pagination: {
+                  currentPage: i,
+                  numPages: state.pagination.numPages,
+                }
+              })
               fetchData()
             }}
           >
@@ -356,16 +361,23 @@ export function TableHandler(props: {
           </a>
         )
       )}
+      */}
+      <For each={(Array.from(Array(state.pagination.numPages).keys()))}>{
+        (i) =>
+        <a
+          onclick={() => {
+            setState({
+              pagination: {
+                currentPage: i,
+                numPages: state.pagination.numPages,
+              }
+            })
+            fetchData()
+          }}
+        >
+          {i+1}
+        </a>
+      }</For>
     </div>
-    {/*
-    <For each={(Array.from(Array(state.pagination.numPages).keys()))}>{
-      (i) =>
-      <a
-        onclick={() => setState({pagination: {currentPage: i}})}
-      >
-        {i+1}
-      </a>
-    }</For>
-    */}
   </>)
 }
