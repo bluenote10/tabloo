@@ -82,6 +82,8 @@ def get_num_pages():
 
 @app.route('/api/get_data')
 def get_data():
+    filter = request.args.get("filter")
+
     sort_column = request.args.get("sortColumn")
     sort_kind = int(request.args.get("sortKind", 0))
 
@@ -93,7 +95,7 @@ def get_data():
         pagination_size = int(pagination_size)
 
     return to_json(backend.get_data(
-        sort_column, sort_kind, page, pagination_size))
+        filter, sort_column, sort_kind, page, pagination_size))
 
 
 @app.route('/')

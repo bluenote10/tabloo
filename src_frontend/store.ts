@@ -11,6 +11,7 @@ export interface DataFetchOptions {
   sortKind: number
   paginationSize?: number
   page?: number
+  filter?: string
 }
 
 export interface StoreInterface {

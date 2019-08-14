@@ -297,6 +297,7 @@ export function TableHandler(props: {
     tableData: [] as TableData,
     sortKind: 0,
     sortColumn: undefined as (string|undefined),
+    filter: "",
     pagination: {
       numPages: 0,
       currentPage: 0
@@ -327,6 +328,7 @@ export function TableHandler(props: {
       sortColumn: state.sortColumn,
       paginationSize: 20,
       page: state.pagination.currentPage,
+      filter: state.filter,
     }
     let data = await store.fetchData(dataFetchOptions)
     setState({tableData: data})
@@ -340,7 +342,30 @@ export function TableHandler(props: {
     fetchData()
   }
 
+  let inputFilter: HTMLInputElement | undefined
+
+  function onFilter(event: Event) {
+    let value = (event.target as HTMLInputElement).value.trim();
+    console.log(value);
+  }
+
+  function onFilterKeydown(event: KeyboardEvent) {
+    console.log(event.keyCode);
+    if (event.keyCode === 13 && inputFilter != undefined) {
+      setState({filter: inputFilter.value.trim()})
+      fetchData()
+    }
+  }
+
   return (<>
+    <div>
+      <input
+        placeholder="Filter..."
+        oninput={onFilter}
+        onkeydown={onFilterKeydown}
+        ref={inputFilter}
+      />
+    </div>
     <Table data={(state.tableData)} cbSort={cbSort}/>
     <div>
       {/*
