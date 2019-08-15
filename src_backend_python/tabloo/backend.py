@@ -4,6 +4,23 @@ import math
 import pandas as pd
 
 
+def apply_filter(df, filter):
+    if filter is not None and len(filter.strip()) > 0:
+        try:
+            df = df.query(filter)
+            return df
+        except pd.core.computation.ops.UndefinedVariableError as e:
+            # TODO: We should be able to pass errors/messages from the backend to the frontend
+            print("UndefinedVariableError: {}".format(e.message))
+            return df
+        except Exception as e:
+            # TODO: We should be able to pass errors/messages from the backend to the frontend
+            print("Illegal query: {}".format(e.message))
+            return df
+    else:
+        return df
+
+
 class Backend(object):
     def __init__(self, df):
         self.df = df
@@ -11,16 +28,18 @@ class Backend(object):
     def get_columns(self):
         return list(self.df.columns)
 
-    def get_num_pages(self, pagination_size):
+    def get_num_pages(self, pagination_size, filter):
         if pagination_size < 1:
             pagination_size = 1
-        return int(math.ceil(len(self.df) / pagination_size))
+
+        df = self.df
+        df = apply_filter(df, filter)
+
+        return int(math.ceil(len(df) / pagination_size))
 
     def get_data(self, filter, sort_column, sort_kind, page, pagination_size):
         df = self.df
-
-        if filter is not None and len(filter.strip()) > 0:
-            df = df.query(filter)
+        df = apply_filter(df, filter)
 
         if sort_column is not None:
             asc = sort_kind > 0

@@ -5,7 +5,7 @@ import numpy as np
 
 import tabloo
 
-N = 100
+N = 1000
 df = pd.DataFrame({
     "id": np.arange(N),
     "xs": np.random.uniform(-1, +1, N),

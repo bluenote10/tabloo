@@ -17,7 +17,7 @@ export interface DataFetchOptions {
 export interface StoreInterface {
   //async fetchData(): void
   fetchColumns(): Promise<string[]>
-  fetchNumPages(paginationSize: number): Promise<number>
+  fetchNumPages(paginationSize: number, filter?: string): Promise<number>
   fetchData(opts: DataFetchOptions): Promise<TableData>
 }
 

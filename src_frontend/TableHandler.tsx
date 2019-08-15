@@ -284,8 +284,54 @@ function Table(props: {
 interface PaginationData {
   numPages: number
   currentPage: number
+  onPaginate: (i: number) => void
 }
 
+function Pagination(props: PaginationData) {
+
+  function constructPageArray(n: number, current: number): Array<number | undefined> {
+    if (n <= 10) {
+      return Array.from(Array(props.numPages).keys());
+    } else {
+      if (current <= 2) {
+        return [0, 1, 2, 3, undefined, n-1];
+      } else if (current >= n-3) {
+        return [0, undefined, n-4, n-3, n-2, n-1];
+      } else {
+        return [0, undefined, current-1, current, current+1, undefined, n-1];
+      }
+    }
+  }
+
+  return (
+    <nav class="pagination is-small">
+      <ul class="pagination-list">
+        <For each={(constructPageArray(props.numPages, props.currentPage))}>{
+          i => {
+            if (typeof i === "number") {
+              return (
+                <li>
+                  <a
+                    class={("pagination-link" + (i === props.currentPage ? " is-current" : ""))}
+                    onclick={() => props.onPaginate(i)}
+                  >
+                    {i+1}
+                  </a>
+                </li>
+              );
+            } else {
+              return (
+                <li>
+                  <span class="pagination-ellipsis">&hellip;</span>
+                </li>
+              );
+            }
+          }
+        }</For>
+      </ul>
+    </nav>
+  );
+}
 
 export function TableHandler(props: {
     store: StoreInterface
@@ -312,7 +358,7 @@ export function TableHandler(props: {
   }
 
   async function fetchNumPages() {
-    let numPages = await store.fetchNumPages(20)
+    let numPages = await store.fetchNumPages(20, state.filter)
     console.log("num pages:", numPages)
     setState({
       pagination: {
@@ -353,8 +399,19 @@ export function TableHandler(props: {
     console.log(event.keyCode);
     if (event.keyCode === 13 && inputFilter != undefined) {
       setState({filter: inputFilter.value.trim()})
+      fetchNumPages()
       fetchData()
     }
+  }
+
+  function onPaginate(i: number) {
+    setState({
+      pagination: {
+        currentPage: i,
+        numPages: state.pagination.numPages,
+      }
+    })
+    fetchData()
   }
 
   return (<>
@@ -367,42 +424,10 @@ export function TableHandler(props: {
       />
     </div>
     <Table data={(state.tableData)} cbSort={cbSort}/>
-    <div>
-      {/*
-      {(
-        Array.from(Array(state.pagination.numPages).keys()).map((i: number) =>
-          <a
-            onclick={() => {
-              setState({
-                pagination: {
-                  currentPage: i,
-                  numPages: state.pagination.numPages,
-                }
-              })
-              fetchData()
-            }}
-          >
-            {i+1}
-          </a>
-        )
-      )}
-      */}
-      <For each={(Array.from(Array(state.pagination.numPages).keys()))}>{
-        (i) =>
-        <a
-          onclick={() => {
-            setState({
-              pagination: {
-                currentPage: i,
-                numPages: state.pagination.numPages,
-              }
-            })
-            fetchData()
-          }}
-        >
-          {i+1}
-        </a>
-      }</For>
-    </div>
+    <Pagination
+      numPages={(state.pagination.numPages)}
+      currentPage={(state.pagination.currentPage)}
+      onPaginate={onPaginate}
+    />
   </>)
 }

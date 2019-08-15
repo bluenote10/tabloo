@@ -77,7 +77,8 @@ def get_columns():
 @app.route('/api/get_num_pages')
 def get_num_pages():
     pagination_size = int(request.args.get("paginationSize", 20))
-    return to_json(backend.get_num_pages(pagination_size))
+    filter = request.args.get("filter")
+    return to_json(backend.get_num_pages(pagination_size, filter))
 
 
 @app.route('/api/get_data')
