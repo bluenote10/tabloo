@@ -162,6 +162,24 @@ $ui-navbar-height: 3rem;
 // Table
 // -------------------------------------------------------------------------
 
+.table-container {
+  // By wrapping the table into a div with display: inline-block, we achieve that
+  // the table-container is only as wide as its widest child (the table). Setting
+  // the width of e.g. the filter input element to 100% makes it as wide as the
+  // table.
+  // https://stackoverflow.com/questions/450903/how-to-make-div-not-larger-than-its-contents
+  display: inline-block;
+  overflow: visible; // to avoid cropping box shadows
+}
+
+.table-filter-input.is-small {
+  margin-bottom: 0.4rem;
+  border-radius: 4px;
+}
+.table-filter-input.is-small:focus {
+  box-shadow: 0 0 5px 2px rgba(50, 115, 220, 0.25);
+}
+
 .compact-table {
   font-size: $default-font-size;
 }

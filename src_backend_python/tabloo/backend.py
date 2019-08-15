@@ -1,6 +1,8 @@
 from __future__ import division, print_function
 
 import math
+import traceback
+
 import pandas as pd
 
 
@@ -15,7 +17,8 @@ def apply_filter(df, filter):
             return df
         except Exception as e:
             # TODO: We should be able to pass errors/messages from the backend to the frontend
-            print("Illegal query: {}".format(e.message))
+            print("Illegal query:")
+            print(traceback.format_exc())
             return df
     else:
         return df

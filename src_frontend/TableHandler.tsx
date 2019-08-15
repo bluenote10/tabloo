@@ -415,15 +415,16 @@ export function TableHandler(props: {
   }
 
   return (<>
-    <div>
+    <div class="table-container">
       <input
+        class="input is-small table-filter-input"
         placeholder="Filter..."
         oninput={onFilter}
         onkeydown={onFilterKeydown}
         ref={inputFilter}
       />
+      <Table data={(state.tableData)} cbSort={cbSort}/>
     </div>
-    <Table data={(state.tableData)} cbSort={cbSort}/>
     <Pagination
       numPages={(state.pagination.numPages)}
       currentPage={(state.pagination.currentPage)}
