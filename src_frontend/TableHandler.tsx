@@ -235,8 +235,22 @@ function Table(props: {
     }
   }
 
+  function onCopy(event: ClipboardEvent) {
+    // https://jsbin.com/runomuheye/1/edit?html,css,js,output
+    // http://jsfiddle.net/vello/qvw0pgcu/
+    console.log("Handling copy event")
+    var clipboardData = event.clipboardData;
+    if (clipboardData != null) {
+      clipboardData.setData("text", "table data...");
+      event.preventDefault();
+    }
+  }
+
   return (
-    <table class={"table is-striped is-narrow is-hoverable is-bordered compact-table"}>
+    <table
+      class={"table is-striped is-narrow is-hoverable is-bordered compact-table"}
+      oncopy={onCopy}
+    >
       <thead>
         <tr>
           <ForIndex each={(state.headerData)}>
@@ -260,7 +274,7 @@ function Table(props: {
         </tr>
       </thead>
       <tbody>
-        <For each={(state.rowsData as string[][] /* FIXME, why does the wrapper type fail with nested array? */)} fallback={<div>empty</div>}>
+        <For each={(state.rowsData as string[][] /* FIXME, why does the wrapper type fail with nested array? */)} fallback={<div>No data</div>}>
           { (row: string[]) =>
             <tr>
               <ForIndex each={(row)}>
