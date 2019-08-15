@@ -25,7 +25,7 @@ export function Tabs(props: TabsProps) {
       <nav class="ui-navbar">
 
         <a class="ui-navbar-logo" href="https://github.com/bluenote10/tabloo">
-          Tabloo
+          tabloo
         </a>
 
         <div class="container">

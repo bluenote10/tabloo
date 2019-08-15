@@ -122,7 +122,7 @@ function transformData(data: TableData): Value[][] {
     return [];
   }
   const numRows = data[0].values.length;
-  console.log(numRows, numCols);
+  console.log("Transforming data of shape:", numRows, numCols);
 
   // we need to convert from columnar to row-wise data
   let rowsData = Array(numRows) as Value[][];
@@ -134,7 +134,6 @@ function transformData(data: TableData): Value[][] {
     }
     rowsData[i] = rowData;
   }
-  console.log(rowsData);
   return rowsData;
 }
 
@@ -160,7 +159,6 @@ function Table(props: {
   let columnFormatters = [] as ColumnFormatter[];
 
   createEffect(() => {
-    console.log("Data updated", props.data)
     console.log("Data updated", props.data.length)
     const data = props.data
     if (data.length == 0) {
@@ -187,12 +185,10 @@ function Table(props: {
   })
 
   createEffect(() => {
-    console.log("Rowsdata updated", state.rowsData)
     console.log("Rowsdata updated", state.rowsData.length)
   })
 
   createEffect(() => {
-    console.log("headerData updated", state.headerData)
     console.log("headerData updated", state.headerData.length)
   })
 
@@ -390,15 +386,21 @@ export function TableHandler(props: {
 
   let inputFilter: HTMLInputElement | undefined
 
-  function onFilter(event: Event) {
-    let value = (event.target as HTMLInputElement).value.trim();
-    console.log(value);
-  }
-
   function onFilterKeydown(event: KeyboardEvent) {
-    console.log(event.keyCode);
     if (event.keyCode === 13 && inputFilter != undefined) {
-      setState({filter: inputFilter.value.trim()})
+      // Note we reset the currentPage to 0 immediately here, which
+      // allows to run the fetchData in parallel (otherwise it would
+      // fetch with a page number that is larger than the possible
+      // page number with the new filter => returning no data).
+      // We'll have to see if resetting the page number is what we
+      // want on changing selections...
+      setState({
+        filter: inputFilter.value.trim(),
+        pagination: {
+          currentPage: 0,
+          numPages: state.pagination.numPages,
+        }
+      })
       fetchNumPages()
       fetchData()
     }
@@ -419,7 +421,6 @@ export function TableHandler(props: {
       <input
         class="input is-small table-filter-input"
         placeholder="Filter..."
-        oninput={onFilter}
         onkeydown={onFilterKeydown}
         ref={inputFilter}
       />
