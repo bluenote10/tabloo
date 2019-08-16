@@ -21,8 +21,6 @@ export function App({store} : {store: StoreInterface}) {
   ]
 
   return (
-    <div class="container">
-      <Tabs contents={tabContents}/>
-    </div>
+    <Tabs contents={tabContents}/>
   )
 }

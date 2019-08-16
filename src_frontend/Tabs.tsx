@@ -24,12 +24,13 @@ export function Tabs(props: TabsProps) {
     <>
       <nav class="ui-navbar">
 
-        <a class="ui-navbar-logo" href="https://github.com/bluenote10/tabloo">
-          tabloo
-        </a>
+        <div class="ui-sidebar-placeholder">
+          <a class="ui-navbar-logo" href="https://github.com/bluenote10/tabloo">
+            tabloo
+          </a>
+        </div>
 
         <div class="container">
-
           { props.contents.map((content, index) =>
             <a
               class={("ui-navbar-button " + (index === state.activeIndex ? "is-active" : ""))}
@@ -38,11 +39,17 @@ export function Tabs(props: TabsProps) {
               {content.name}
             </a>
           )}
-
         </div>
 
+        <div class="ui-sidebar-placeholder"/>
+
       </nav>
-      {( props.contents[state.activeIndex].component )}
+
+      <div class="ui-padded-container">
+        <div class="container">
+          {( props.contents[state.activeIndex].component )}
+        </div>
+      </div>
     </>
   )
 }

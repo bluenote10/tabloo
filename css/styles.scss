@@ -76,8 +76,8 @@ $ui-navbar-height: 3rem;
 
   padding-top: 0.03rem;
   padding-bottom: 0.03rem;
-  padding-right: 2rem;
-  padding-left: 2rem;
+  padding-right: 0;
+  padding-left: 0;
 
   min-height: $ui-navbar-height;
 
@@ -100,9 +100,11 @@ $ui-navbar-height: 3rem;
 
   transition: 0.1s;
   color: #3273dc;
-
+}
+.ui-navbar-button:not(:first-child) {
   margin-left: 0.75rem;
 }
+
 
 .ui-navbar-button:hover {
   background: rgb(59, 63, 70);
@@ -115,17 +117,28 @@ $ui-navbar-height: 3rem;
     0px 0px 0px 1px #888888; // the spread is used to generate a border
 }
 
-.ui-navbar-logo {
-  float: left;
-  position: absolute;
+$sidebar-placeholder-width: 8rem;
 
+.ui-sidebar-placeholder {
+  min-width: $sidebar-placeholder-width;
+}
+
+// Helper to use an auto margin but with a minium margin
+// https://stackoverflow.com/a/24488747/1804173
+.ui-padded-container {
+  padding-left: $sidebar-placeholder-width;
+  padding-right: $sidebar-placeholder-width;
+}
+
+.ui-navbar-logo {
   font-family: 'Open Sans Condensed', sans-serif;
   font-weight: bold;
-  font-size: 1.5625rem; // 25px
+  font-size: 23px; // giving height of 32px
 
   border-radius: 0.25rem;
   background: #25282C;
-  padding: 0rem 1.0rem;
+  padding: 2px 1.0rem; // giving height of 36px
+  margin-left: 6px; // navbar 48px, this is 36px, leaving 12px for vertical, 6px to make it symmetrical
 
   color: #F0F1F1;
 
