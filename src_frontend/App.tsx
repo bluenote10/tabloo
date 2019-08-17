@@ -1,5 +1,6 @@
 
-import { createState } from 'solid-js';
+import { createState, createEffect, createMemo } from 'solid-js';
+import { For } from 'solid-js/dom';
 
 import { StoreInterface } from "./store";
 
@@ -49,11 +50,14 @@ export function App({store} : {store: StoreInterface}) {
           ]
         }
       ]
-    }
+    },
+    activeTabIndex: 0,
+    tabHeaders: [] as JSX.Element[],
+    tabContents: [] as JSX.Element[],
   })
 
   function buildIcon(icon: string) {
-    if (icon === "databse") {
+    if (icon === "database") {
       return <IconDatabase/>;
     } else if (icon === "plot") {
       return <IconChartBar/>;
@@ -69,10 +73,13 @@ export function App({store} : {store: StoreInterface}) {
       return <PlotHandler store={store}/>;
     } else {
       console.log("Illegal widgetType:", widgetType);
+      return <div>{"Illegal widgetType: " + widgetType}</div>
     }
   }
 
+  /*
   function buildTabContents(tabConfigs: TabConfig[]) {
+    console.log("building tab contents")
     return tabConfigs.map(tabConfig => {
       return {
         name: <span>{buildIcon(tabConfig.name.icon)} {tabConfig.name.text}</span>,
@@ -82,6 +89,25 @@ export function App({store} : {store: StoreInterface}) {
       }
     })
   }
+  */
+
+  createEffect(() => {
+    let tabs = state.appstate.tabs;
+    let newTabHeaders = tabs.map(tabConfig =>
+      <span>{buildIcon(tabConfig.name.icon)} {tabConfig.name.text}</span>
+    )
+    setState({
+      tabHeaders: newTabHeaders
+    })
+  })
+
+  let tabContents = (
+    <For each={(state.appstate.tabs)}>{ tab =>
+      <For each={(tab.widgets)}>{ widget =>
+        buildWidget(widget.type)
+      }</For>
+    }</For>
+  ) as () => JSX.Element[]
 
   /*
   let tabContents = [
@@ -96,7 +122,24 @@ export function App({store} : {store: StoreInterface}) {
   ]
   */
 
+  createEffect(() => {
+    console.log("tabs updated:", state.appstate.tabs)
+  })
+
+  //let tabContentsMemo = createMemo(() => buildTabContents2());
+
+  function onActivate(i: number) {
+    setState({activeTabIndex: i})
+  }
+
   return (
-    <Tabs contents={(buildTabContents(state.appstate.tabs))}/>
+    <>
+      <Tabs activeIndex={state.activeTabIndex} contents={(state.tabHeaders)} onActivate={onActivate}/>
+      <div class="ui-padded-container">
+        <div class="container">
+          {( tabContents()[state.activeTabIndex] )}
+        </div>
+      </div>
+    </>
   )
 }
