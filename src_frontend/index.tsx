@@ -8,5 +8,4 @@ import { StoreBackend } from "./store_backend";
 let store = new StoreBackend()
 
 let el = document.getElementById('ROOT')!;
-let app = <App store={store}/>
-render(() => app, el);
+render(() => <App store={store}/>, el);

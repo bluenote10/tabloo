@@ -8,5 +8,4 @@ import { StoreStandalone } from "./store_standalone";
 let store = new StoreStandalone()
 
 let el = document.getElementById('ROOT')!;
-let app = <App store={store}/>
-render(() => app, el);
+render(() => <App store={store}/>, el);
