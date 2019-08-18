@@ -10,6 +10,7 @@ import { PlotHandler } from "./PlotHandler"
 
 import { IconDatabase, IconChartBar } from "./Icons"
 
+
 interface TabConfig {
   name: {
     icon: string,
@@ -21,6 +22,28 @@ interface TabConfig {
 interface WidgetConfig {
   type: string
 }
+
+
+function buildIcon(icon: string) {
+  if (icon === "database") {
+    return <IconDatabase/>;
+  } else if (icon === "plot") {
+    return <IconChartBar/>;
+  } else {
+    return <span>?</span>
+  }
+}
+
+function buildWidget(widgetType: string, store: StoreInterface) {
+  if (widgetType === "table") {
+    return <TableHandler store={store}/>;
+  } else if (widgetType === "scatter-plot") {
+    return <PlotHandler store={store}/>;
+  } else {
+    return <div>{"Illegal widgetType: " + widgetType}</div>
+  }
+}
+
 
 export function App({store} : {store: StoreInterface}) {
 
@@ -49,84 +72,24 @@ export function App({store} : {store: StoreInterface}) {
             }
           ]
         }
-      ]
+      ] as TabConfig[]
     },
     activeTabIndex: 0,
-    tabHeaders: [] as JSX.Element[],
-    tabContents: [] as JSX.Element[],
   })
 
-  function buildIcon(icon: string) {
-    if (icon === "database") {
-      return <IconDatabase/>;
-    } else if (icon === "plot") {
-      return <IconChartBar/>;
-    } else {
-      console.log("Illegal icon:", icon);
-    }
-  }
-
-  function buildWidget(widgetType: string) {
-    if (widgetType === "table") {
-      return <TableHandler store={store}/>;
-    } else if (widgetType === "scatter-plot") {
-      return <PlotHandler store={store}/>;
-    } else {
-      console.log("Illegal widgetType:", widgetType);
-      return <div>{"Illegal widgetType: " + widgetType}</div>
-    }
-  }
-
-  /*
-  function buildTabContents(tabConfigs: TabConfig[]) {
-    console.log("building tab contents")
-    return tabConfigs.map(tabConfig => {
-      return {
-        name: <span>{buildIcon(tabConfig.name.icon)} {tabConfig.name.text}</span>,
-        component: <div>
-          {tabConfig.widgets.map(widget => buildWidget(widget.type))}
-        </div>
-      }
-    })
-  }
-  */
-
-  createEffect(() => {
-    let tabs = state.appstate.tabs;
-    let newTabHeaders = tabs.map(tabConfig =>
-      <span>{buildIcon(tabConfig.name.icon)} {tabConfig.name.text}</span>
-    )
-    setState({
-      tabHeaders: newTabHeaders
-    })
-  })
+  let tabHeaders = (
+    <For each={(state.appstate.tabs)}>{tab =>
+      <span>{buildIcon(tab.name.icon)} {tab.name.text}</span>
+    }</For>
+  ) as () => JSX.Element[]
 
   let tabContents = (
     <For each={(state.appstate.tabs)}>{ tab =>
       <For each={(tab.widgets)}>{ widget =>
-        buildWidget(widget.type)
+        buildWidget(widget.type, store)
       }</For>
     }</For>
   ) as () => JSX.Element[]
-
-  /*
-  let tabContents = [
-    {
-      name: <span><IconDatabase/> Table </span>,
-      component: <TableHandler store={store}/>,
-    },
-    {
-      name: <span><IconChartBar/> Plot </span>,
-      component: <PlotHandler store={store}/>,
-    }
-  ]
-  */
-
-  createEffect(() => {
-    console.log("tabs updated:", state.appstate.tabs)
-  })
-
-  //let tabContentsMemo = createMemo(() => buildTabContents2());
 
   function onActivate(i: number) {
     setState({activeTabIndex: i})
@@ -134,12 +97,12 @@ export function App({store} : {store: StoreInterface}) {
 
   return (
     <>
-      <Tabs activeIndex={state.activeTabIndex} contents={(state.tabHeaders)} onActivate={onActivate}/>
+      <Tabs activeIndex={(state.activeTabIndex)} tabHeaders={(tabHeaders())} onActivate={onActivate}/>
       <div class="ui-padded-container">
         <div class="container">
           {( tabContents()[state.activeTabIndex] )}
         </div>
       </div>
     </>
-  )
+  );
 }

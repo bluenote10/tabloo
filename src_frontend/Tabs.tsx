@@ -1,24 +1,7 @@
-import { createRoot, createState, createEffect, onCleanup } from 'solid-js';
-
-/*
-type TabHeader = {
-  icon: string,
-  text: string,
-}
-
-type TabContents = Array<{
-  name: JSX.Element,
-  component: JSX.Element,
-}>
-
-interface TabsProps {
-  contents: TabContents
-}
-*/
 
 export function Tabs(props: {
     activeIndex: number,
-    contents: JSX.Element[],
+    tabHeaders: JSX.Element[],
     onActivate: (i: number) => void
   }) {
 
@@ -32,12 +15,12 @@ export function Tabs(props: {
       </div>
 
       <div class="container">
-        { props.contents.map((content, index) =>
+        { props.tabHeaders.map((tabHeader, index) =>
           <a
             class={("ui-navbar-button " + (index === props.activeIndex ? "is-active" : ""))}
             onclick={(event) => props.onActivate(index)}
           >
-            {content}
+            {tabHeader}
           </a>
         )}
       </div>
@@ -45,6 +28,5 @@ export function Tabs(props: {
       <div class="ui-sidebar-placeholder"/>
 
     </nav>
-
   )
 }
