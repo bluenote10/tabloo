@@ -56,7 +56,7 @@ export function App({store} : {store: StoreInterface}) {
         {
           name: {
             icon: "plot",
-            text: "Plot",
+            text: "Plots",
           },
           widgets: [
             {

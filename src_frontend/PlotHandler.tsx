@@ -178,9 +178,17 @@ export function PlotHandler(props: {
     }
 
     // specify chart configuration item and data
+    // https://echarts.baidu.com/echarts2/doc/doc-en.html
     let plotData = {
-      xAxis: {},
-      yAxis: {},
+      //toolbox: {
+      //  show: true,
+      //},
+      xAxis: {
+        scale: true, // avoids axis range starts at zero
+      },
+      yAxis: {
+        scale: true, // avoids axis range starts at zero
+      },
       series: [{
         symbolSize: 5,
         data:rowsData,
