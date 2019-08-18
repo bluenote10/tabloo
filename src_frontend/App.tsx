@@ -1,6 +1,6 @@
 
 import { createState, createEffect, createMemo } from 'solid-js';
-import { For } from 'solid-js/dom';
+import { For, Switch, Match } from 'solid-js/dom';
 
 import { StoreInterface } from "./store";
 
@@ -21,6 +21,7 @@ interface TabConfig {
 
 interface WidgetConfig {
   type: string
+  filterId: string
 }
 
 
@@ -31,16 +32,6 @@ function buildIcon(icon: string) {
     return <IconChartBar/>;
   } else {
     return <span>?</span>
-  }
-}
-
-function buildWidget(widgetType: string, store: StoreInterface) {
-  if (widgetType === "table") {
-    return <TableHandler store={store}/>;
-  } else if (widgetType === "scatter-plot") {
-    return <PlotHandler store={store}/>;
-  } else {
-    return <div>{"Illegal widgetType: " + widgetType}</div>
   }
 }
 
@@ -57,7 +48,8 @@ export function App({store} : {store: StoreInterface}) {
           },
           widgets: [
             {
-              type: "table"
+              type: "table",
+              filterId: "default",
             },
           ]
         },
@@ -68,11 +60,15 @@ export function App({store} : {store: StoreInterface}) {
           },
           widgets: [
             {
-              type: "scatter-plot"
+              type: "scatter-plot",
+              filterId: "default",
             },
           ]
         }
-      ] as TabConfig[]
+      ] as TabConfig[],
+      filters: {
+        default: "",
+      } as {[index: string]: string},
     },
     activeTabIndex: 0,
   })
@@ -86,7 +82,29 @@ export function App({store} : {store: StoreInterface}) {
   let tabContents = (
     <For each={(state.appstate.tabs)}>{ tab =>
       <For each={(tab.widgets)}>{ widget =>
-        buildWidget(widget.type, store)
+        <Switch>
+          <Match when={(widget.type === "table")}>
+            <TableHandler
+              store={store}
+              filter={(state.appstate.filters[widget.filterId])}
+              onSetFilter={s => {
+                setState("appstate", "filters", widget.filterId, s)
+              }}
+            />
+          </Match>
+          <Match when={(widget.type === "scatter-plot")}>
+            <PlotHandler
+              store={store}
+              filter={(state.appstate.filters[widget.filterId])}
+              onSetFilter={s => {
+                setState("appstate", "filters", widget.filterId, s)
+              }}
+            />
+          </Match>
+          <Match when={true}>
+            <div class="ui-widget-header">{("Illegal widget.type: " + widget.type)}</div>
+          </Match>
+        </Switch>
       }</For>
     }</For>
   ) as () => JSX.Element[]

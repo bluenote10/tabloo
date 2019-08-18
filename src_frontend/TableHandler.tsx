@@ -1,4 +1,4 @@
-import { createRoot, createState, createEffect, onCleanup } from 'solid-js';
+import { createRoot, createState, createEffect, onCleanup, sample } from 'solid-js';
 import { For } from 'solid-js/dom';
 import { ForIndex } from './ForIndex';
 
@@ -343,8 +343,11 @@ function Pagination(props: PaginationData) {
   );
 }
 
+
 export function TableHandler(props: {
-    store: StoreInterface
+    store: StoreInterface,
+    filter: string,
+    onSetFilter: (s: string) => void,
   }) {
 
   const { store } = props
@@ -353,7 +356,6 @@ export function TableHandler(props: {
     tableData: [] as TableData,
     sortKind: 0,
     sortColumn: undefined as (string|undefined),
-    filter: "",
     pagination: {
       numPages: 0,
       currentPage: 0
@@ -368,7 +370,7 @@ export function TableHandler(props: {
   }
 
   async function fetchNumPages() {
-    let numPages = await store.fetchNumPages(20, state.filter)
+    let numPages = await store.fetchNumPages(20, props.filter)
     console.log("num pages:", numPages)
     setState({
       pagination: {
@@ -384,7 +386,7 @@ export function TableHandler(props: {
       sortColumn: state.sortColumn,
       paginationSize: 20,
       page: state.pagination.currentPage,
-      filter: state.filter,
+      filter: props.filter,
     }
     let data = await store.fetchData(dataFetchOptions)
     setState({tableData: data})
@@ -408,17 +410,30 @@ export function TableHandler(props: {
       // page number with the new filter => returning no data).
       // We'll have to see if resetting the page number is what we
       // want on changing selections...
+      props.onSetFilter(inputFilter.value.trim())
       setState({
-        filter: inputFilter.value.trim(),
         pagination: {
           currentPage: 0,
           numPages: state.pagination.numPages,
         }
       })
-      fetchNumPages()
-      fetchData()
     }
   }
+
+  createEffect(() => {
+    let newFilter = props.filter;
+    console.log("TableHandler: filter updated to", newFilter);
+    if (inputFilter != undefined) {
+      inputFilter.value = newFilter;
+    }
+    // TODO: clarify why not sampling here causes an infinte loop.
+    // Interestingly running either fetchNumPages or fetchDat alone is fine.
+    // Only the combination causes an infinite loop.
+    sample(() => {
+      fetchNumPages()
+      fetchData()
+    })
+  })
 
   function onPaginate(i: number) {
     setState({

@@ -293,7 +293,7 @@ see https://stackoverflow.com/questions/9789723/css-text-overflow-in-a-table-cel
   font-size: $default-font-size;
   font-weight: bold;
   margin-right: 1rem;
-  min-width: 4.375rem;
+  min-width: 5rem;
   display: inline-block;
 }
 
@@ -305,6 +305,9 @@ see https://stackoverflow.com/questions/9789723/css-text-overflow-in-a-table-cel
 .ui-form-input.is-small:focus {
   box-shadow: 0 0 5px 2px rgba(50, 115, 220, 0.25);
 }
+
+// TODO: We probably have to get the dropdown to fullwidth.
+// => https://github.com/jgthms/bulma/issues/2055
 
 // -------------------------------------------------------------------------
 // Float overlays

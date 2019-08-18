@@ -111,11 +111,11 @@ function PlotWrapper(props: PlotWrapperProps) {
 }
 
 
-export interface PlotHandlerProps {
-  store: StoreInterface
-}
-
-export function PlotHandler(props: PlotHandlerProps) {
+export function PlotHandler(props: {
+    store: StoreInterface,
+    filter: string,
+    onSetFilter: (s: string) => void,
+  }) {
 
   const { store } = props
 
@@ -136,8 +136,9 @@ export function PlotHandler(props: PlotHandlerProps) {
     // handels updates of selected column indices
     let xCol = state.selectedColX;
     let yCol = state.selectedColY;
+    let filter = props.filter;
     if (xCol != undefined && yCol != undefined) {
-      fetchData(xCol, yCol);
+      fetchData(xCol, yCol, filter);
     }
   })
 
@@ -154,19 +155,18 @@ export function PlotHandler(props: PlotHandlerProps) {
     }
   }
 
-  async function fetchData(xCol: number, yCol: number) {
+  async function fetchData(xCol: number, yCol: number, filter: string) {
     console.log(`Fetching data for columns ${xCol} vs ${yCol}`)
     let data = await store.fetchData({
-      sortKind: 0
+      sortKind: 0,
+      filter: filter,
     })
-    console.log(data)
 
     const numCols = data.length;
     if (numCols === 0) {
       console.log("WARNING: received data with 0 columns, ignoring...");
       return;
     }
-    console.log(numCols)
     const numRows = data[0].values.length;
 
     let rowsData = Array(numRows);
@@ -192,9 +192,40 @@ export function PlotHandler(props: PlotHandlerProps) {
 
   fetchColumns()
 
+  let inputFilter: HTMLInputElement | undefined
+
+  function onFilterKeydown(event: KeyboardEvent) {
+    if (event.keyCode === 13 && inputFilter != undefined) {
+      // Note we reset the currentPage to 0 immediately here, which
+      // allows to run the fetchData in parallel (otherwise it would
+      // fetch with a page number that is larger than the possible
+      // page number with the new filter => returning no data).
+      // We'll have to see if resetting the page number is what we
+      // want on changing selections...
+      props.onSetFilter(inputFilter.value.trim())
+    }
+  }
+
+  createEffect(() => {
+    let newFilter = props.filter;
+    console.log("PlotHandler: filter updated to", newFilter);
+    if (inputFilter != undefined) {
+      inputFilter.value = newFilter;
+    }
+  })
+
   return (
     <div>
       <div class="ui-widget-header">
+      <div class="ui-form-row">
+        <span class="ui-form-label">Filter</span>
+          <input
+            class="input is-small ui-form-input"
+            placeholder="Filter..."
+            onkeydown={onFilterKeydown}
+            ref={inputFilter}
+          />
+        </div>
         <div class="ui-form-row">
           <span class="ui-form-label">Dimension x</span>
           <Dropdown
