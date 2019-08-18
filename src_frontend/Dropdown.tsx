@@ -41,9 +41,6 @@ export function Dropdown(props: DropdownProps) {
           <div class="dropdown-content">
             {(props.items.map((item, index) =>
               <a class={("dropdown-item modified" + (props.selectedIndex === index ? " is-active" : ""))} onmousedown={(event) => {
-                console.log("clicked li")
-                //props.selected.set(item)
-                //props.selected = item
                 props.cbSelect(index)
               }}>
                 {item}

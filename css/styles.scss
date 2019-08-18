@@ -64,7 +64,7 @@ $dropdown-content-shadow:
 $ui-navbar-height: 3rem;
 
 .ui-has-navbar-fixed-top {
-  padding-top: $ui-navbar-height + 1rem;
+  padding-top: $ui-navbar-height - 0.5rem;
 }
 
 .ui-navbar {
@@ -149,32 +149,12 @@ $sidebar-placeholder-width: 8rem;
   background: rgb(59, 63, 70);
 }
 
-/* -------------------------------------------------------------------------
- * General layout
- * ------------------------------------------------------------------------- */
-
-.has-margin-top {
-  margin-top: 0.75rem;
-}
-
-.navbar.color-light-gray {
-  background: #F4F3F2;
-}
-.navbar.color-dark-gray {
-  background: #21252B;
-}
-
-/* https://stackoverflow.com/questions/51467546/make-column-fill-vertical-space-in-bulma */
-/* https://github.com/jgthms/bulma/issues/860 */
-.is-fullheight {
-  /*height: calc(100vh - ( 3.25rem - .75rem - .75rem) );*/
-  /*height: calc(100vh - ( 3.25rem - .75rem ) );*/
-}
-
 // -------------------------------------------------------------------------
 // Table
 // -------------------------------------------------------------------------
 
+/*
+// No longer used
 .table-container {
   // By wrapping the table into a div with display: inline-block, we achieve that
   // the table-container is only as wide as its widest child (the table). Setting
@@ -183,15 +163,9 @@ $sidebar-placeholder-width: 8rem;
   // https://stackoverflow.com/questions/450903/how-to-make-div-not-larger-than-its-contents
   display: inline-block;
   overflow: visible; // to avoid cropping box shadows
+  margin-bottom: 0.5rem;
 }
-
-.table-filter-input.is-small {
-  margin-bottom: 0.4rem;
-  border-radius: 4px;
-}
-.table-filter-input.is-small:focus {
-  box-shadow: 0 0 5px 2px rgba(50, 115, 220, 0.25);
-}
+*/
 
 .compact-table {
   font-size: $default-font-size;
@@ -296,19 +270,40 @@ see https://stackoverflow.com/questions/9789723/css-text-overflow-in-a-table-cel
 }
 
 // -------------------------------------------------------------------------
-// Form helpers
+// Widget header / form helpers
 // -------------------------------------------------------------------------
 
-.form-row {
+.ui-widget-header {
+  background: #F5F5F9;
+  border: 1px solid #DDD;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  padding: 6px 10px;
+}
+
+.ui-form-row {
+  display: flex;
+  align-items: center;
+}
+.ui-form-row:not(:last-child) {
   margin-bottom: 0.2rem;
 }
 
-.form-label {
+.ui-form-label {
   font-size: $default-font-size;
   font-weight: bold;
   margin-right: 1rem;
   min-width: 4.375rem;
   display: inline-block;
+}
+
+.ui-form-input.is-small {
+  //margin-bottom: 0.4rem;
+  border-radius: 4px;
+  flex-grow: 1;
+}
+.ui-form-input.is-small:focus {
+  box-shadow: 0 0 5px 2px rgba(50, 115, 220, 0.25);
 }
 
 // -------------------------------------------------------------------------

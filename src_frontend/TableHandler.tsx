@@ -431,15 +431,18 @@ export function TableHandler(props: {
   }
 
   return (<>
-    <div class="table-container">
-      <input
-        class="input is-small table-filter-input"
-        placeholder="Filter..."
-        onkeydown={onFilterKeydown}
-        ref={inputFilter}
-      />
-      <Table data={(state.tableData)} cbSort={cbSort}/>
+    <div class="ui-widget-header">
+      <div class="ui-form-row">
+        <span class="ui-form-label">Filter</span>
+        <input
+          class="input is-small ui-form-input"
+          placeholder="Filter..."
+          onkeydown={onFilterKeydown}
+          ref={inputFilter}
+        />
+      </div>
     </div>
+    <Table data={(state.tableData)} cbSort={cbSort}/>
     <Pagination
       numPages={(state.pagination.numPages)}
       currentPage={(state.pagination.currentPage)}

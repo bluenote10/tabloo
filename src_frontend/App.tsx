@@ -58,7 +58,7 @@ export function App({store} : {store: StoreInterface}) {
           widgets: [
             {
               type: "table"
-            }
+            },
           ]
         },
         {
@@ -69,7 +69,7 @@ export function App({store} : {store: StoreInterface}) {
           widgets: [
             {
               type: "scatter-plot"
-            }
+            },
           ]
         }
       ] as TabConfig[]

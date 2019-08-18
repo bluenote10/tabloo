@@ -187,28 +187,30 @@ export function PlotHandler(props: PlotHandlerProps) {
         type: 'scatter'
       }]
     };
-    setState({plotData: plotData} as any) // FIXME: why cast needed?
+    setState({plotData: plotData as any}) // FIXME: Partial<any> doesn't seem to match specific types?
   }
 
   fetchColumns()
 
   return (
     <div>
-      <div class="form-row">
-        <span class="form-label">Dimension x</span>
-        <Dropdown
-          items={(state.columns)}
-          selectedIndex={(state.selectedColX)}
-          cbSelect={(index: number) => setState({selectedColX: index})}
-        />
-      </div>
-      <div class="form-row">
-        <span class="form-label">Dimension y</span>
-        <Dropdown
-          items={(state.columns)}
-          selectedIndex={(state.selectedColY)}
-          cbSelect={(index: number) => setState({selectedColY: index})}
-        />
+      <div class="ui-widget-header">
+        <div class="ui-form-row">
+          <span class="ui-form-label">Dimension x</span>
+          <Dropdown
+            items={(state.columns)}
+            selectedIndex={(state.selectedColX)}
+            cbSelect={(index: number) => setState({selectedColX: index})}
+          />
+        </div>
+        <div class="ui-form-row">
+          <span class="ui-form-label">Dimension y</span>
+          <Dropdown
+            items={(state.columns)}
+            selectedIndex={(state.selectedColY)}
+            cbSelect={(index: number) => setState({selectedColY: index})}
+          />
+        </div>
       </div>
       <PlotWrapper plotData={(state.plotData)}/>
     </div>
