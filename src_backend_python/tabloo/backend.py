@@ -1,9 +1,37 @@
 from __future__ import division, print_function
 
+import json
 import math
 import traceback
 
 import pandas as pd
+import numpy as np
+
+
+def to_json(data):
+    """
+    Accompanying function to get_data for generic json encoding.
+    """
+
+    def converter(x):
+        if isinstance(x, np.ndarray):
+            return list(x)
+        elif isinstance(x, pd.Series):
+            return x.to_dict()
+        elif isinstance(x, pd.DataFrame):
+            return x.to_dict(orient="list")
+        else:
+            try:
+                return list(x)
+            except Exception:
+                pass
+            try:
+                return dict(x)
+            except Exception:
+                pass
+            return str(x)
+
+    return json.dumps(data, default=converter, allow_nan=False)
 
 
 def apply_filter(df, filter):

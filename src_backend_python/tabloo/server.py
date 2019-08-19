@@ -2,14 +2,13 @@ from __future__ import division, print_function
 
 import logging
 import os
-import json
 import threading
 import webbrowser
 
 from flask import Flask, send_from_directory, redirect, request, make_response
 from flask_cors import CORS
 
-from .backend import Backend
+from .backend import Backend, to_json
 
 
 app = Flask(
@@ -35,7 +34,7 @@ def add_header(response):
 backend = None
 
 
-def to_json(obj):
+def json_response(data):
     """
     We don't use jsonify from flask because
     - it doesn't allow to pass options to the JSON encoder
@@ -64,21 +63,21 @@ def to_json(obj):
     """
     # This would be the simplejson variant, but just too slow...
     # response = make_response(simplejson.dumps(obj, ignore_nan=True))
-    response = make_response(json.dumps(obj, allow_nan=False))
+    response = make_response(to_json(data))
     response.mimetype = "application/json"
     return response
 
 
 @app.route('/api/get_columns')
 def get_columns():
-    return to_json(backend.get_columns())
+    return json_response(backend.get_columns())
 
 
 @app.route('/api/get_num_pages')
 def get_num_pages():
     pagination_size = int(request.args.get("paginationSize", 20))
     filter = request.args.get("filter")
-    return to_json(backend.get_num_pages(pagination_size, filter))
+    return json_response(backend.get_num_pages(pagination_size, filter))
 
 
 @app.route('/api/get_data')
@@ -95,7 +94,7 @@ def get_data():
     if pagination_size is not None:
         pagination_size = int(pagination_size)
 
-    return to_json(backend.get_data(
+    return json_response(backend.get_data(
         filter, sort_column, sort_kind, page, pagination_size))
 
 
