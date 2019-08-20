@@ -103,7 +103,7 @@ function PlotWrapper(props: PlotWrapperProps) {
   return (
     <div
       ref={el}
-      style="width: 600px;height:400px;"
+      style="width: 800px;height:600px;"
       onconnected={onMounted}
       ondisconnected={onUnmounted}
     ></div>
@@ -169,11 +169,19 @@ export function PlotHandler(props: {
     }
     const numRows = data[0].values.length;
 
+    const valueConverter = (x: any) => {
+      if (x == undefined || x === "inf" || x === "-inf") {
+        return NaN;
+      } else {
+        return x; // TODO: do we need to convert to string for categorial data?
+      }
+    }
+
     let rowsData = Array(numRows);
     for (let i=0; i<numRows; i++) {
       let rowData = Array(2);
-      rowData[0] = data[xCol].values[i].toString();
-      rowData[1] = data[yCol].values[i].toString();
+      rowData[0] = valueConverter(data[xCol].values[i]);
+      rowData[1] = valueConverter(data[yCol].values[i]);
       rowsData[i] = rowData;
     }
 
@@ -191,7 +199,7 @@ export function PlotHandler(props: {
       },
       series: [{
         symbolSize: 5,
-        data:rowsData,
+        data: rowsData,
         type: 'scatter'
       }]
     };

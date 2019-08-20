@@ -5,7 +5,7 @@ import datetime
 import pandas as pd
 import numpy as np
 
-from tabloo.backend import Backend, to_json
+from tabloo.backend import Backend, to_json, convert_column
 
 
 @pytest.fixture
@@ -102,3 +102,26 @@ def test_backend__json_convertability(df_with_custom_column_types):
     # Maybe change to deserialized check based on extracting individual values
     # def get(col):
     #     return [row["values"] for row in data_json if row["columnName"] == col][0]
+
+
+def test_convert_column():
+    c = pd.Series([1, 2, 3])
+    assert convert_column(c) == [1, 2, 3]
+
+    c = pd.Series([1, 2, 3], index=[30, 20, 10])
+    assert convert_column(c) == [1, 2, 3]
+
+    c = pd.Series([None, "1", 2])
+    assert convert_column(c) == [None, "1", 2]
+
+    c = pd.Series([1, None, 2])
+    assert convert_column(c) == [1, None, 2]
+
+    c = pd.Series([1, np.nan, 2])
+    assert convert_column(c) == [1, None, 2]
+
+    c = pd.Series([1, np.inf, 2])
+    assert convert_column(c) == [1, "inf", 2]
+
+    c = pd.Series([1, -np.inf, 2])
+    assert convert_column(c) == [1, "-inf", 2]

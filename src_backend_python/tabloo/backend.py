@@ -30,7 +30,6 @@ def to_json(data):
             except Exception:
                 pass
             return str(x)
-
     return json.dumps(data, default=converter, allow_nan=False)
 
 
@@ -50,6 +49,20 @@ def apply_filter(df, filter):
             return df
     else:
         return df
+
+
+def convert_column(col):
+    # TODO: Add more tests...
+    # TODO: How to deeply convert nested nans/infs for json conversion?
+    c = col.replace({np.nan: None})
+    try:
+        c = c.replace({
+            +np.inf: "inf",
+            -np.inf: "-inf",
+        })
+    except:
+        pass
+    return list(c)
 
 
 class Backend(object):
@@ -82,10 +95,6 @@ class Backend(object):
             i = pagination_size * page
             j = pagination_size * (page + 1)
             df = df.iloc[i:j, :]
-
-        def convert_column(col):
-            # TODO: handle +/- inf handling to satisfy JSON standard
-            return list(col.replace({pd.np.nan: None}))
 
         data = [
             {
