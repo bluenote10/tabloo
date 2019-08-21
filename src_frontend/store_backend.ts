@@ -3,6 +3,18 @@ import axios from "axios";
 
 import { StoreInterface, DataFetchOptions, TableData } from "./store";
 
+
+function transformValue(x: any): any {
+  if (x === "inf") {
+    return Infinity;
+  } else if (x === "-inf") {
+    return -Infinity;
+  } else {
+    return x;
+  }
+}
+
+
 export class StoreBackend implements StoreInterface {
   url = "http://localhost:5000"
 
@@ -43,6 +55,14 @@ export class StoreBackend implements StoreInterface {
       return parsed;
     }
     let parsed = response.data as TableData;
+
+    // Transform values to account for JSON sentinels
+    for (let j=0; j<parsed.length; j++) {
+      for (let i=0; i<parsed[j].values.length; i++) {
+        parsed[j].values[i] = transformValue(parsed[j].values[i]);
+      }
+    }
+
     return parsed;
   }
 

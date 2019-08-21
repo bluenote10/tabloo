@@ -3,8 +3,10 @@ import { createRoot, createState, createEffect, onCleanup, sample } from 'solid-
 import { StoreInterface, DataFetchOptions, TableData, ColumnData } from "./store";
 import { Dropdown } from "./Dropdown";
 
-import * as echarts from "echarts";
-import { ECharts } from "echarts";
+//import * as echarts from "echarts";
+//import { ECharts } from "echarts";
+import * as echarts from "echarts/dist/echarts-en";
+import { ECharts } from "echarts/dist/echarts-en";
 
 declare global {
   namespace JSX {
@@ -170,7 +172,7 @@ export function PlotHandler(props: {
     const numRows = data[0].values.length;
 
     const valueConverter = (x: any) => {
-      if (x == undefined || x === "inf" || x === "-inf") {
+      if (x == undefined || x === "inf" || x === "-inf" || !isFinite(x)) {
         return NaN;
       } else {
         return x; // TODO: do we need to convert to string for categorial data?
@@ -191,6 +193,38 @@ export function PlotHandler(props: {
       //toolbox: {
       //  show: true,
       //},
+      tooltip : {
+        // trigger: 'axis',
+        showContent: false,
+        showDelay : 0,
+        axisPointer:{
+          show: true,
+          type : 'cross',
+          lineStyle: {
+            type : 'dashed',
+            width : 1
+          }
+        }
+      },
+      toolbox: {
+        feature: {
+          dataZoom: {},
+          brush: {
+            type: ['rect', 'polygon', 'lineX', 'lineY', 'clear']
+          },
+          saveAsImage: {
+            show: true,
+            title: 'Save As Image',
+            pixelRatio: 2,
+          },
+          //restore: {}
+        },
+        top: "20px",
+        right: "80px",
+      },
+      brush: {
+        // seems to be necessary to set to empty for box zoom to work...
+      },
       xAxis: {
         scale: true, // avoids axis range starts at zero
       },
