@@ -42,7 +42,14 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: [ '.ts', '.tsx', '.js' ]
+    extensions: [ '.ts', '.tsx', '.js' ],
+    alias: {
+      // Currently it is not possible to import echarts from the "lib" folder
+      // and set the language: https://github.com/apache/incubator-echarts/issues/7451
+      // As a temporary work-around we import it from the "dist" folder instead,
+      // which has pre-bundled English versions.
+      echarts$: path.resolve(__dirname, 'node_modules/echarts/dist/echarts-en.min.js'),
+    },
   },
   plugins: [
     // https://webpack.js.org/guides/hot-module-replacement

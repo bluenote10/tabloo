@@ -3,10 +3,8 @@ import { createRoot, createState, createEffect, onCleanup, sample } from 'solid-
 import { StoreInterface, DataFetchOptions, TableData, ColumnData } from "./store";
 import { Dropdown } from "./Dropdown";
 
-//import * as echarts from "echarts";
-//import { ECharts } from "echarts";
-import * as echarts from "echarts/dist/echarts-en";
-import { ECharts } from "echarts/dist/echarts-en";
+import * as echarts from "echarts";
+import { ECharts } from "echarts";
 
 declare global {
   namespace JSX {

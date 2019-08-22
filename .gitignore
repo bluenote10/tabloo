@@ -18,3 +18,5 @@ dist/styles.css
 
 test.html
 Bundesliga.csv
+
+webpack-stats.json
