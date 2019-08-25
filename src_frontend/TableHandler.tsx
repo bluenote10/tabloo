@@ -457,7 +457,9 @@ export function TableHandler(props: {
         />
       </div>
     </div>
-    <Table data={(state.tableData)} cbSort={cbSort}/>
+    <div class="ui-table-wrapper">
+      <Table data={(state.tableData)} cbSort={cbSort}/>
+    </div>
     <Pagination
       numPages={(state.pagination.numPages)}
       currentPage={(state.pagination.currentPage)}

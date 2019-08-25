@@ -167,6 +167,10 @@ $sidebar-placeholder-width: 8rem;
 }
 */
 
+.ui-table-wrapper {
+  overflow-x: auto;
+}
+
 .compact-table {
   font-size: $default-font-size;
 }
