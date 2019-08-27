@@ -150,6 +150,48 @@ $sidebar-placeholder-width: 8rem;
 }
 
 // -------------------------------------------------------------------------
+// Widget header / form helpers
+// -------------------------------------------------------------------------
+
+$margin-bottom-widget: 0.2rem;
+
+.ui-widget-header {
+  background: #F5F5F9;
+  border: 1px solid #DDD;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  padding: 6px 10px;
+}
+
+.ui-form-row {
+  display: flex;
+  align-items: center;
+}
+.ui-form-row:not(:last-child) {
+  margin-bottom: $margin-bottom-widget;
+}
+
+.ui-form-label {
+  font-size: $default-font-size;
+  font-weight: bold;
+  margin-right: 1rem;
+  min-width: 5rem;
+  display: inline-block;
+}
+
+.ui-form-input.is-small {
+  //margin-bottom: 0.4rem;
+  border-radius: 4px;
+  flex-grow: 1;
+}
+.ui-form-input.is-small:focus {
+  box-shadow: 0 0 5px 2px rgba(50, 115, 220, 0.25);
+}
+
+// TODO: We probably have to get the dropdown to fullwidth.
+// => https://github.com/jgthms/bulma/issues/2055
+
+// -------------------------------------------------------------------------
 // Table
 // -------------------------------------------------------------------------
 
@@ -169,6 +211,7 @@ $sidebar-placeholder-width: 8rem;
 
 .ui-table-wrapper {
   overflow-x: auto;
+  margin-bottom: $margin-bottom-widget;
 }
 
 .compact-table {
@@ -191,18 +234,20 @@ see https://stackoverflow.com/questions/9789723/css-text-overflow-in-a-table-cel
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/*
 .truncate {
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: inline-block;  /* https://stackoverflow.com/questions/22260240/width-of-element-with-white-space-nowrap-doesnt-adjust-to-child-content */
-  /* consider switching to box-sizing: border-box */
+  display: inline-block;  // https://stackoverflow.com/questions/22260240/width-of-element-with-white-space-nowrap-doesnt-adjust-to-child-content
+  // consider switching to box-sizing: border-box
 
-  /* overflow: hidden seems to affect the height: https://stackoverflow.com/questions/32190967/why-does-overflow-hidden-affect-height-and-how-can-i-fix-it-in-this-example   */
-  /* Apparently we have to mess with vertical-align to fix it... */
+  // overflow: hidden seems to affect the height: https://stackoverflow.com/questions/32190967/why-does-overflow-hidden-affect-height-and-how-can-i-fix-it-in-this-example
+  // Apparently we have to mess with vertical-align to fix it...
   vertical-align: top;
 }
+*/
 
 .column-header {
   display: flex;
@@ -218,6 +263,7 @@ see https://stackoverflow.com/questions/9789723/css-text-overflow-in-a-table-cel
 
 .th-sort-symbol {
   padding-left: 0.2rem;
+  white-space: nowrap; // avoid linebreaks between symbols
 }
 
 // -------------------------------------------------------------------------
@@ -272,46 +318,6 @@ see https://stackoverflow.com/questions/9789723/css-text-overflow-in-a-table-cel
 .button.is-small {
   border-radius: 4px;
 }
-
-// -------------------------------------------------------------------------
-// Widget header / form helpers
-// -------------------------------------------------------------------------
-
-.ui-widget-header {
-  background: #F5F5F9;
-  border: 1px solid #DDD;
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-  padding: 6px 10px;
-}
-
-.ui-form-row {
-  display: flex;
-  align-items: center;
-}
-.ui-form-row:not(:last-child) {
-  margin-bottom: 0.2rem;
-}
-
-.ui-form-label {
-  font-size: $default-font-size;
-  font-weight: bold;
-  margin-right: 1rem;
-  min-width: 5rem;
-  display: inline-block;
-}
-
-.ui-form-input.is-small {
-  //margin-bottom: 0.4rem;
-  border-radius: 4px;
-  flex-grow: 1;
-}
-.ui-form-input.is-small:focus {
-  box-shadow: 0 0 5px 2px rgba(50, 115, 220, 0.25);
-}
-
-// TODO: We probably have to get the dropdown to fullwidth.
-// => https://github.com/jgthms/bulma/issues/2055
 
 // -------------------------------------------------------------------------
 // Float overlays

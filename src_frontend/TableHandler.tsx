@@ -257,7 +257,7 @@ function Table(props: {
             {(colHeader: ColHeader, index: () => number) =>
               <th>
                 <div class="column-header">
-                  <span>
+                  <span class="truncate">
                     {colHeader.name}
                   </span>
                   <a
@@ -279,7 +279,7 @@ function Table(props: {
             <tr>
               <ForIndex each={(row)}>
                 { (x: Value, j: () => number) =>
-                  <td class={(columnFormatters[j()].align > 0 ? "has-text-right" : undefined)}>{columnFormatters[j()].format(x)}</td>
+                  <td class={("truncate " + (columnFormatters[j()].align > 0 ? "has-text-right" : undefined))}>{columnFormatters[j()].format(x)}</td>
                 }
               </ForIndex>
             </tr>
