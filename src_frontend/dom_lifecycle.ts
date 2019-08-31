@@ -1,9 +1,9 @@
 new MutationObserver(changes).observe(document, {
   subtree: true,
-  childList: true
+  childList: true,
 });
 
-function changes(records: any) {
+export function changes(records: any) {
   for (var record, length = records.length, i = 0; i < length; i++) {
     record = records[i];
     dispatchAll(record.removedNodes, "disconnected");
@@ -11,7 +11,7 @@ function changes(records: any) {
   }
 }
 
-function dispatchAll(nodes: any, type: any) {
+export function dispatchAll(nodes: any, type: any) {
   for (
     var node, length = nodes.length, i = 0;
     i < length;
@@ -19,11 +19,20 @@ function dispatchAll(nodes: any, type: any) {
   );
 }
 
-function dispatchTarget(node: any, type: any) {
+export function dispatchTarget(node: any, type: any) {
   node["on" + type] && node["on" + type]();
   node = node.firstChild;
   while (node) {
     dispatchTarget(node, type);
     node = node.nextSibling;
+  }
+}
+
+declare global {
+  namespace JSX {
+    interface HTMLAttributes<T> {
+      onconnected?: () => void
+      ondisconnected?: () => void
+    }
   }
 }

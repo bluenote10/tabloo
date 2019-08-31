@@ -6,14 +6,6 @@ import { Dropdown } from "./Dropdown";
 import * as echarts from "echarts";
 import { ECharts } from "echarts";
 
-declare global {
-  namespace JSX {
-    interface HTMLAttributes<T> {
-      onconnected?: () => void
-      ondisconnected?: () => void
-    }
-  }
-}
 
 export interface PlotWrapperProps {
   plotData?: any
@@ -94,7 +86,7 @@ function PlotWrapper(props: PlotWrapperProps) {
       setState({cachedPlotData: null});
     }
     setState({mounted: true})
- }
+  }
 
   let onUnmounted = () => {
     setState({mounted: false})
@@ -244,12 +236,6 @@ export function PlotHandler(props: {
 
   function onFilterKeydown(event: KeyboardEvent) {
     if (event.keyCode === 13 && inputFilter != undefined) {
-      // Note we reset the currentPage to 0 immediately here, which
-      // allows to run the fetchData in parallel (otherwise it would
-      // fetch with a page number that is larger than the possible
-      // page number with the new filter => returning no data).
-      // We'll have to see if resetting the page number is what we
-      // want on changing selections...
       props.onSetFilter(inputFilter.value.trim())
     }
   }

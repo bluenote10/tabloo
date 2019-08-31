@@ -42,6 +42,14 @@ $dropdown-content-shadow:
 @import "../node_modules/bulma/bulma.sass";
 
 /* -------------------------------------------------------------------------
+ * Leaflet integration
+ * ------------------------------------------------------------------------- */
+
+// important to omit the .css extension to statically import.
+// See: https://sass-lang.com/documentation/at-rules/import#importing-css
+@import "../node_modules/leaflet/dist/leaflet";
+
+/* -------------------------------------------------------------------------
  * General style
  * ------------------------------------------------------------------------- */
 

@@ -37,9 +37,11 @@
     "webpack-dev-server": "^3.7.1"
   },
   "dependencies": {
+    "@types/leaflet": "^1.5.1",
     "axios": "^0.18.1",
     "bulma": "^0.7.5",
     "echarts": "^4.2.1",
+    "leaflet": "^1.5.1",
     "solid-js": "^0.10.3",
     "ts-loader": "^5.4.5",
     "typescript": "^3.5.1"

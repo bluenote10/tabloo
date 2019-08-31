@@ -7,6 +7,7 @@ import { StoreInterface } from "./store";
 import { Tabs } from "./Tabs";
 import { TableHandler } from "./TableHandler"
 import { PlotHandler } from "./PlotHandler"
+import { MapHandler } from "./MapHandler"
 
 import { IconDatabase, IconChartBar } from "./Icons"
 
@@ -94,6 +95,15 @@ export function App({store} : {store: StoreInterface}) {
           </Match>
           <Match when={(widget.type === "scatter-plot")}>
             <PlotHandler
+              store={store}
+              filter={(state.appstate.filters[widget.filterId])}
+              onSetFilter={s => {
+                setState("appstate", "filters", widget.filterId, s)
+              }}
+            />
+          </Match>
+          <Match when={(widget.type === "map")}>
+            <MapHandler
               store={store}
               filter={(state.appstate.filters[widget.filterId])}
               onSetFilter={s => {
