@@ -11,6 +11,11 @@ export class StoreStandalone implements StoreInterface {
     return TABLOO_COLUMN_DATA;
   }
 
+  async fetchNumPages(paginationSize: number, filter?: string): Promise<number> {
+    // TODO
+    return 0;
+  }
+
   async fetchData(opts: DataFetchOptions): Promise<TableData> {
     let data = clone(TABLOO_TABLE_DATA);
 

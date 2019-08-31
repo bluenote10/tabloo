@@ -8,7 +8,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="tabloo",
-    version="0.0.9",
+    version="0.0.10",
 
     license="MIT",
     author="Fabian Keller",
