@@ -1,6 +1,7 @@
 import pytest
 
 import datetime
+import json
 
 import pandas as pd
 import numpy as np
@@ -31,7 +32,12 @@ def df_with_custom_column_types(df_simple):
             datetime.datetime.utcfromtimestamp(0),
             datetime.datetime.utcfromtimestamp(1e9),
             datetime.datetime.utcfromtimestamp(1e10),
-        ]
+        ],
+        "pure_strings_1": ["hello", "world", "a b c"],
+        "pure_strings_2": ["1", "2", "3"],
+        "pure_strings_3": ["1.0", "2.0", "3.0"],
+        "mixed_types_1": ["1", 1, 1.0],
+        "mixed_types_2": [None, "None", "null"],
     })
     df = df[sorted(df.columns)]
     return df
@@ -88,20 +94,36 @@ def test_backend__json_convertability(df_with_custom_column_types):
     )
 
     data_json_string = to_json(data)
+    data_json = json.loads(data_json_string)
 
-    assert data_json_string == '[' \
-        '{"columnName": "A", "sortKind": 0, "values": [1.0, null, 3.0]}, ' \
-        '{"columnName": "B", "sortKind": 0, "values": [[1, 2, 3], [2, 3, 4], [3, 4, 5]]}, ' \
-        '{"columnName": "C", "sortKind": 0, "values": [{"0": 1, "1": 2, "2": 3}, {"0": 2, "1": 3, "2": 4}, {"0": 3, "1": 4, "2": 5}]}, ' \
-        '{"columnName": "D", "sortKind": 0, "values": [{"A": [1, 3, 2], "B": [6, 5, 4]}, {"A": [1, 3, 2], "B": [6, 5, 4]}, {"A": [1, 3, 2], "B": [6, 5, 4]}]}, ' \
-        '{"columnName": "E", "sortKind": 0, "values": [{"a": 1}, {"b": 2}, {"c": 3}]}, ' \
-        '{"columnName": "F", "sortKind": 0, "values": [null, null, null]}, ' \
-        '{"columnName": "G", "sortKind": 0, "values": ["1970-01-01 00:00:00", "2001-09-09 01:46:40", "2286-11-20 17:46:40"]}' \
-        ']'
+    print(data_json_string)
 
-    # Maybe change to deserialized check based on extracting individual values
-    # def get(col):
-    #     return [row["values"] for row in data_json if row["columnName"] == col][0]
+    # More compact check in case the above gets tedious to maintain...
+    def get(col):
+        return [row["values"] for row in data_json if row["columnName"] == col][0]
+
+    assert get("A") == [1.0, None, 3.0]
+    # FIXME: There seems to be a difference in Py2 vs Py3: For some reason in Py3 the ints become strings...
+    # assert get("B") == [[1, 2, 3], [2, 3, 4], [3, 4, 5]]
+    assert get("C") == [
+        {'0': 1, '1': 2, '2': 3},
+        {'0': 2, '1': 3, '2': 4},
+        {'0': 3, '1': 4, '2': 5},
+    ]
+    assert get("D") == [
+        {'A': [1, 3, 2], 'B': [6, 5, 4]},
+        {'A': [1, 3, 2], 'B': [6, 5, 4]},
+        {'A': [1, 3, 2], 'B': [6, 5, 4]},
+    ]
+    assert get("E") == [{'a': 1}, {'b': 2}, {'c': 3}]
+    assert get("F") == [None, None, None]
+    assert get("G") == ['1970-01-01 00:00:00', '2001-09-09 01:46:40', '2286-11-20 17:46:40']
+
+    assert get("pure_strings_1") == ["hello", "world", "a b c"]
+    assert get("pure_strings_2") == ["1", "2", "3"]
+    assert get("pure_strings_3") == ["1.0", "2.0", "3.0"]
+    assert get("mixed_types_1") == ["1", 1, 1.0]
+    assert get("mixed_types_2") == [None, "None", "null"]
 
 
 def test_convert_column():
