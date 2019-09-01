@@ -28,9 +28,9 @@ def df_with_custom_column_types(df_simple):
         "E": [{"a": 1}, {"b": 2}, {"c": 3}],
         "F": [None, None, None],
         "G": [
-            datetime.datetime.fromtimestamp(0),
-            datetime.datetime.fromtimestamp(1e9),
-            datetime.datetime.fromtimestamp(1e10),
+            datetime.datetime.utcfromtimestamp(0),
+            datetime.datetime.utcfromtimestamp(1e9),
+            datetime.datetime.utcfromtimestamp(1e10),
         ]
     })
     df = df[sorted(df.columns)]
@@ -96,7 +96,7 @@ def test_backend__json_convertability(df_with_custom_column_types):
         '{"columnName": "D", "sortKind": 0, "values": [{"A": [1, 3, 2], "B": [6, 5, 4]}, {"A": [1, 3, 2], "B": [6, 5, 4]}, {"A": [1, 3, 2], "B": [6, 5, 4]}]}, ' \
         '{"columnName": "E", "sortKind": 0, "values": [{"a": 1}, {"b": 2}, {"c": 3}]}, ' \
         '{"columnName": "F", "sortKind": 0, "values": [null, null, null]}, ' \
-        '{"columnName": "G", "sortKind": 0, "values": ["1970-01-01 01:00:00", "2001-09-09 03:46:40", "2286-11-20 18:46:40"]}' \
+        '{"columnName": "G", "sortKind": 0, "values": ["1970-01-01 00:00:00", "2001-09-09 01:46:40", "2286-11-20 17:46:40"]}' \
         ']'
 
     # Maybe change to deserialized check based on extracting individual values
