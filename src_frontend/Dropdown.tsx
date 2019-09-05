@@ -37,7 +37,7 @@ export function Dropdown(props: DropdownProps) {
         </button>
       </div>
       <Show when={(state.active)}>
-        <div class="dropdown-menu">
+        <div class="dropdown-menu customz">
           <div class="dropdown-content">
             {(props.items.map((item, index) =>
               <a class={("dropdown-item modified" + (props.selectedIndex === index ? " is-active" : ""))} onmousedown={(event) => {

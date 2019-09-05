@@ -5,6 +5,8 @@ import { Dropdown } from "./Dropdown";
 
 import * as leaflet from "leaflet";
 
+//import { addLayerGL } from "./webgl";
+
 
 function MapWrapper(props: {
     mapData?: any,
@@ -28,20 +30,35 @@ function MapWrapper(props: {
       }).addTo(map)
     }
 
-    if (layerGroup != undefined) {
-      map.removeLayer(layerGroup);
-    }
 
     let t1 = performance.now()
-    try {
-      let lines = [] as leaflet.Polyline[];
-      for (let trajectory of mapData) {
-        lines.push(leaflet.polyline(trajectory, {color: "red"}))
+    if (false) {
+      /*
+      try {
+        let data = [] as number[][];
+        for (let trajectory of mapData) {
+          data = data.concat(trajectory);
+        }
+        addLayerGL(map, data);
+      } catch {
+        console.log("Invalid plot data");
       }
-      layerGroup = new leaflet.LayerGroup(lines);
-      layerGroup.addTo(map);
-    } catch {
-      console.log("Invalid plot data");
+      */
+    }
+    if (true) {  // pure leaflet implementation => not very scalable...
+      if (layerGroup != undefined) {
+        map!.removeLayer(layerGroup!);
+      }
+      try {
+        let lines = [] as leaflet.Polyline[];
+        for (let trajectory of mapData) {
+          lines.push(leaflet.polyline(trajectory, {color: "red"}))
+        }
+        layerGroup = new leaflet.LayerGroup(lines);
+        layerGroup!.addTo(map!);
+      } catch {
+        console.log("Invalid plot data");
+      }
     }
     let t2 = performance.now()
     console.log("Updated map took", (t2 - t1) / 1000);

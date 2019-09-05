@@ -289,6 +289,10 @@ see https://stackoverflow.com/questions/9789723/css-text-overflow-in-a-table-cel
   font-size: $default-font-size;
 }
 
+.dropdown-menu.customz {
+  z-index: 1000; // to force on top of leaflet
+}
+
 // -------------------------------------------------------------------------
 // Input helpers
 // -------------------------------------------------------------------------
