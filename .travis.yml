@@ -37,8 +37,8 @@ install:
       pip install -I -e .
     elif [[ $INSTALL_TYPE = "minimal" ]]; then
       pip install -I -e .
-      # apparently earlier versions of pandas behave differently in term of to_dict()
-      # need to check if we could support them as well by rolling our own to_dict() logic.
+      # Apparently earlier versions of pandas behave differently in term of to_dict().
+      # Need to check if we could support them as well by rolling our own to_dict() logic.
       pip install flask==1.0.0 flask-cors==3.0.0 pandas==0.24.0
     fi
 
