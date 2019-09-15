@@ -8,7 +8,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="tabloo",
-    version="0.0.10",
+    version="0.0.11",
 
     license="MIT",
     author="Fabian Keller",
@@ -41,18 +41,11 @@ setup(
     ],
     packages=find_packages(),
 
-    # Since `static` isn't a Python package, we need to specify its name.
+    # To make use of MANIFEST.in:
+    include_package_data=True,
+    # Note: This is simpler then using package_data, because I couldn't figure out
+    # how to package top level files like requirements.txt, and it seems to work for
+    # both sdist and bdist packaging.
     # https://setuptools.readthedocs.io/en/latest/setuptools.html#including-data-files
-    package_data={"": [
-        "static/*",
-        "static/**/*",
-    ]},
-    exclude_package_data={"": [
-        #"static/*.js.map"
-    ]},
-    # We need to disable `include_package_data` because we don't
-    # have a MANIFEST.in and don't want to depend on source control
-    # to affect package_data inclusion:
     # https://stackoverflow.com/a/13783919/1804173
-    include_package_data=False,
 )

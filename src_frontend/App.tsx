@@ -7,7 +7,7 @@ import { StoreInterface } from "./store";
 import { Tabs } from "./Tabs";
 import { TableHandler } from "./TableHandler"
 import { PlotHandler } from "./PlotHandler"
-import { MapHandler } from "./MapHandler"
+// import { MapHandler } from "./MapHandler"
 
 import { IconDatabase, IconChartBar } from "./Icons"
 
@@ -102,6 +102,7 @@ export function App({store} : {store: StoreInterface}) {
               }}
             />
           </Match>
+          {/*
           <Match when={(widget.type === "map")}>
             <MapHandler
               store={store}
@@ -111,6 +112,7 @@ export function App({store} : {store: StoreInterface}) {
               }}
             />
           </Match>
+          */}
           <Match when={true}>
             <div class="ui-widget-header">{("Illegal widget.type: " + widget.type)}</div>
           </Match>
