@@ -17,4 +17,4 @@ df.loc[::47, "xs"] = +np.inf
 df.loc[::83, "xs"] = -np.inf
 #df["Column with much too long name"] = 0
 
-tabloo.show(df, open_browser=False, server_logging=True)
+tabloo.show(df, open_browser=False, debug=True, server_logging=True)

@@ -10,8 +10,10 @@ from . import server
 def show(
         df,
         open_browser=True,
+        server_port=5000,
         server_logging=False,
-        server_port=5000):
+        debug=False,
+    ):
     """
     Runs a Tabloo app on a given dataframe.
 
@@ -19,17 +21,21 @@ def show(
         The dataframe to display.
     :param open_browser: bool
         Whether to open the web browser automatically.
-    :param server_logging: bool
-        Whether enable web server logging (for debugging).
     :param server_port: int
         Port of web server.
+    :param server_logging: bool
+        Whether enable web server logging (for debugging).
+    :param debug: bool
+        Whether enable Flask debugging functionality including auto-reloading.
+        This is mainly relevant for Tabloo backend development
     :return:
     """
     server.serve(
         df=df,
         open_browser=open_browser,
-        server_logging=server_logging,
         server_port=server_port,
+        server_logging=server_logging,
+        debug=debug,
     )
 
 

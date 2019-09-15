@@ -103,7 +103,7 @@ def index():
     return redirect("index.html")
 
 
-def serve(df, open_browser, server_logging, server_port=5000):
+def serve(df, open_browser, server_port=5000, server_logging=True, debug=False):
     # TODO: We may add some auto port handling like this: https://stackoverflow.com/a/5089963/1804173
 
     url = "http://127.0.0.1:{0}".format(server_port)
@@ -127,7 +127,8 @@ def serve(df, open_browser, server_logging, server_port=5000):
 
     app.run(
         port=server_port,
-        debug=True,
+        debug=debug,
+        use_reloader=debug,
         processes=1,
         threaded=False,
     )
