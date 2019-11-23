@@ -30,7 +30,16 @@ def to_json(data):
             except Exception:
                 pass
             return str(x)
-    return json.dumps(data, default=converter, allow_nan=False)
+
+    # TODO: we should use recursion here so that conversion errors only affect
+    # inner data elements, so that the "invalid" data_string isn't applied on
+    # the global conversion but ideally on values, or at least on entire columns.
+    try:
+        data_string = json.dumps(data, default=converter, allow_nan=False)
+    except Exception:
+        traceback.print_exc()
+        data_string = ""
+    return data_string
 
 
 def apply_filter(df, filter):
@@ -54,14 +63,30 @@ def apply_filter(df, filter):
 def convert_column(col):
     # TODO: Add more tests...
     # TODO: How to deeply convert nested nans/infs for json conversion?
-    c = col.replace({np.nan: None})
+    # We cannot use col.replace({np.nan: None}) because of
+    # https://github.com/pandas-dev/pandas/issues/29813
+
+    # And we have to convert to object columns early because float columns
+    # have special treatments for None. In particular setting c[is_null] = None
+    # has no effect on a float column, because they get immediately converted
+    # back to np.nan, which is what we want to replace...
+    c = col.copy().astype(object)
+
+    is_null = c.isnull()
+    c[is_null] = None
+
     try:
-        c = c.replace({
-            +np.inf: "inf",
-            -np.inf: "-inf",
-        })
+        # Note that the c == +np.inf checks can fail with
+        # 'ValueError: The truth value of an array with more than one element is ambiguous.'
+        # in case the elements themselves are vectors/matrices.
+        is_pos_inf = (c == +np.inf)
+        is_neg_inf = (c == -np.inf)
+
+        c[is_pos_inf] = "inf"
+        c[is_neg_inf] = "-inf"
     except:
         pass
+
     return list(c)
 
 

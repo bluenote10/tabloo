@@ -147,3 +147,8 @@ def test_convert_column():
 
     c = pd.Series([1, -np.inf, 2])
     assert convert_column(c) == [1, "-inf", 2]
+
+    # Bug https://github.com/pandas-dev/pandas/issues/29813
+    c = pd.Series([np.nan, 1.0, "hello"])
+    c = c[0:2]
+    assert convert_column(c) == [None, 1.0]
