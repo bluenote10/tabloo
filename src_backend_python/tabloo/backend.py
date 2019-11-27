@@ -35,7 +35,7 @@ def to_json(data):
     # inner data elements, so that the "invalid" data_string isn't applied on
     # the global conversion but ideally on values, or at least on entire columns.
     try:
-        data_string = json.dumps(data, default=converter, allow_nan=False)
+        data_string = json.dumps(data, default=converter, allow_nan=False, ensure_ascii=False)
     except Exception:
         traceback.print_exc()
         data_string = ""
