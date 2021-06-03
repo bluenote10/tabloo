@@ -22,7 +22,7 @@
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-typescript": "^7.3.3",
     "@fortawesome/fontawesome-free": "^5.9.0",
-    "@fortawesome/fontawesome-svg-core": "^1.2.19",
+    "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.9.0",
     "@types/echarts": "^4.1.10",
     "@types/leaflet": "^1.5.1",
@@ -31,6 +31,7 @@
     "babel-loader": "^8.0.6",
     "babel-plugin-jsx-dom-expressions": "^0.11.3",
     "eslint": "^5.16.0",
+    "node-sass": "^6.0.0",
     "ts-loader": "^5.4.5",
     "typescript": "^3.5.1",
     "webpack": "^4.33.0",
@@ -38,11 +39,10 @@
     "webpack-dev-server": "^3.7.1"
   },
   "dependencies": {
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "bulma": "^0.7.5",
     "echarts": "^4.2.1",
     "leaflet": "^1.5.1",
-    "node-sass": "^6.0.0",
     "solid-js": "^0.10.3"
   }
 }

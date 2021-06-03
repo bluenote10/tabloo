@@ -1,8 +1,6 @@
 nimcache/
 node_modules/
 
-package-lock.json
-
 .watchcode.log
 
 /data/
