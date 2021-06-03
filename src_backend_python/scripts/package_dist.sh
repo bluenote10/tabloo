@@ -7,6 +7,8 @@
 # is removed if the setup.py package_data list is updated before
 # calling setup.py.
 
+set -e
+
 cd $(dirname $0)/..
 
 cd ..

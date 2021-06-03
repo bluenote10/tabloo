@@ -240,10 +240,13 @@ function Table(props: {
     // http://jsfiddle.net/vello/qvw0pgcu/
     console.log("Handling copy event")
     var clipboardData = event.clipboardData;
+    // TODO...
+    /*
     if (clipboardData != null) {
       clipboardData.setData("text", "table data...");
       event.preventDefault();
     }
+    */
   }
 
   return (
