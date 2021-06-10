@@ -23,7 +23,7 @@ jobs:
     env:
       INSTALL_TYPE:  ${{ matrix.install_type }}
 
-    name: Python ${{ matrix.python_version }}, {{ matrix.install_type }}
+    name: "Python ${{ matrix.python_version }}, {{ matrix.install_type }}"
 
     steps:
       - uses: actions/checkout@master
@@ -92,5 +92,7 @@ jobs:
           node-version: 14.x
 
       - run: npm install
+
+      - run: npm run check-types
 
       - run: npm test
