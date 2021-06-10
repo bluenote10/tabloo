@@ -23,7 +23,7 @@ jobs:
     env:
       INSTALL_TYPE:  ${{ matrix.install_type }}
 
-    name: "Python ${{ matrix.python_version }}, {{ matrix.install_type }}"
+    name: "Python ${{ matrix.python_version }}, ${{ matrix.install_type }}"
 
     steps:
       - uses: actions/checkout@master
