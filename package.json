@@ -11,7 +11,8 @@
     "watch-standalone": "webpack --config webpack.config.standalone.js --watch",
     "start": "npm run build",
     "check-types": "tsc",
-    "dev-server": "webpack-dev-server"
+    "dev-server": "webpack-dev-server",
+    "test": "echo 'No test yet :(' && exit 1"
   },
   "keywords": [],
   "author": "Fabian Keller",
