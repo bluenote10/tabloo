@@ -5,6 +5,8 @@ name: ci
 
 on:
   push:
+    branches:
+    - master
   pull_request:
   schedule:
     - cron: '0 0 * * 0' # at 00:00 every Sunday
@@ -21,7 +23,7 @@ jobs:
     env:
       INSTALL_TYPE:  ${{ matrix.install_type }}
 
-    name: Python ${{ matrix.python_version }}, {{ matrix.install_type}}
+    name: Python ${{ matrix.python_version }}, {{ matrix.install_type }}
 
     steps:
       - uses: actions/checkout@master
@@ -49,8 +51,10 @@ jobs:
             #  - python setup.py install
             #  - pip install .
             # The latter seems to be caused by README.md being a symlink, great pip...
-            rm -rf ./dist
-            python setup.py bdist_wheel
+            # rm -rf ./dist
+            pip install wheel
+            python setup.py sdist bdist_wheel
+            ls -la ./dist/*.whl
             pip install ./dist/*.whl
           elif [[ $INSTALL_TYPE = "dev" ]]; then
             pip install -I -e .
