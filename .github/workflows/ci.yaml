@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python_version: [3.5, 3.8]
+        python_version: [3.6, 3.8]
         install_type: [standard, dev, minimal]
 
     env:
@@ -47,11 +47,6 @@ jobs:
           cd src_backend_python
           echo -e "\n *** Installing tabloo"
           if [[ $INSTALL_TYPE = "standard" ]]; then
-            #  For now neither of the following works:
-            #  - python setup.py install
-            #  - pip install .
-            # The latter seems to be caused by README.md being a symlink, great pip...
-            # rm -rf ./dist
             pip install wheel
             python setup.py sdist bdist_wheel
             ls -la ./dist/*.whl
@@ -72,7 +67,7 @@ jobs:
           pip freeze
 
       - name: Test
-        run: cd src_backend_python && py.test
+        run: cd src_backend_python && py.test --color=yes
 
       - name: CLI Test
         run: tabloo_cli -h
@@ -94,5 +89,3 @@ jobs:
       - run: npm install
 
       - run: npm run check-types
-
-      - run: npm test
