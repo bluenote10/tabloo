@@ -25,6 +25,11 @@ jobs:
 
     name: "Python ${{ matrix.python_version }}, ${{ matrix.install_type }}"
 
+    # Python 3.8 doesn't support the old Pandas version we are testing against.
+    # Also, the idea of the 'minimal' test is to test compatibility w.r.t. old
+    # environment, which doesn't require testing against a more modern Python.
+    if: ${{ matrix.python_version != '3.8' && matrix.install_type != 'minimal' }}
+
     steps:
       - uses: actions/checkout@master
 
