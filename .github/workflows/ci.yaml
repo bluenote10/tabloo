@@ -1,0 +1,92 @@
+# https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow
+# https://github.com/jiro4989/setup-nim-action
+
+name: ci
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 0 * * 0' # at 00:00 every Sunday
+
+jobs:
+
+  python:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python_version: [3.5, 3.8]
+        install_type: [standard, dev, minimal]
+
+    env:
+      INSTALL_TYPE:  ${{ matrix.install_type }}
+
+    name: Python ${{ matrix.python_version }}, {{ matrix.install_type}}
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Set up Python ${{ matrix.python_version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python_version }}
+
+      - name: Install tabloo + dependencies
+        run: |
+          set -e
+
+          echo -e "\n *** Inspecting base environment"
+          pip freeze
+
+          echo -e "\n *** Updating pip + setuptools"
+          pip install -U pip setuptools
+          pip config list
+
+          cd src_backend_python
+          echo -e "\n *** Installing tabloo"
+          if [[ $INSTALL_TYPE = "standard" ]]; then
+            #  For now neither of the following works:
+            #  - python setup.py install
+            #  - pip install .
+            # The latter seems to be caused by README.md being a symlink, great pip...
+            rm -rf ./dist
+            python setup.py bdist_wheel
+            pip install ./dist/*.whl
+          elif [[ $INSTALL_TYPE = "dev" ]]; then
+            pip install -I -e .
+          elif [[ $INSTALL_TYPE = "minimal" ]]; then
+            pip install -I -e .
+            # Apparently earlier versions of pandas behave differently in term of to_dict().
+            # Need to check if we could support them as well by rolling our own to_dict() logic.
+            pip install flask==1.0.0 flask-cors==3.0.0 pandas==0.24.0
+          fi
+
+          echo -e "\n *** Installing test dependencies"
+          pip install -U pytest pytest-cov
+
+          echo -e "\n *** Installed packages:"
+          pip freeze
+
+      - name: Test
+        run: cd src_backend_python && py.test
+
+      - name: CLI Test
+        run: tabloo_cli -h
+
+
+  frontend:
+    runs-on: ubuntu-latest
+
+    name: Frontend
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Install node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+
+      - run: npm install
+
+      - run: npm test
