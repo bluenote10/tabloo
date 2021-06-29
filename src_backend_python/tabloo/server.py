@@ -106,7 +106,7 @@ def index():
 def serve(df, open_browser, server_port=5000, server_logging=True, debug=False):
     # TODO: We may add some auto port handling like this: https://stackoverflow.com/a/5089963/1804173
 
-    url = "http://127.0.0.1:{0}".format(server_port)
+    url = "http://0.0.0.0:{0}".format(server_port)
 
     global backend
     backend = Backend(df)
