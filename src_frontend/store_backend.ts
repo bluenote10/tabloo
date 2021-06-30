@@ -16,7 +16,7 @@ function transformValue(x: any): any {
 
 
 export class StoreBackend implements StoreInterface {
-  url = "http://localhost:5000"
+  url = "http://10.70.16.18:5000"
 
   async fetchColumns(): Promise<string[]> {
     let response = await axios.get(`${this.url}/api/get_columns`)
