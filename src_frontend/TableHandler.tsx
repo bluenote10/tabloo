@@ -1,6 +1,6 @@
-import { createRoot, createState, createEffect, onCleanup, sample } from 'solid-js';
-import { For } from 'solid-js/dom';
-import { ForIndex } from './ForIndex';
+import { createRoot, createEffect, onCleanup, untrack } from 'solid-js';
+import { createStore } from 'solid-js/store';
+import { For } from 'solid-js/web';
 
 import { StoreInterface, DataFetchOptions, TableData, ColumnData } from "./store";
 
@@ -149,7 +149,7 @@ function Table(props: {
     cbSort: (sortKind: number, columnIndex?: number) => void,
   }) {
 
-  const [state, setState] = createState({
+  const [state, setState] = createStore({
     rowsData: [] as Value[][],
     headerData: [] as ColHeader[],
     sortColIndex: undefined as (number | undefined),
@@ -256,7 +256,7 @@ function Table(props: {
     >
       <thead>
         <tr>
-          <ForIndex each={(state.headerData)}>
+          <For each={(state.headerData)}>
             {(colHeader: ColHeader, index: () => number) =>
               <th>
                 <div class="column-header">
@@ -273,18 +273,18 @@ function Table(props: {
                 </div>
               </th>
             }
-          </ForIndex>
+          </For>
         </tr>
       </thead>
       <tbody>
         <For each={(state.rowsData as string[][] /* FIXME, why does the wrapper type fail with nested array? */)} fallback={<div>No data</div>}>
           { (row: string[]) =>
             <tr>
-              <ForIndex each={(row)}>
+              <For each={(row)}>
                 { (x: Value, j: () => number) =>
                   <td class={("truncate " + (columnFormatters[j()].align > 0 ? "has-text-right" : undefined))}>{columnFormatters[j()].format(x)}</td>
                 }
-              </ForIndex>
+              </For>
             </tr>
           }
         </For>
@@ -355,14 +355,14 @@ export function TableHandler(props: {
 
   const { store } = props
 
-  const [state, setState] = createState({
+  const [state, setState] = createStore({
     tableData: [] as TableData,
     sortKind: 0,
     sortColumn: undefined as (string|undefined),
     pagination: {
       numPages: 0,
       currentPage: 0
-    } as PaginationData
+    }
   })
 
   initialize()
@@ -429,10 +429,10 @@ export function TableHandler(props: {
     if (inputFilter != undefined) {
       inputFilter.value = newFilter;
     }
-    // TODO: clarify why not sampling here causes an infinte loop.
+    // TODO: clarify why not sampling here causes an infinite loop.
     // Interestingly running either fetchNumPages or fetchDat alone is fine.
     // Only the combination causes an infinite loop.
-    sample(() => {
+    untrack(() => {
       fetchNumPages()
       fetchData()
     })

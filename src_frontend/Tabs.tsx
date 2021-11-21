@@ -1,3 +1,4 @@
+import { JSX } from 'solid-js';
 
 export function Tabs(props: {
     activeIndex: number,

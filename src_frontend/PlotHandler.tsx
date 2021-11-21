@@ -1,4 +1,5 @@
-import { createRoot, createState, createEffect, onCleanup, sample } from 'solid-js';
+import { createRoot, createEffect, onCleanup, untrack, onMount } from 'solid-js';
+import { createStore } from 'solid-js/store';
 
 import { StoreInterface, DataFetchOptions, TableData, ColumnData } from "./store";
 import { Dropdown } from "./Dropdown";
@@ -55,23 +56,28 @@ function PlotWrapper(props: PlotWrapperProps) {
   let el: HTMLDivElement = null!;
   let chart: ECharts = null!;
 
-  const [state, setState] = createState({
+  const [state, setState] = createStore({
     mounted: false,
     cachedPlotData: null,
   })
 
   let updatePlot = (plotData: any) => {
     if (chart == null) {
-      chart = echarts.init(el as HTMLDivElement);
+      chart = echarts.init(el as HTMLDivElement, {locale: "EN"});
     }
     console.log("updating plot with:", plotData)
     chart.setOption(plotData)
   }
 
+  onMount(() =>  {
+    (el as any).onconnected = onMounted;
+    (el as any).ondisconnected = onUnmounted;
+  })
+
   createEffect(() => {
     // effect to monitor changes to props.plotData
     let newPlotData = props.plotData;
-    if (sample(() => state.mounted)) {
+    if (untrack(() => state.mounted)) {
       // already mounted => we can call into the external lib directly
       updatePlot(newPlotData)
     } else {
@@ -96,8 +102,8 @@ function PlotWrapper(props: PlotWrapperProps) {
     <div
       ref={el}
       style="width: 800px;height:600px;"
-      onconnected={onMounted}
-      ondisconnected={onUnmounted}
+      // onconnected={onMounted}
+      // ondisconnected={onUnmounted}
     ></div>
   )
 }
@@ -117,7 +123,7 @@ export function PlotHandler(props: {
   } as DataFetchOptions
   */
 
-  const [state, setState] = createState({
+  const [state, setState] = createStore({
     columns: [] as string[],
     plotData: {} as any,
     selectedColX: undefined! as number,
@@ -125,7 +131,7 @@ export function PlotHandler(props: {
   })
 
   createEffect(() => {
-    // handels updates of selected column indices
+    // handles updates of selected column indices
     let xCol = state.selectedColX;
     let yCol = state.selectedColY;
     let filter = props.filter;
@@ -165,7 +171,7 @@ export function PlotHandler(props: {
       if (x == undefined || x === "inf" || x === "-inf" || !isFinite(x)) {
         return NaN;
       } else {
-        return x; // TODO: do we need to convert to string for categorial data?
+        return x; // TODO: do we need to convert to string for categorical data?
       }
     }
 

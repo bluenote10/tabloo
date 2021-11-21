@@ -1,4 +1,5 @@
-import { createRoot, createState, createEffect, onCleanup, sample } from 'solid-js';
+import { createRoot, createEffect, onCleanup, untrack } from 'solid-js';
+import { createStore } from 'solid-js/store';
 
 import { StoreInterface, DataFetchOptions, TableData, ColumnData } from "./store";
 import { Dropdown } from "./Dropdown";
@@ -16,7 +17,7 @@ function MapWrapper(props: {
   let map: leaflet.Map | undefined = undefined;
   let layerGroup: leaflet.LayerGroup | undefined = undefined;
 
-  const [state, setState] = createState({
+  const [state, setState] = createStore({
     mounted: false,
     cachedMapData: null,
   })
@@ -67,7 +68,7 @@ function MapWrapper(props: {
   createEffect(() => {
     // effect to monitor changes to props.mapData
     let newMapData = props.mapData;
-    if (sample(() => state.mounted)) {
+    if (untrack(() => state.mounted)) {
       // already mounted => we can call into the external lib directly
       updateMap(newMapData)
     } else {
@@ -92,8 +93,8 @@ function MapWrapper(props: {
     <div
       ref={el}
       style="height:800px;"
-      onconnected={onMounted}
-      ondisconnected={onUnmounted}
+      // onconnected={onMounted}
+      // ondisconnected={onUnmounted}
     ></div>
   )
 }
@@ -107,7 +108,7 @@ export function MapHandler(props: {
 
   const { store } = props
 
-  const [state, setState] = createState({
+  const [state, setState] = createStore({
     columns: [] as string[],
     mapData: {} as any,
     selectedCol: undefined! as number,
