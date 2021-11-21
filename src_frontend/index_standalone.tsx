@@ -5,7 +5,7 @@ import { render } from "solid-js/web";
 import { App } from "./App";
 import { StoreStandalone } from "./store_standalone";
 
-let store = new StoreStandalone();
+const store = new StoreStandalone();
 
-let el = document.getElementById("ROOT")!;
+const el = document.getElementById("ROOT")!;
 render(() => <App store={store} />, el);

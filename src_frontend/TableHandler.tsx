@@ -53,7 +53,7 @@ function analyzeColumn(data: Value[]): ColumnFormatter {
   let maxDecimalPlacesL = 0;
 
   for (let i = 0; i < data.length; i++) {
-    let value = data[i];
+    const value = data[i];
 
     if (value != undefined) {
       allNull = false;
@@ -68,7 +68,7 @@ function analyzeColumn(data: Value[]): ColumnFormatter {
         allInteger = false;
       }
 
-      let absValue = Math.abs(value as number);
+      const absValue = Math.abs(value as number);
       if (absValue > absMax) {
         absMax = absValue;
       }
@@ -76,14 +76,14 @@ function analyzeColumn(data: Value[]): ColumnFormatter {
         absMin = absValue;
       }
 
-      let valueString = value > 0 ? value.toString() : (-value).toString();
+      const valueString = value > 0 ? value.toString() : (-value).toString();
       if (valueString.includes("e")) {
         hasExponetials = true;
         // TODO
       } else if (valueString.includes(".")) {
-        let split = valueString.split(".");
-        let decL = split[0].length;
-        let decR = split[1].length;
+        const split = valueString.split(".");
+        const decL = split[0].length;
+        const decR = split[1].length;
         if (decL > maxDecimalPlacesL) {
           maxDecimalPlacesL = decL;
         }
@@ -96,7 +96,7 @@ function analyzeColumn(data: Value[]): ColumnFormatter {
   // console.log(maxDecimalPlacesL, maxDecimalPlacesR)
 
   if (allNumbers && !allInteger && !hasExponetials) {
-    let maxDigits = 6;
+    const maxDigits = 6;
     let digits = maxDigits - maxDecimalPlacesL + 1;
     if (digits < 1) {
       digits = 1;
@@ -130,11 +130,11 @@ function transformData(data: TableData): Value[][] {
   console.log("Transforming data of shape:", numRows, numCols);
 
   // we need to convert from columnar to row-wise data
-  let rowsData = Array(numRows) as Value[][];
+  const rowsData = Array(numRows) as Value[][];
   for (let i = 0; i < numRows; i++) {
-    let rowData = Array(numCols) as Value[];
+    const rowData = Array(numCols) as Value[];
     for (let j = 0; j < numCols; j++) {
-      let value = data[j].values[i];
+      const value = data[j].values[i];
       rowData[j] = value;
     }
     rowsData[i] = rowData;
@@ -158,7 +158,7 @@ function Table(props: {
     sortColKind: 0,
   });
 
-  let columnFormatters = [] as ColumnFormatter[];
+  const columnFormatters = [] as ColumnFormatter[];
 
   createEffect(() => {
     console.log("Data updated", props.data.length);
@@ -168,16 +168,16 @@ function Table(props: {
     }
 
     // update column formatters
-    let numCols = data.length;
+    const numCols = data.length;
     columnFormatters.length = numCols;
     for (let j = 0; j < numCols; j++) {
       columnFormatters[j] = analyzeColumn(data[j].values);
     }
 
-    let rowsData = transformData(props.data);
+    const rowsData = transformData(props.data);
     setState({ rowsData: rowsData });
 
-    let headerData = data.map((x: ColumnData) => ({
+    const headerData = data.map((x: ColumnData) => ({
       name: x.columnName,
       sortKind: x.sortKind,
       //onsort: () => { this.props.onsort(x.columnName) }
@@ -248,7 +248,7 @@ function Table(props: {
     // https://jsbin.com/runomuheye/1/edit?html,css,js,output
     // http://jsfiddle.net/vello/qvw0pgcu/
     console.log("Handling copy event");
-    var clipboardData = event.clipboardData;
+    const clipboardData = event.clipboardData;
     // TODO...
     /*
     if (clipboardData != null) {
@@ -412,7 +412,7 @@ export function TableHandler(props: {
   }
 
   async function fetchNumPages() {
-    let numPages = await store.fetchNumPages(20, props.filter);
+    const numPages = await store.fetchNumPages(20, props.filter);
     console.log("num pages:", numPages);
     setState({
       pagination: {
@@ -430,7 +430,7 @@ export function TableHandler(props: {
       page: state.pagination.currentPage,
       filter: props.filter,
     };
-    let data = await store.fetchData(dataFetchOptions);
+    const data = await store.fetchData(dataFetchOptions);
     setState({ tableData: data });
   }
 
@@ -463,7 +463,7 @@ export function TableHandler(props: {
   }
 
   createEffect(() => {
-    let newFilter = props.filter;
+    const newFilter = props.filter;
     console.log("TableHandler: filter updated to", newFilter);
     if (inputFilter != undefined) {
       inputFilter.value = newFilter;

@@ -14,14 +14,13 @@ export interface DataFetchOptions {
 }
 
 export interface StoreInterface {
-  //async fetchData(): void
   fetchColumns(): Promise<string[]>;
   fetchNumPages(paginationSize: number, filter?: string): Promise<number>;
   fetchData(opts: DataFetchOptions): Promise<TableData>;
 }
 
 export function clone(data: TableData): TableData {
-  let newData = [...Array(data.length)].map((x, i) => ({
+  const newData = [...Array(data.length)].map((x, i) => ({
     columnName: data[i].columnName,
     sortKind: data[i].sortKind,
     values: data[i].values.slice(),
