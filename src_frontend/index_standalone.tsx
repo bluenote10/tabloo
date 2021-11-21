@@ -7,5 +7,6 @@ import { StoreStandalone } from "./store_standalone";
 
 const store = new StoreStandalone();
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const el = document.getElementById("ROOT")!;
 render(() => <App store={store} />, el);

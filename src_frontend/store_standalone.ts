@@ -9,8 +9,8 @@ export class StoreStandalone implements StoreInterface {
   }
 
   async fetchNumPages(
-    paginationSize: number,
-    filter?: string
+    _paginationSize: number,
+    _filter?: string
   ): Promise<number> {
     // TODO
     return 0;
@@ -19,12 +19,12 @@ export class StoreStandalone implements StoreInterface {
   async fetchData(opts: DataFetchOptions): Promise<TableData> {
     const data = clone(TABLOO_TABLE_DATA);
 
-    if (opts.sortKind === 0 || opts.sortColumn == null) {
+    if (opts.sortColumn == null || opts.sortKind === 0) {
       return data;
     } else {
       const sortColumn = data.find(
-        (colData) => colData.columnName === opts.sortColumn!
-      )!;
+        (colData) => colData.columnName === opts.sortColumn
+      )!; // TODO: Handle null
       const toSort = sortColumn.values.map(
         (x, i) => [x, i] as [number | string, number]
       );
@@ -43,7 +43,7 @@ export class StoreStandalone implements StoreInterface {
       for (let i = 0; i < data.length; i++) {
         data[i].values = sortIndices.map((j) => data[i].values[j]);
         data[i].sortKind =
-          data[i].columnName === opts.sortColumn! ? opts.sortKind : 0;
+          data[i].columnName === opts.sortColumn ? opts.sortKind : 0;
       }
       return data;
     }

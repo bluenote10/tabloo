@@ -20,7 +20,7 @@ export function Tabs(props: {
               "ui-navbar-button " +
               (index === props.activeIndex ? "is-active" : "")
             }
-            onclick={(event) => props.onActivate(index)}
+            onclick={(_event) => props.onActivate(index)}
           >
             {tabHeader}
           </a>

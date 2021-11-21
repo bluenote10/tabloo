@@ -1,18 +1,7 @@
-import {
-  createRoot,
-  createEffect,
-  onCleanup,
-  untrack,
-  onMount,
-} from "solid-js";
+import { createEffect, untrack, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
 
-import {
-  StoreInterface,
-  DataFetchOptions,
-  TableData,
-  ColumnData,
-} from "./store";
+import { StoreInterface } from "./store";
 import { Dropdown } from "./Dropdown";
 
 import * as echarts from "echarts";
@@ -62,8 +51,8 @@ function PlotWrapper(props: PlotWrapperProps) {
 */
 
 function PlotWrapper(props: PlotWrapperProps) {
-  const el: HTMLDivElement = null!;
-  let chart: ECharts = null!;
+  const el: HTMLDivElement | null = null;
+  let chart: ECharts | null = null;
 
   const [state, setState] = createStore({
     mounted: false,
@@ -71,16 +60,20 @@ function PlotWrapper(props: PlotWrapperProps) {
   });
 
   const updatePlot = (plotData: any) => {
-    if (chart == null) {
-      chart = echarts.init(el as HTMLDivElement, { locale: "EN" });
+    if (el != null) {
+      if (chart == null) {
+        chart = echarts.init(el as HTMLDivElement, { locale: "EN" });
+      }
+      console.log("updating plot with:", plotData);
+      chart.setOption(plotData);
     }
-    console.log("updating plot with:", plotData);
-    chart.setOption(plotData);
   };
 
   onMount(() => {
-    (el as any).onconnected = onMounted;
-    (el as any).ondisconnected = onUnmounted;
+    if (el != null) {
+      (el as any).onconnected = onMounted;
+      (el as any).ondisconnected = onUnmounted;
+    }
   });
 
   createEffect(() => {
@@ -97,7 +90,7 @@ function PlotWrapper(props: PlotWrapperProps) {
 
   const onMounted = () => {
     if (state.cachedPlotData != null) {
-      updatePlot(state.cachedPlotData!);
+      updatePlot(state.cachedPlotData);
       setState({ cachedPlotData: null });
     }
     setState({ mounted: true });
@@ -109,7 +102,9 @@ function PlotWrapper(props: PlotWrapperProps) {
 
   return (
     <div
-      ref={el}
+      // Not sure why the Solid types expect passed in refs to be not-null
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      ref={el!}
       style="width: 800px;height:600px;"
       // onconnected={onMounted}
       // ondisconnected={onUnmounted}
@@ -174,8 +169,13 @@ export function PlotHandler(props: {
     }
     const numRows = data[0].values.length;
 
-    const valueConverter = (x: any) => {
-      if (x == undefined || x === "inf" || x === "-inf" || !isFinite(x)) {
+    const valueConverter = (x: string | number) => {
+      if (
+        x == undefined ||
+        x === "inf" ||
+        x === "-inf" ||
+        (typeof x == "number" && !isFinite(x))
+      ) {
         return NaN;
       } else {
         return x; // TODO: do we need to convert to string for categorical data?

@@ -1,13 +1,8 @@
-import { createRoot, createEffect, onCleanup, untrack } from "solid-js";
+import { createEffect, untrack } from "solid-js";
 import { createStore } from "solid-js/store";
 import { For } from "solid-js/web";
 
-import {
-  StoreInterface,
-  DataFetchOptions,
-  TableData,
-  ColumnData,
-} from "./store";
+import { StoreInterface, TableData, ColumnData } from "./store";
 
 import {
   IconLongArrowAltUp,
@@ -41,10 +36,10 @@ interface ColumnFormatter {
 }
 
 function analyzeColumn(data: Value[]): ColumnFormatter {
-  let allNull = true;
+  let _allNull = true;
   let allNumbers = true;
   let allInteger = true;
-  let hasExponetials = false;
+  let hasExponentials = false;
 
   let absMax = -Infinity;
   let absMin = +Infinity;
@@ -56,7 +51,7 @@ function analyzeColumn(data: Value[]): ColumnFormatter {
     const value = data[i];
 
     if (value != undefined) {
-      allNull = false;
+      _allNull = false;
     }
 
     if (typeof value === "string") {
@@ -78,7 +73,7 @@ function analyzeColumn(data: Value[]): ColumnFormatter {
 
       const valueString = value > 0 ? value.toString() : (-value).toString();
       if (valueString.includes("e")) {
-        hasExponetials = true;
+        hasExponentials = true;
         // TODO
       } else if (valueString.includes(".")) {
         const split = valueString.split(".");
@@ -95,7 +90,7 @@ function analyzeColumn(data: Value[]): ColumnFormatter {
   }
   // console.log(maxDecimalPlacesL, maxDecimalPlacesR)
 
-  if (allNumbers && !allInteger && !hasExponetials) {
+  if (allNumbers && !allInteger && !hasExponentials) {
     const maxDigits = 6;
     let digits = maxDigits - maxDecimalPlacesL + 1;
     if (digits < 1) {
@@ -248,7 +243,7 @@ function Table(props: {
     // https://jsbin.com/runomuheye/1/edit?html,css,js,output
     // http://jsfiddle.net/vello/qvw0pgcu/
     console.log("Handling copy event");
-    const clipboardData = event.clipboardData;
+    const _clipboardData = event.clipboardData;
     // TODO...
     /*
     if (clipboardData != null) {
@@ -274,7 +269,7 @@ function Table(props: {
                   <span class="truncate">{colHeader.name}</span>
                   <a
                     class="th-sort-symbol"
-                    onclick={(event) => sortByCol(colHeader.name, index())}
+                    onclick={(_event) => sortByCol(colHeader.name, index())}
                     onmousedown={
                       (event) =>
                         event.preventDefault() /* to prevent header selection*/
