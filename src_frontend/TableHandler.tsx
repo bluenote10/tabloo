@@ -1,14 +1,20 @@
-import { createRoot, createEffect, onCleanup, untrack } from 'solid-js';
-import { createStore } from 'solid-js/store';
-import { For } from 'solid-js/web';
-
-import { StoreInterface, DataFetchOptions, TableData, ColumnData } from "./store";
+import { createRoot, createEffect, onCleanup, untrack } from "solid-js";
+import { createStore } from "solid-js/store";
+import { For } from "solid-js/web";
 
 import {
-  IconLongArrowAltUp, IconLongArrowAltDown,
-  IconSortAmountUp, IconSortAmountDown,
-} from "./Icons";
+  StoreInterface,
+  DataFetchOptions,
+  TableData,
+  ColumnData,
+} from "./store";
 
+import {
+  IconLongArrowAltUp,
+  IconLongArrowAltDown,
+  IconSortAmountUp,
+  IconSortAmountDown,
+} from "./Icons";
 
 type Value = string | number;
 
@@ -16,7 +22,7 @@ function transformToString(x: Value) {
   if (x != undefined) {
     return x.toString();
   } else {
-    return "-"
+    return "-";
   }
 }
 
@@ -25,13 +31,13 @@ function transformFloatToString(digits: number, x: number) {
     // TODO: handle limitations of toFixed
     return x.toFixed(digits);
   } else {
-    return "-"
+    return "-";
   }
 }
 
 interface ColumnFormatter {
-  format: (x: Value) => string
-  align: number
+  format: (x: Value) => string;
+  align: number;
 }
 
 function analyzeColumn(data: Value[]): ColumnFormatter {
@@ -46,7 +52,7 @@ function analyzeColumn(data: Value[]): ColumnFormatter {
   let maxDecimalPlacesR = 0;
   let maxDecimalPlacesL = 0;
 
-  for (let i=0; i<data.length; i++) {
+  for (let i = 0; i < data.length; i++) {
     let value = data[i];
 
     if (value != undefined) {
@@ -62,7 +68,7 @@ function analyzeColumn(data: Value[]): ColumnFormatter {
         allInteger = false;
       }
 
-      let absValue = Math.abs(value as number)
+      let absValue = Math.abs(value as number);
       if (absValue > absMax) {
         absMax = absValue;
       }
@@ -70,7 +76,7 @@ function analyzeColumn(data: Value[]): ColumnFormatter {
         absMin = absValue;
       }
 
-      let valueString = (value > 0 ? value.toString() : (-value).toString());
+      let valueString = value > 0 ? value.toString() : (-value).toString();
       if (valueString.includes("e")) {
         hasExponetials = true;
         // TODO
@@ -98,19 +104,18 @@ function analyzeColumn(data: Value[]): ColumnFormatter {
     return {
       format: transformFloatToString.bind(null, digits) as (x: Value) => string,
       align: +1,
-    }
+    };
   } else if (allInteger) {
     return {
       format: transformToString,
       align: +1,
-    }
+    };
   } else {
     return {
       format: transformToString,
       align: -1,
-    }
+    };
   }
-
 }
 
 /**
@@ -126,9 +131,9 @@ function transformData(data: TableData): Value[][] {
 
   // we need to convert from columnar to row-wise data
   let rowsData = Array(numRows) as Value[][];
-  for (let i=0; i<numRows; i++) {
+  for (let i = 0; i < numRows; i++) {
     let rowData = Array(numCols) as Value[];
-    for (let j=0; j<numCols; j++) {
+    for (let j = 0; j < numCols; j++) {
       let value = data[j].values[i];
       rowData[j] = value;
     }
@@ -137,30 +142,27 @@ function transformData(data: TableData): Value[][] {
   return rowsData;
 }
 
-
 interface ColHeader {
-  name: string,
-  sortKind: number,
+  name: string;
+  sortKind: number;
 }
 
-
 function Table(props: {
-    data: TableData,
-    cbSort: (sortKind: number, columnIndex?: number) => void,
-  }) {
-
+  data: TableData;
+  cbSort: (sortKind: number, columnIndex?: number) => void;
+}) {
   const [state, setState] = createStore({
     rowsData: [] as Value[][],
     headerData: [] as ColHeader[],
-    sortColIndex: undefined as (number | undefined),
+    sortColIndex: undefined as number | undefined,
     sortColKind: 0,
-  })
+  });
 
   let columnFormatters = [] as ColumnFormatter[];
 
   createEffect(() => {
-    console.log("Data updated", props.data.length)
-    const data = props.data
+    console.log("Data updated", props.data.length);
+    const data = props.data;
     if (data.length == 0) {
       return;
     }
@@ -168,77 +170,84 @@ function Table(props: {
     // update column formatters
     let numCols = data.length;
     columnFormatters.length = numCols;
-    for (let j=0; j<numCols; j++) {
+    for (let j = 0; j < numCols; j++) {
       columnFormatters[j] = analyzeColumn(data[j].values);
     }
 
     let rowsData = transformData(props.data);
-    setState({rowsData: rowsData})
+    setState({ rowsData: rowsData });
 
     let headerData = data.map((x: ColumnData) => ({
       name: x.columnName,
       sortKind: x.sortKind,
       //onsort: () => { this.props.onsort(x.columnName) }
-    }))
-    setState({headerData: headerData})
-
-  })
-
-  createEffect(() => {
-    console.log("Rowsdata updated", state.rowsData.length)
-  })
+    }));
+    setState({ headerData: headerData });
+  });
 
   createEffect(() => {
-    console.log("headerData updated", state.headerData.length)
-  })
+    console.log("Rowsdata updated", state.rowsData.length);
+  });
 
   createEffect(() => {
-    console.log("Updated sortColIndex", state.sortColIndex)
-  })
+    console.log("headerData updated", state.headerData.length);
+  });
+
   createEffect(() => {
-    console.log("Updated sortColKind", state.sortColKind)
-  })
+    console.log("Updated sortColIndex", state.sortColIndex);
+  });
+  createEffect(() => {
+    console.log("Updated sortColKind", state.sortColKind);
+  });
 
   function sortByCol(name: string, index: number) {
-    console.log("Sorting by column:", name, index, state.sortColIndex, state.sortColKind)
+    console.log(
+      "Sorting by column:",
+      name,
+      index,
+      state.sortColIndex,
+      state.sortColKind
+    );
     if (state.sortColIndex !== index || state.sortColKind == 0) {
-      props.cbSort(1, index)
+      props.cbSort(1, index);
       setState({
         sortColIndex: index,
         sortColKind: 1,
-      })
+      });
     } else {
       if (state.sortColKind == 1) {
-        props.cbSort(-1, index)
+        props.cbSort(-1, index);
         setState({
           sortColKind: -1,
-        })
+        });
       } else {
-        props.cbSort(0, undefined)
+        props.cbSort(0, undefined);
         setState({
           sortColKind: 0,
-        })
+        });
       }
     }
   }
 
   function renderSymbol(name: string, sortKind: number) {
     if (sortKind == 0) {
-      return <>
-        <IconLongArrowAltUp/>
-        <IconLongArrowAltDown/>
-      </>
+      return (
+        <>
+          <IconLongArrowAltUp />
+          <IconLongArrowAltDown />
+        </>
+      );
     } else if (sortKind < 0) {
-      return <IconSortAmountDown/>
+      return <IconSortAmountDown />;
     } else {
-      return <IconSortAmountUp/>
+      return <IconSortAmountUp />;
     }
   }
 
   function onCopy(event: ClipboardEvent) {
     // https://jsbin.com/runomuheye/1/edit?html,css,js,output
     // http://jsfiddle.net/vello/qvw0pgcu/
-    console.log("Handling copy event")
+    console.log("Handling copy event");
     var clipboardData = event.clipboardData;
     // TODO...
     /*
@@ -251,67 +260,96 @@ function Table(props: {
 
   return (
     <table
-      class={"table is-striped is-narrow is-hoverable is-bordered compact-table"}
+      class={
+        "table is-striped is-narrow is-hoverable is-bordered compact-table"
+      }
       oncopy={onCopy}
     >
       <thead>
         <tr>
-          <For each={(state.headerData)}>
-            {(colHeader: ColHeader, index: () => number) =>
+          <For each={state.headerData}>
+            {(colHeader: ColHeader, index: () => number) => (
               <th>
                 <div class="column-header">
-                  <span class="truncate">
-                    {colHeader.name}
-                  </span>
+                  <span class="truncate">{colHeader.name}</span>
                   <a
                     class="th-sort-symbol"
                     onclick={(event) => sortByCol(colHeader.name, index())}
-                    onmousedown={(event) => event.preventDefault() /* to prevent header selection*/}
+                    onmousedown={
+                      (event) =>
+                        event.preventDefault() /* to prevent header selection*/
+                    }
                   >
-                    {(renderSymbol(colHeader.name, state.sortColIndex == index() ? state.sortColKind : 0))}
+                    {renderSymbol(
+                      colHeader.name,
+                      state.sortColIndex == index() ? state.sortColKind : 0
+                    )}
                   </a>
                 </div>
               </th>
-            }
+            )}
           </For>
         </tr>
       </thead>
       <tbody>
-        <For each={(state.rowsData as string[][] /* FIXME, why does the wrapper type fail with nested array? */)} fallback={<div>No data</div>}>
-          { (row: string[]) =>
+        <For
+          each={
+            state.rowsData as string[][] /* FIXME, why does the wrapper type fail with nested array? */
+          }
+          fallback={<div>No data</div>}
+        >
+          {(row: string[]) => (
             <tr>
-              <For each={(row)}>
-                { (x: Value, j: () => number) =>
-                  <td class={("truncate " + (columnFormatters[j()].align > 0 ? "has-text-right" : undefined))}>{columnFormatters[j()].format(x)}</td>
-                }
+              <For each={row}>
+                {(x: Value, j: () => number) => (
+                  <td
+                    class={
+                      "truncate " +
+                      (columnFormatters[j()].align > 0
+                        ? "has-text-right"
+                        : undefined)
+                    }
+                  >
+                    {columnFormatters[j()].format(x)}
+                  </td>
+                )}
               </For>
             </tr>
-          }
+          )}
         </For>
       </tbody>
     </table>
-  )
+  );
 }
 
-
 interface PaginationData {
-  numPages: number
-  currentPage: number
-  onPaginate: (i: number) => void
+  numPages: number;
+  currentPage: number;
+  onPaginate: (i: number) => void;
 }
 
 function Pagination(props: PaginationData) {
-
-  function constructPageArray(n: number, current: number): Array<number | undefined> {
+  function constructPageArray(
+    n: number,
+    current: number
+  ): Array<number | undefined> {
     if (n <= 10) {
       return Array.from(Array(props.numPages).keys());
     } else {
       if (current <= 2) {
-        return [0, 1, 2, 3, undefined, n-1];
-      } else if (current >= n-3) {
-        return [0, undefined, n-4, n-3, n-2, n-1];
+        return [0, 1, 2, 3, undefined, n - 1];
+      } else if (current >= n - 3) {
+        return [0, undefined, n - 4, n - 3, n - 2, n - 1];
       } else {
-        return [0, undefined, current-1, current, current+1, undefined, n-1];
+        return [
+          0,
+          undefined,
+          current - 1,
+          current,
+          current + 1,
+          undefined,
+          n - 1,
+        ];
       }
     }
   }
@@ -319,16 +357,19 @@ function Pagination(props: PaginationData) {
   return (
     <nav class="pagination is-small">
       <ul class="pagination-list">
-        <For each={(constructPageArray(props.numPages, props.currentPage))}>{
-          i => {
+        <For each={constructPageArray(props.numPages, props.currentPage)}>
+          {(i) => {
             if (typeof i === "number") {
               return (
                 <li>
                   <a
-                    class={("pagination-link" + (i === props.currentPage ? " is-current" : ""))}
+                    class={
+                      "pagination-link" +
+                      (i === props.currentPage ? " is-current" : "")
+                    }
                     onclick={() => props.onPaginate(i)}
                   >
-                    {i+1}
+                    {i + 1}
                   </a>
                 </li>
               );
@@ -339,48 +380,46 @@ function Pagination(props: PaginationData) {
                 </li>
               );
             }
-          }
-        }</For>
+          }}
+        </For>
       </ul>
     </nav>
   );
 }
 
-
 export function TableHandler(props: {
-    store: StoreInterface,
-    filter: string,
-    onSetFilter: (s: string) => void,
-  }) {
-
-  const { store } = props
+  store: StoreInterface;
+  filter: string;
+  onSetFilter: (s: string) => void;
+}) {
+  const { store } = props;
 
   const [state, setState] = createStore({
     tableData: [] as TableData,
     sortKind: 0,
-    sortColumn: undefined as (string|undefined),
+    sortColumn: undefined as string | undefined,
     pagination: {
       numPages: 0,
-      currentPage: 0
-    }
-  })
+      currentPage: 0,
+    },
+  });
 
-  initialize()
+  initialize();
 
   async function initialize() {
-    await fetchNumPages()
-    await fetchData()
+    await fetchNumPages();
+    await fetchData();
   }
 
   async function fetchNumPages() {
-    let numPages = await store.fetchNumPages(20, props.filter)
-    console.log("num pages:", numPages)
+    let numPages = await store.fetchNumPages(20, props.filter);
+    console.log("num pages:", numPages);
     setState({
       pagination: {
         numPages: numPages,
         currentPage: 0,
-      }
-    })
+      },
+    });
   }
 
   async function fetchData() {
@@ -390,20 +429,20 @@ export function TableHandler(props: {
       paginationSize: 20,
       page: state.pagination.currentPage,
       filter: props.filter,
-    }
-    let data = await store.fetchData(dataFetchOptions)
-    setState({tableData: data})
+    };
+    let data = await store.fetchData(dataFetchOptions);
+    setState({ tableData: data });
   }
 
   function cbSort(sortKind: number, columnIndex?: number) {
-    setState({sortKind: sortKind})
+    setState({ sortKind: sortKind });
     if (columnIndex != null) {
-      setState({sortColumn: state.tableData[columnIndex].columnName})
+      setState({ sortColumn: state.tableData[columnIndex].columnName });
     }
-    fetchData()
+    fetchData();
   }
 
-  let inputFilter: HTMLInputElement | undefined
+  let inputFilter: HTMLInputElement | undefined;
 
   function onFilterKeydown(event: KeyboardEvent) {
     if (event.keyCode === 13 && inputFilter != undefined) {
@@ -413,13 +452,13 @@ export function TableHandler(props: {
       // page number with the new filter => returning no data).
       // We'll have to see if resetting the page number is what we
       // want on changing selections...
-      props.onSetFilter(inputFilter.value.trim())
+      props.onSetFilter(inputFilter.value.trim());
       setState({
         pagination: {
           currentPage: 0,
           numPages: state.pagination.numPages,
-        }
-      })
+        },
+      });
     }
   }
 
@@ -433,40 +472,42 @@ export function TableHandler(props: {
     // Interestingly running either fetchNumPages or fetchDat alone is fine.
     // Only the combination causes an infinite loop.
     untrack(() => {
-      fetchNumPages()
-      fetchData()
-    })
-  })
+      fetchNumPages();
+      fetchData();
+    });
+  });
 
   function onPaginate(i: number) {
     setState({
       pagination: {
         currentPage: i,
         numPages: state.pagination.numPages,
-      }
-    })
-    fetchData()
+      },
+    });
+    fetchData();
   }
 
-  return (<>
-    <div class="ui-widget-header">
-      <div class="ui-form-row">
-        <span class="ui-form-label">Filter</span>
-        <input
-          class="input is-small ui-form-input"
-          placeholder="Filter..."
-          onkeydown={onFilterKeydown}
-          ref={inputFilter}
-        />
+  return (
+    <>
+      <div class="ui-widget-header">
+        <div class="ui-form-row">
+          <span class="ui-form-label">Filter</span>
+          <input
+            class="input is-small ui-form-input"
+            placeholder="Filter..."
+            onkeydown={onFilterKeydown}
+            ref={inputFilter}
+          />
+        </div>
       </div>
-    </div>
-    <div class="ui-table-wrapper">
-      <Table data={(state.tableData)} cbSort={cbSort}/>
-    </div>
-    <Pagination
-      numPages={(state.pagination.numPages)}
-      currentPage={(state.pagination.currentPage)}
-      onPaginate={onPaginate}
-    />
-  </>)
+      <div class="ui-table-wrapper">
+        <Table data={state.tableData} cbSort={cbSort} />
+      </div>
+      <Pagination
+        numPages={state.pagination.numPages}
+        currentPage={state.pagination.currentPage}
+        onPaginate={onPaginate}
+      />
+    </>
+  );
 }

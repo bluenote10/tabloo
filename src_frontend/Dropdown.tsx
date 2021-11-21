@@ -1,25 +1,24 @@
-import { createStore } from 'solid-js/store';
-import { Show } from "solid-js/web"
+import { createStore } from "solid-js/store";
+import { Show } from "solid-js/web";
 
-import { IconAngleDown } from "./Icons"
+import { IconAngleDown } from "./Icons";
 
 interface DropdownProps {
-  items: string[],
-  selectedIndex?: number,
-  cbSelect: (index: number) => void,
+  items: string[];
+  selectedIndex?: number;
+  cbSelect: (index: number) => void;
 }
 
 export function Dropdown(props: DropdownProps) {
-
   const [state, setState] = createStore({
     active: false,
-  })
+  });
 
   function onClick(event: Event) {
-    setState({active: !state.active})
+    setState({ active: !state.active });
   }
   function onBlur(event: Event) {
-    setState({active: false})
+    setState({ active: false });
   }
 
   // Note the click handler of the dropdown items uses an onMouseDown
@@ -27,28 +26,38 @@ export function Dropdown(props: DropdownProps) {
   // onClick of the item, see:
   // https://stackoverflow.com/questions/17769005/onclick-and-onblur-ordering-issue
   return (
-    <div class={("dropdown" + (state.active ? " is-active" : "") )}>
+    <div class={"dropdown" + (state.active ? " is-active" : "")}>
       <div class="dropdown-trigger">
         <button class="button is-small" onclick={onClick} onblur={onBlur}>
-          <span class="dropdown-text">{(props.selectedIndex != undefined ? props.items[props.selectedIndex] : "")}</span>
+          <span class="dropdown-text">
+            {props.selectedIndex != undefined
+              ? props.items[props.selectedIndex]
+              : ""}
+          </span>
           <span class="icon is-small">
-            <IconAngleDown/>
+            <IconAngleDown />
           </span>
         </button>
       </div>
-      <Show when={(state.active)}>
+      <Show when={state.active}>
         <div class="dropdown-menu customz">
           <div class="dropdown-content">
-            {(props.items.map((item, index) =>
-              <a class={("dropdown-item modified" + (props.selectedIndex === index ? " is-active" : ""))} onmousedown={(event) => {
-                props.cbSelect(index)
-              }}>
+            {props.items.map((item, index) => (
+              <a
+                class={
+                  "dropdown-item modified" +
+                  (props.selectedIndex === index ? " is-active" : "")
+                }
+                onmousedown={(event) => {
+                  props.cbSelect(index);
+                }}
+              >
                 {item}
-              </a>)
-            )}
+              </a>
+            ))}
           </div>
         </div>
       </Show>
     </div>
-  )
+  );
 }

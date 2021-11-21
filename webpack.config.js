@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require("path");
 
 // const webpack = require('webpack');
 // const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -6,13 +6,13 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    app: './src_frontend/index.tsx'
+    app: "./src_frontend/index.tsx",
   },
-  devtool : 'source-map',
-  mode: 'development',
+  devtool: "source-map",
+  mode: "development",
   output: {
-    filename: 'main.js',
-    path: path.resolve(__dirname, 'dist')
+    filename: "main.js",
+    path: path.resolve(__dirname, "dist"),
   },
   module: {
     rules: [
@@ -34,15 +34,15 @@ module.exports = {
       */
       {
         test: [/\.jsx?$/, /\.tsx?$/],
-        include: path.resolve(__dirname, 'src_frontend'),
+        include: path.resolve(__dirname, "src_frontend"),
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader",
         },
       },
-    ]
+    ],
   },
   resolve: {
-    extensions: [ '.ts', '.tsx', '.js' ],
+    extensions: [".ts", ".tsx", ".js"],
   },
   plugins: [
     // https://webpack.js.org/guides/hot-module-replacement
@@ -53,9 +53,9 @@ module.exports = {
     // new webpack.HotModuleReplacementPlugin()
   ],
   devServer: {
-    static: path.join(__dirname, 'dist'),
+    static: path.join(__dirname, "dist"),
     //disableHostCheck: true,
     //hot: true,
     //inline: true,
-  }
+  },
 };
