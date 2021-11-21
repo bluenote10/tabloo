@@ -1,5 +1,5 @@
-import { createState, createEffect, onCleanup } from 'solid-js'
-import { Show } from "solid-js/dom"
+import { createStore } from 'solid-js/store';
+import { Show } from "solid-js/web"
 
 import { IconAngleDown } from "./Icons"
 
@@ -11,7 +11,7 @@ interface DropdownProps {
 
 export function Dropdown(props: DropdownProps) {
 
-  const [state, setState] = createState({
+  const [state, setState] = createStore({
     active: false,
   })
 

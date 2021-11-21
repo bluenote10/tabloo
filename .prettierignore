@@ -3,3 +3,4 @@ node_modules/
 
 # unfortunately my old Solid version still isn't prettier compatible
 src_frontend/*.tsx
+webpack.*.js

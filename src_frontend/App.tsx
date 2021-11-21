@@ -1,6 +1,7 @@
 
-import { createState, createEffect, createMemo } from 'solid-js';
-import { For, Switch, Match } from 'solid-js/dom';
+import { JSX, createEffect, createMemo } from 'solid-js';
+import { createStore } from 'solid-js/store';
+import { For, Switch, Match } from 'solid-js/web';
 
 import { StoreInterface } from "./store";
 
@@ -39,7 +40,7 @@ function buildIcon(icon: string) {
 
 export function App({store} : {store: StoreInterface}) {
 
-  const [state, setState] = createState({
+  const [state, setState] = createStore({
     appstate: {
       tabs: [
         {
