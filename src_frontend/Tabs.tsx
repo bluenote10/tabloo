@@ -16,10 +16,7 @@ export function Tabs(props: {
       <div class="container">
         {props.tabHeaders.map((tabHeader, index) => (
           <a
-            class={
-              "ui-navbar-button " +
-              (index === props.activeIndex ? "is-active" : "")
-            }
+            class={"ui-navbar-button " + (index === props.activeIndex ? "is-active" : "")}
             onclick={(_event) => props.onActivate(index)}
           >
             {tabHeader}

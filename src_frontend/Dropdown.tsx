@@ -30,9 +30,7 @@ export function Dropdown(props: DropdownProps) {
       <div class="dropdown-trigger">
         <button class="button is-small" onclick={onClick} onblur={onBlur}>
           <span class="dropdown-text">
-            {props.selectedIndex != undefined
-              ? props.items[props.selectedIndex]
-              : ""}
+            {props.selectedIndex != undefined ? props.items[props.selectedIndex] : ""}
           </span>
           <span class="icon is-small">
             <IconAngleDown />
@@ -45,8 +43,7 @@ export function Dropdown(props: DropdownProps) {
             {props.items.map((item, index) => (
               <a
                 class={
-                  "dropdown-item modified" +
-                  (props.selectedIndex === index ? " is-active" : "")
+                  "dropdown-item modified" + (props.selectedIndex === index ? " is-active" : "")
                 }
                 onmousedown={(_event) => {
                   props.cbSelect(index);

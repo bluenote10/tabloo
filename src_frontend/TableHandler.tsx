@@ -196,13 +196,7 @@ function Table(props: {
   });
 
   function sortByCol(name: string, index: number) {
-    console.log(
-      "Sorting by column:",
-      name,
-      index,
-      state.sortColIndex,
-      state.sortColKind
-    );
+    console.log("Sorting by column:", name, index, state.sortColIndex, state.sortColKind);
     if (state.sortColIndex !== index || state.sortColKind == 0) {
       props.cbSort(1, index);
       setState({
@@ -255,9 +249,7 @@ function Table(props: {
 
   return (
     <table
-      class={
-        "table is-striped is-narrow is-hoverable is-bordered compact-table"
-      }
+      class={"table is-striped is-narrow is-hoverable is-bordered compact-table"}
       oncopy={onCopy}
     >
       <thead>
@@ -270,10 +262,7 @@ function Table(props: {
                   <a
                     class="th-sort-symbol"
                     onclick={(_event) => sortByCol(colHeader.name, index())}
-                    onmousedown={
-                      (event) =>
-                        event.preventDefault() /* to prevent header selection*/
-                    }
+                    onmousedown={(event) => event.preventDefault() /* to prevent header selection*/}
                   >
                     {renderSymbol(
                       colHeader.name,
@@ -299,10 +288,7 @@ function Table(props: {
                 {(x: Value, j: () => number) => (
                   <td
                     class={
-                      "truncate " +
-                      (columnFormatters[j()].align > 0
-                        ? "has-text-right"
-                        : undefined)
+                      "truncate " + (columnFormatters[j()].align > 0 ? "has-text-right" : undefined)
                     }
                   >
                     {columnFormatters[j()].format(x)}
@@ -324,10 +310,7 @@ interface PaginationData {
 }
 
 function Pagination(props: PaginationData) {
-  function constructPageArray(
-    n: number,
-    current: number
-  ): Array<number | undefined> {
+  function constructPageArray(n: number, current: number): Array<number | undefined> {
     if (n <= 10) {
       return Array.from(Array(props.numPages).keys());
     } else {
@@ -336,15 +319,7 @@ function Pagination(props: PaginationData) {
       } else if (current >= n - 3) {
         return [0, undefined, n - 4, n - 3, n - 2, n - 1];
       } else {
-        return [
-          0,
-          undefined,
-          current - 1,
-          current,
-          current + 1,
-          undefined,
-          n - 1,
-        ];
+        return [0, undefined, current - 1, current, current + 1, undefined, n - 1];
       }
     }
   }
@@ -358,10 +333,7 @@ function Pagination(props: PaginationData) {
               return (
                 <li>
                   <a
-                    class={
-                      "pagination-link" +
-                      (i === props.currentPage ? " is-current" : "")
-                    }
+                    class={"pagination-link" + (i === props.currentPage ? " is-current" : "")}
                     onclick={() => props.onPaginate(i)}
                   >
                     {i + 1}

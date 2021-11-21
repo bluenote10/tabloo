@@ -104,9 +104,7 @@ export function App({ store }: { store: StoreInterface }) {
                 />
               </Match>
               <Match when={true}>
-                <div class="ui-widget-header">
-                  {"Illegal widget.type: " + widget.type}
-                </div>
+                <div class="ui-widget-header">{"Illegal widget.type: " + widget.type}</div>
               </Match>
             </Switch>
           )}
@@ -121,11 +119,7 @@ export function App({ store }: { store: StoreInterface }) {
 
   return (
     <>
-      <Tabs
-        activeIndex={state.activeTabIndex}
-        tabHeaders={tabHeaders()}
-        onActivate={onActivate}
-      />
+      <Tabs activeIndex={state.activeTabIndex} tabHeaders={tabHeaders()} onActivate={onActivate} />
       <div class="ui-padded-container">
         <div class="container">{tabContents()[state.activeTabIndex]}</div>
       </div>

@@ -11,10 +11,7 @@ export function mutationCallback(records: MutationRecord[]) {
   }
 }
 
-export function dispatchAll(
-  nodes: NodeList,
-  type: "disconnected" | "connected"
-) {
+export function dispatchAll(nodes: NodeList, type: "disconnected" | "connected") {
   for (let i = 0; i < nodes.length; ++i) {
     const node = nodes[i];
     node.nodeType === 1 && dispatchTarget(node, type);

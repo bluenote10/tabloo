@@ -20,10 +20,7 @@ export class StoreBackend implements StoreInterface {
     return response.data as string[];
   }
 
-  async fetchNumPages(
-    paginationSize: number,
-    filter?: string
-  ): Promise<number> {
+  async fetchNumPages(paginationSize: number, filter?: string): Promise<number> {
     const response = await axios.get(`${this.url}/api/get_num_pages`, {
       params: {
         paginationSize: paginationSize,
