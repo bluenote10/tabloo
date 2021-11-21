@@ -69,7 +69,7 @@ export function App({ store }: { store: StoreInterface }) {
     activeTabIndex: 0,
   });
 
-  let tabHeaders = (
+  const tabHeaders = (
     <For each={state.appstate.tabs}>
       {(tab) => (
         <span>
@@ -79,7 +79,7 @@ export function App({ store }: { store: StoreInterface }) {
     </For>
   ) as () => JSX.Element[];
 
-  let tabContents = (
+  const tabContents = (
     <For each={state.appstate.tabs}>
       {(tab) => (
         <For each={tab.widgets}>

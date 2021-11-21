@@ -16,7 +16,7 @@ export class StoreBackend implements StoreInterface {
   url = "http://localhost:5000";
 
   async fetchColumns(): Promise<string[]> {
-    let response = await axios.get(`${this.url}/api/get_columns`);
+    const response = await axios.get(`${this.url}/api/get_columns`);
     return response.data as string[];
   }
 
@@ -24,7 +24,7 @@ export class StoreBackend implements StoreInterface {
     paginationSize: number,
     filter?: string
   ): Promise<number> {
-    let response = await axios.get(`${this.url}/api/get_num_pages`, {
+    const response = await axios.get(`${this.url}/api/get_num_pages`, {
       params: {
         paginationSize: paginationSize,
         filter: filter,
@@ -34,7 +34,7 @@ export class StoreBackend implements StoreInterface {
   }
 
   async fetchData(opts: DataFetchOptions): Promise<TableData> {
-    let response = await axios.get(`${this.url}/api/get_data`, {
+    const response = await axios.get(`${this.url}/api/get_data`, {
       params: opts,
     });
     console.log("Received response...");
@@ -51,10 +51,10 @@ export class StoreBackend implements StoreInterface {
       // Ugly axios bug: It swallows JSON.parse exceptions...
       // https://github.com/axios/axios/issues/1723
       // Try explicit parse to see exception...
-      let parsed = JSON.parse(response.data) as TableData;
+      const parsed = JSON.parse(response.data) as TableData;
       return parsed;
     }
-    let parsed = response.data as TableData;
+    const parsed = response.data as TableData;
 
     // Transform values to account for JSON sentinels
     for (let j = 0; j < parsed.length; j++) {

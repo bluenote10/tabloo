@@ -62,7 +62,7 @@ function PlotWrapper(props: PlotWrapperProps) {
 */
 
 function PlotWrapper(props: PlotWrapperProps) {
-  let el: HTMLDivElement = null!;
+  const el: HTMLDivElement = null!;
   let chart: ECharts = null!;
 
   const [state, setState] = createStore({
@@ -70,7 +70,7 @@ function PlotWrapper(props: PlotWrapperProps) {
     cachedPlotData: null,
   });
 
-  let updatePlot = (plotData: any) => {
+  const updatePlot = (plotData: any) => {
     if (chart == null) {
       chart = echarts.init(el as HTMLDivElement, { locale: "EN" });
     }
@@ -85,7 +85,7 @@ function PlotWrapper(props: PlotWrapperProps) {
 
   createEffect(() => {
     // effect to monitor changes to props.plotData
-    let newPlotData = props.plotData;
+    const newPlotData = props.plotData;
     if (untrack(() => state.mounted)) {
       // already mounted => we can call into the external lib directly
       updatePlot(newPlotData);
@@ -95,7 +95,7 @@ function PlotWrapper(props: PlotWrapperProps) {
     }
   });
 
-  let onMounted = () => {
+  const onMounted = () => {
     if (state.cachedPlotData != null) {
       updatePlot(state.cachedPlotData!);
       setState({ cachedPlotData: null });
@@ -103,7 +103,7 @@ function PlotWrapper(props: PlotWrapperProps) {
     setState({ mounted: true });
   };
 
-  let onUnmounted = () => {
+  const onUnmounted = () => {
     setState({ mounted: false });
   };
 
@@ -139,16 +139,16 @@ export function PlotHandler(props: {
 
   createEffect(() => {
     // handles updates of selected column indices
-    let xCol = state.selectedColX;
-    let yCol = state.selectedColY;
-    let filter = props.filter;
+    const xCol = state.selectedColX;
+    const yCol = state.selectedColY;
+    const filter = props.filter;
     if (xCol != undefined && yCol != undefined) {
       fetchData(xCol, yCol, filter);
     }
   });
 
   async function fetchColumns() {
-    let columns = await store.fetchColumns();
+    const columns = await store.fetchColumns();
     console.log(columns);
     setState({ columns: columns });
 
@@ -162,7 +162,7 @@ export function PlotHandler(props: {
 
   async function fetchData(xCol: number, yCol: number, filter: string) {
     console.log(`Fetching data for columns ${xCol} vs ${yCol}`);
-    let data = await store.fetchData({
+    const data = await store.fetchData({
       sortKind: 0,
       filter: filter,
     });
@@ -182,9 +182,9 @@ export function PlotHandler(props: {
       }
     };
 
-    let rowsData = Array(numRows);
+    const rowsData = Array(numRows);
     for (let i = 0; i < numRows; i++) {
-      let rowData = Array(2);
+      const rowData = Array(2);
       rowData[0] = valueConverter(data[xCol].values[i]);
       rowData[1] = valueConverter(data[yCol].values[i]);
       rowsData[i] = rowData;
@@ -192,7 +192,7 @@ export function PlotHandler(props: {
 
     // specify chart configuration item and data
     // https://echarts.baidu.com/echarts2/doc/doc-en.html
-    let plotData = {
+    const plotData = {
       //toolbox: {
       //  show: true,
       //},
@@ -256,7 +256,7 @@ export function PlotHandler(props: {
   }
 
   createEffect(() => {
-    let newFilter = props.filter;
+    const newFilter = props.filter;
     console.log("PlotHandler: filter updated to", newFilter);
     if (inputFilter != undefined) {
       inputFilter.value = newFilter;

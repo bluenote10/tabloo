@@ -31,8 +31,8 @@ const iAngleDown = icon({ prefix: "fas", iconName: "angle-down" });
 
 function convert(icon: Icon) {
   // Note: icon.node is an HTMLCollection https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection
-  let fragment = []; // <></>
-  for (let node of Array.from(icon.node)) {
+  const fragment = []; // <></>
+  for (const node of Array.from(icon.node)) {
     fragment.push(node);
   }
   return fragment;
