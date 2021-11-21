@@ -51,7 +51,7 @@ function PlotWrapper(props: PlotWrapperProps) {
 */
 
 function PlotWrapper(props: PlotWrapperProps) {
-  const el: HTMLDivElement | null = null;
+  let el: HTMLDivElement | null = null;
   let chart: ECharts | null = null;
 
   const [state, setState] = createStore({
@@ -104,7 +104,7 @@ function PlotWrapper(props: PlotWrapperProps) {
     <div
       // Not sure why the Solid types expect passed in refs to be not-null
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      ref={el!}
+      ref={(ref) => (el = ref)}
       style="width: 800px;height:600px;"
       // onconnected={onMounted}
       // ondisconnected={onUnmounted}
