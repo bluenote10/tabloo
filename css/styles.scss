@@ -27,8 +27,7 @@ $default-font-size: 0.75rem;
 // Dropdown customization
 // https://bulma.io/documentation/components/dropdown/#variables
 $dropdown-item-active-background-color: hsl(217, 61%, 19%);
-$dropdown-content-shadow: 2px 2px 25px 0px rgba($black, 0.3),
-  0px 0px 0px 1px rgba($black, 0.1); // the spread is used to generate a border
+$dropdown-content-shadow: 2px 2px 25px 0px rgba($black, 0.3), 0px 0px 0px 1px rgba($black, 0.1); // the spread is used to generate a border
 // TODO: Maybe adjust radius, but has to be synced with other components
 // $dropdown-content-radius: 8px;
 

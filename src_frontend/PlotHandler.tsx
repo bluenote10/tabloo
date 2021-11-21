@@ -170,12 +170,7 @@ export function PlotHandler(props: {
     const numRows = data[0].values.length;
 
     const valueConverter = (x: string | number) => {
-      if (
-        x == undefined ||
-        x === "inf" ||
-        x === "-inf" ||
-        (typeof x == "number" && !isFinite(x))
-      ) {
+      if (x == undefined || x === "inf" || x === "-inf" || (typeof x == "number" && !isFinite(x))) {
         return NaN;
       } else {
         return x; // TODO: do we need to convert to string for categorical data?

@@ -9,10 +9,7 @@ export function isArray(value: any): value is Array<unknown> {
   // Array.isArray(value);
 }
 
-export function forEach<V>(
-  obj: { [key: string]: V },
-  f: (k: string, v: V) => void
-) {
+export function forEach<V>(obj: { [key: string]: V }, f: (k: string, v: V) => void) {
   for (const key in obj) {
     const value = obj[key];
     f(key, value);
@@ -31,10 +28,7 @@ export function mapEntries<A, B>(obj: {[key: string]: A}, f: (k: string, v: A) =
 }
 */
 
-export function mapEntries<A, B>(
-  obj: { [key: string]: A },
-  f: (k: string, v: A) => B
-): Array<B> {
+export function mapEntries<A, B>(obj: { [key: string]: A }, f: (k: string, v: A) => B): Array<B> {
   const result = Array<B>();
   for (const key in obj) {
     const value = obj[key];
