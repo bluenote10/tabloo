@@ -2,8 +2,16 @@
 module.exports = {
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint"],
-  extends: ["plugin:@typescript-eslint/recommended"],
+  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   rules: {
     "no-unexpected-multiline": "error",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        ignoreRestSiblings: true,
+        varsIgnorePattern: "^_.*",
+        argsIgnorePattern: "^_.*",
+      },
+    ],
   },
 };

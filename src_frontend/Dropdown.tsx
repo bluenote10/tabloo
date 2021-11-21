@@ -14,10 +14,10 @@ export function Dropdown(props: DropdownProps) {
     active: false,
   });
 
-  function onClick(event: Event) {
+  function onClick(_event: Event) {
     setState({ active: !state.active });
   }
-  function onBlur(event: Event) {
+  function onBlur(_event: Event) {
     setState({ active: false });
   }
 
@@ -48,7 +48,7 @@ export function Dropdown(props: DropdownProps) {
                   "dropdown-item modified" +
                   (props.selectedIndex === index ? " is-active" : "")
                 }
-                onmousedown={(event) => {
+                onmousedown={(_event) => {
                   props.cbSelect(index);
                 }}
               >
