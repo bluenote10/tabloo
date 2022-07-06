@@ -10,7 +10,7 @@ from . import server
 def show(
         df,
         open_browser=True,
-        server_host="0.0.0.0",
+        server_host="127.0.0.1",
         server_port=5000,
         server_logging=False,
         debug=False):
