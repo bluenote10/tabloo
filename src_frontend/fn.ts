@@ -1,19 +1,17 @@
-
 // https://webbjocke.com/javascript-check-data-types/
-export function isObject(value: any) {
-  return value && typeof value === 'object' && value.constructor === Object;
+export function isObject(value: any): value is object {
+  return value && typeof value === "object" && value.constructor === Object;
 }
 
-export function isArray(value: any) {
-  return value && typeof value === 'object' && value.constructor === Array;
+export function isArray(value: any): value is Array<unknown> {
+  return value && typeof value === "object" && value.constructor === Array;
   // ES5 actually has a method for this (ie9+)
   // Array.isArray(value);
 }
 
-
-export function forEach<V>(obj: {[key: string]: V}, f: (k: string, v: V) => void) {
-  for (let key in obj) {
-    let value = obj[key];
+export function forEach<V>(obj: { [key: string]: V }, f: (k: string, v: V) => void) {
+  for (const key in obj) {
+    const value = obj[key];
     f(key, value);
   }
 }
@@ -30,15 +28,14 @@ export function mapEntries<A, B>(obj: {[key: string]: A}, f: (k: string, v: A) =
 }
 */
 
-export function mapEntries<A, B>(obj: {[key: string]: A}, f: (k: string, v: A) => B): Array<B> {
-  let result = Array<B>();
-  for (let key in obj) {
-    let value = obj[key];
-    result.push(f(key, value))
+export function mapEntries<A, B>(obj: { [key: string]: A }, f: (k: string, v: A) => B): Array<B> {
+  const result = Array<B>();
+  for (const key in obj) {
+    const value = obj[key];
+    result.push(f(key, value));
   }
   return result;
 }
-
 
 /*
 export function forEach<V>(arr: Array<V>, f: (v: V) => void) {

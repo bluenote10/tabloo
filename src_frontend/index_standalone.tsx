@@ -1,11 +1,12 @@
 // Needs to be imported once to enable lifecycle hooks
-import './dom_lifecycle';
+import "./dom_lifecycle";
 
-import { render } from 'solid-js/dom';
+import { render } from "solid-js/web";
 import { App } from "./App";
 import { StoreStandalone } from "./store_standalone";
 
-let store = new StoreStandalone()
+const store = new StoreStandalone();
 
-let el = document.getElementById('ROOT')!;
-render(() => <App store={store}/>, el);
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const el = document.getElementById("ROOT")!;
+render(() => <App store={store} />, el);

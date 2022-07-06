@@ -1,45 +1,40 @@
-
-import { createState, createEffect, createMemo } from 'solid-js';
-import { For, Switch, Match } from 'solid-js/dom';
+import { JSX } from "solid-js";
+import { createStore } from "solid-js/store";
+import { For, Switch, Match } from "solid-js/web";
 
 import { StoreInterface } from "./store";
 
 import { Tabs } from "./Tabs";
-import { TableHandler } from "./TableHandler"
-import { PlotHandler } from "./PlotHandler"
-// import { MapHandler } from "./MapHandler"
+import { TableHandler } from "./TableHandler";
+import { PlotHandler } from "./PlotHandler";
 
-import { IconDatabase, IconChartBar } from "./Icons"
-
+import { IconDatabase, IconChartBar } from "./Icons";
 
 interface TabConfig {
   name: {
-    icon: string,
-    text: string,
-  }
-  widgets: WidgetConfig[]
+    icon: string;
+    text: string;
+  };
+  widgets: WidgetConfig[];
 }
 
 interface WidgetConfig {
-  type: string
-  filterId: string
+  type: string;
+  filterId: string;
 }
-
 
 function buildIcon(icon: string) {
   if (icon === "database") {
-    return <IconDatabase/>;
+    return <IconDatabase />;
   } else if (icon === "plot") {
-    return <IconChartBar/>;
+    return <IconChartBar />;
   } else {
-    return <span>?</span>
+    return <span>?</span>;
   }
 }
 
-
-export function App({store} : {store: StoreInterface}) {
-
-  const [state, setState] = createState({
+export function App({ store }: { store: StoreInterface }) {
+  const [state, setState] = createStore({
     appstate: {
       tabs: [
         {
@@ -52,7 +47,7 @@ export function App({store} : {store: StoreInterface}) {
               type: "table",
               filterId: "default",
             },
-          ]
+          ],
         },
         {
           name: {
@@ -64,74 +59,69 @@ export function App({store} : {store: StoreInterface}) {
               type: "scatter-plot",
               filterId: "default",
             },
-          ]
-        }
+          ],
+        },
       ] as TabConfig[],
       filters: {
         default: "",
-      } as {[index: string]: string},
+      } as { [index: string]: string },
     },
     activeTabIndex: 0,
-  })
+  });
 
-  let tabHeaders = (
-    <For each={(state.appstate.tabs)}>{tab =>
-      <span>{buildIcon(tab.name.icon)} {tab.name.text}</span>
-    }</For>
-  ) as () => JSX.Element[]
+  const tabHeaders = (
+    <For each={state.appstate.tabs}>
+      {(tab) => (
+        <span>
+          {buildIcon(tab.name.icon)} {tab.name.text}
+        </span>
+      )}
+    </For>
+  ) as () => JSX.Element[];
 
-  let tabContents = (
-    <For each={(state.appstate.tabs)}>{ tab =>
-      <For each={(tab.widgets)}>{ widget =>
-        <Switch>
-          <Match when={(widget.type === "table")}>
-            <TableHandler
-              store={store}
-              filter={(state.appstate.filters[widget.filterId])}
-              onSetFilter={s => {
-                setState("appstate", "filters", widget.filterId, s)
-              }}
-            />
-          </Match>
-          <Match when={(widget.type === "scatter-plot")}>
-            <PlotHandler
-              store={store}
-              filter={(state.appstate.filters[widget.filterId])}
-              onSetFilter={s => {
-                setState("appstate", "filters", widget.filterId, s)
-              }}
-            />
-          </Match>
-          {/*
-          <Match when={(widget.type === "map")}>
-            <MapHandler
-              store={store}
-              filter={(state.appstate.filters[widget.filterId])}
-              onSetFilter={s => {
-                setState("appstate", "filters", widget.filterId, s)
-              }}
-            />
-          </Match>
-          */}
-          <Match when={true}>
-            <div class="ui-widget-header">{("Illegal widget.type: " + widget.type)}</div>
-          </Match>
-        </Switch>
-      }</For>
-    }</For>
-  ) as () => JSX.Element[]
+  const tabContents = (
+    <For each={state.appstate.tabs}>
+      {(tab) => (
+        <For each={tab.widgets}>
+          {(widget) => (
+            <Switch>
+              <Match when={widget.type === "table"}>
+                <TableHandler
+                  store={store}
+                  filter={state.appstate.filters[widget.filterId]}
+                  onSetFilter={(s) => {
+                    setState("appstate", "filters", widget.filterId, s);
+                  }}
+                />
+              </Match>
+              <Match when={widget.type === "scatter-plot"}>
+                <PlotHandler
+                  store={store}
+                  filter={state.appstate.filters[widget.filterId]}
+                  onSetFilter={(s) => {
+                    setState("appstate", "filters", widget.filterId, s);
+                  }}
+                />
+              </Match>
+              <Match when={true}>
+                <div class="ui-widget-header">{"Illegal widget.type: " + widget.type}</div>
+              </Match>
+            </Switch>
+          )}
+        </For>
+      )}
+    </For>
+  ) as () => JSX.Element[];
 
   function onActivate(i: number) {
-    setState({activeTabIndex: i})
+    setState({ activeTabIndex: i });
   }
 
   return (
     <>
-      <Tabs activeIndex={(state.activeTabIndex)} tabHeaders={(tabHeaders())} onActivate={onActivate}/>
+      <Tabs activeIndex={state.activeTabIndex} tabHeaders={tabHeaders()} onActivate={onActivate} />
       <div class="ui-padded-container">
-        <div class="container">
-          {( tabContents()[state.activeTabIndex] )}
-        </div>
+        <div class="container">{tabContents()[state.activeTabIndex]}</div>
       </div>
     </>
   );
