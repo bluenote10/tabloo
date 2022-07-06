@@ -13,6 +13,7 @@ function transformValue(x: any): any {
 }
 
 export class StoreBackend implements StoreInterface {
+  // TODO: this needs to be dynamic
   url = "http://10.70.16.18:5000"
 
   async fetchColumns(): Promise<string[]> {
