@@ -1,5 +1,10 @@
 .vscode/
 node_modules/
 
-# unfortunately my old Solid version still isn't prettier compatible
-src_frontend/*.tsx
+/.github/workflows/
+/dist/
+/src_backend_python/
+/README.md
+/*.html
+/webpack-stats.json
+/tsconfig.json
