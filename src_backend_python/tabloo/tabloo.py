@@ -10,10 +10,10 @@ from . import server
 def show(
         df,
         open_browser=True,
+        server_host="127.0.0.1",
         server_port=5000,
         server_logging=False,
-        debug=False,
-    ):
+        debug=False):
     """
     Runs a Tabloo app on a given dataframe.
 
@@ -33,6 +33,7 @@ def show(
     server.serve(
         df=df,
         open_browser=open_browser,
+        server_host=server_host,
         server_port=server_port,
         server_logging=server_logging,
         debug=debug,
