@@ -17,14 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python_version: [3.6, 3.8]
+        python_version: [3.8, 3.10]
         install_type: [standard, dev, minimal]
-        exclude:
-          # Python 3.8 doesn't support the old Pandas version we are testing against.
-          # Also, the idea of the 'minimal' test is to test compatibility w.r.t. old
-          # environment, which doesn't require testing against a more modern Python.
-          - python_version: 3.8
-            install_type: minimal
 
     env:
       INSTALL_TYPE:  ${{ matrix.install_type }}
@@ -63,7 +57,7 @@ jobs:
             pip install -I -e .
             # Apparently earlier versions of pandas behave differently in term of to_dict().
             # Need to check if we could support them as well by rolling our own to_dict() logic.
-            pip install flask==1.0.0 flask-cors==3.0.0 pandas==0.24.0
+            pip install flask==2.0.0 pandas==1.0
           fi
 
           echo -e "\n *** Installing test dependencies"

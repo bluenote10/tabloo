@@ -1,19 +1,18 @@
-from __future__ import division, print_function
-
-import os
 import json
+import os
+
 import pandas as pd
 
 from . import server
 
 
 def show(
-        df,
-        open_browser=True,
-        server_port=5000,
-        server_logging=False,
-        debug=False,
-    ):
+    df,
+    open_browser: bool = True,
+    server_port: int = 5000,
+    server_logging: bool = False,
+    debug: bool = False,
+):
     """
     Runs a Tabloo app on a given dataframe.
 
@@ -58,9 +57,11 @@ def embedHTML(df, filename):
         # This is super fragile; let's see if this is viable at all...
         # https://stackoverflow.com/a/23983448/1804173
         # https://blog.uploadcare.com/vulnerability-in-html-design-the-script-tag-33d24642359e
-        return s.replace("</script", "</scr\\ipt")\
-                .replace("<script", "<\\script") \
-                .replace("<!--", "<\\!--")
+        return (
+            s.replace("</script", "</scr\\ipt")
+            .replace("<script", "<\\script")
+            .replace("<!--", "<\\!--")
+        )
 
     # TODO: factor out df to json conversion
     column_data = json.dumps(list(df.columns))
@@ -69,18 +70,20 @@ def embedHTML(df, filename):
         # TODO: handle +/- inf handling to satisfy JSON standard
         return list(col.replace({pd.np.nan: None}))
 
-    table_data = json.dumps([
-        {
-            "columnName": columnName,
-            "values": convert_column(df[columnName]),
-            "sortKind": 0, # if columnName != sort_column else sort_kind,
-        }
-        for columnName in df.columns
-    ])
+    table_data = json.dumps(
+        [
+            {
+                "columnName": columnName,
+                "values": convert_column(df[columnName]),
+                "sortKind": 0,  # if columnName != sort_column else sort_kind,
+            }
+            for columnName in df.columns
+        ]
+    )
 
     html = asset_html.format(
         SCRIPT=escape(asset_js),
-        STYLES=asset_css,   # TODO: check rules for escaping style
+        STYLES=asset_css,  # TODO: check rules for escaping style
         TABLOO_COLUMN_DATA=escape(column_data),
         TABLOO_TABLE_DATA=escape(table_data),
     )

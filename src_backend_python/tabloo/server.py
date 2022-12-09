@@ -1,20 +1,16 @@
-from __future__ import division, print_function
-
 import logging
-import os
 import threading
 import webbrowser
 
-from flask import Flask, send_from_directory, redirect, request, make_response
+from flask import Flask, make_response, redirect, request
 from flask_cors import CORS
 
 from .backend import Backend, to_json
 
-
 app = Flask(
     __name__,
-    static_url_path='',
-    static_folder='static',
+    static_url_path="",
+    static_folder="static",
 )
 CORS(app)
 
@@ -68,19 +64,19 @@ def json_response(data):
     return response
 
 
-@app.route('/api/get_columns')
+@app.route("/api/get_columns")
 def get_columns():
     return json_response(backend.get_columns())
 
 
-@app.route('/api/get_num_pages')
+@app.route("/api/get_num_pages")
 def get_num_pages():
     pagination_size = int(request.args.get("paginationSize", 20))
     filter = request.args.get("filter")
     return json_response(backend.get_num_pages(pagination_size, filter))
 
 
-@app.route('/api/get_data')
+@app.route("/api/get_data")
 def get_data():
     filter = request.args.get("filter")
 
@@ -94,11 +90,10 @@ def get_data():
     if pagination_size is not None:
         pagination_size = int(pagination_size)
 
-    return json_response(backend.get_data(
-        filter, sort_column, sort_kind, page, pagination_size))
+    return json_response(backend.get_data(filter, sort_column, sort_kind, page, pagination_size))
 
 
-@app.route('/')
+@app.route("/")
 def index():
     return redirect("index.html")
 
@@ -111,16 +106,12 @@ def serve(df, open_browser, server_port=5000, server_logging=True, debug=False):
     global backend
     backend = Backend(df)
 
-    # Avoid Flask warning about using werkzeug: https://stackoverflow.com/a/53166103/1804173
-    os.environ["FLASK_ENV"] = "development"
-
     if not server_logging:
-        os.environ['WERKZEUG_RUN_MAIN'] = 'true'
-        logging.getLogger('werkzeug').disabled = True
+        logging.getLogger("werkzeug").disabled = True
 
     if not server_logging and not open_browser:
         # https://stackoverflow.com/a/56856877/1804173
-        print("Running on {}".format(url))
+        print(f"Running on {url}")
 
     if open_browser:
         threading.Timer(0.25, lambda: webbrowser.open(url)).start()
