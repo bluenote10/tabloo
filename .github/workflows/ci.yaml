@@ -19,7 +19,12 @@ jobs:
       matrix:
         python_version: ["3.8", "3.10"]
         install_type: [standard, dev, minimal]
-
+        exclude:
+          # It looks like pip installing our minimal pandas version is very slow under Python 3.10,
+          # most likely, because it involves explicit compilation. Excluding it for now because
+          # testing old library versions against a modern Python is a rather rare use case.
+          - python_version: "3.10"
+            install_type: minimal
     env:
       INSTALL_TYPE:  ${{ matrix.install_type }}
 
