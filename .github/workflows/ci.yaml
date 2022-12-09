@@ -57,7 +57,7 @@ jobs:
             pip install -I -e .
             # Apparently earlier versions of pandas behave differently in term of to_dict().
             # Need to check if we could support them as well by rolling our own to_dict() logic.
-            pip install flask==2.0.0 pandas==1.0
+            pip install flask==2.0.0 pandas==1.2.0
           fi
 
           echo -e "\n *** Installing test dependencies"
