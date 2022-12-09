@@ -1,3 +1,1 @@
-from .tabloo import (
-    show, embedHTML,
-)
+from .tabloo import embedHTML, show

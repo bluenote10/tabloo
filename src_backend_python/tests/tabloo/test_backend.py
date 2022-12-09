@@ -1,44 +1,47 @@
-import pytest
-
 import datetime
 import json
 
-import pandas as pd
 import numpy as np
+import pandas as pd
+import pytest
 
-from tabloo.backend import Backend, to_json, convert_column
+from tabloo.backend import Backend, convert_column, to_json
 
 
 @pytest.fixture
 def df_simple():
-    df = pd.DataFrame({
-        "A": [1, 3, 2],
-        "B": [6, 5, 4],
-    })
+    df = pd.DataFrame(
+        {
+            "A": [1, 3, 2],
+            "B": [6, 5, 4],
+        }
+    )
     df = df[sorted(df.columns)]
     return df
 
 
 @pytest.fixture
 def df_with_custom_column_types(df_simple):
-    df = pd.DataFrame({
-        "A": [1, None, 3],
-        "B": [np.array([1, 2, 3]), np.array([2, 3, 4]), np.array([3, 4, 5])],
-        "C": [pd.Series([1, 2, 3]), pd.Series([2, 3, 4]), pd.Series([3, 4, 5])],
-        "D": [df_simple, df_simple, df_simple],
-        "E": [{"a": 1}, {"b": 2}, {"c": 3}],
-        "F": [None, None, None],
-        "G": [
-            datetime.datetime.utcfromtimestamp(0),
-            datetime.datetime.utcfromtimestamp(1e9),
-            datetime.datetime.utcfromtimestamp(1e10),
-        ],
-        "pure_strings_1": ["hello", "world", "a b c"],
-        "pure_strings_2": ["1", "2", "3"],
-        "pure_strings_3": ["1.0", "2.0", "3.0"],
-        "mixed_types_1": ["1", 1, 1.0],
-        "mixed_types_2": [None, "None", "null"],
-    })
+    df = pd.DataFrame(
+        {
+            "A": [1, None, 3],
+            "B": [np.array([1, 2, 3]), np.array([2, 3, 4]), np.array([3, 4, 5])],
+            "C": [pd.Series([1, 2, 3]), pd.Series([2, 3, 4]), pd.Series([3, 4, 5])],
+            "D": [df_simple, df_simple, df_simple],
+            "E": [{"a": 1}, {"b": 2}, {"c": 3}],
+            "F": [None, None, None],
+            "G": [
+                datetime.datetime.utcfromtimestamp(0),
+                datetime.datetime.utcfromtimestamp(1e9),
+                datetime.datetime.utcfromtimestamp(1e10),
+            ],
+            "pure_strings_1": ["hello", "world", "a b c"],
+            "pure_strings_2": ["1", "2", "3"],
+            "pure_strings_3": ["1.0", "2.0", "3.0"],
+            "mixed_types_1": ["1", 1, 1.0],
+            "mixed_types_2": [None, "None", "null"],
+        }
+    )
     df = df[sorted(df.columns)]
     return df
 
@@ -55,8 +58,8 @@ def test_backend__basic(df_simple):
         page=None,
         pagination_size=None,
     ) == [
-        {'columnName': 'A', 'sortKind': 0, 'values': [1, 3, 2]},
-        {'columnName': 'B', 'sortKind': 0, 'values': [6, 5, 4]},
+        {"columnName": "A", "sortKind": 0, "values": [1, 3, 2]},
+        {"columnName": "B", "sortKind": 0, "values": [6, 5, 4]},
     ]
 
     assert backend.get_data(
@@ -66,8 +69,8 @@ def test_backend__basic(df_simple):
         page=None,
         pagination_size=None,
     ) == [
-        {'columnName': 'A', 'sortKind': 1, 'values': [1, 2, 3]},
-        {'columnName': 'B', 'sortKind': 0, 'values': [6, 4, 5]},
+        {"columnName": "A", "sortKind": 1, "values": [1, 2, 3]},
+        {"columnName": "B", "sortKind": 0, "values": [6, 4, 5]},
     ]
 
     assert backend.get_data(
@@ -77,8 +80,8 @@ def test_backend__basic(df_simple):
         page=None,
         pagination_size=None,
     ) == [
-        {'columnName': 'A', 'sortKind': -1, 'values': [3, 2, 1]},
-        {'columnName': 'B', 'sortKind': 0, 'values': [5, 4, 6]},
+        {"columnName": "A", "sortKind": -1, "values": [3, 2, 1]},
+        {"columnName": "B", "sortKind": 0, "values": [5, 4, 6]},
     ]
 
 
@@ -106,18 +109,22 @@ def test_backend__json_convertability(df_with_custom_column_types):
     # FIXME: There seems to be a difference in Py2 vs Py3: For some reason in Py3 the ints become strings...
     # assert get("B") == [[1, 2, 3], [2, 3, 4], [3, 4, 5]]
     assert get("C") == [
-        {'0': 1, '1': 2, '2': 3},
-        {'0': 2, '1': 3, '2': 4},
-        {'0': 3, '1': 4, '2': 5},
+        {"0": 1, "1": 2, "2": 3},
+        {"0": 2, "1": 3, "2": 4},
+        {"0": 3, "1": 4, "2": 5},
     ]
     assert get("D") == [
-        {'A': [1, 3, 2], 'B': [6, 5, 4]},
-        {'A': [1, 3, 2], 'B': [6, 5, 4]},
-        {'A': [1, 3, 2], 'B': [6, 5, 4]},
+        {"A": [1, 3, 2], "B": [6, 5, 4]},
+        {"A": [1, 3, 2], "B": [6, 5, 4]},
+        {"A": [1, 3, 2], "B": [6, 5, 4]},
     ]
-    assert get("E") == [{'a': 1}, {'b': 2}, {'c': 3}]
+    assert get("E") == [{"a": 1}, {"b": 2}, {"c": 3}]
     assert get("F") == [None, None, None]
-    assert get("G") == ['1970-01-01 00:00:00', '2001-09-09 01:46:40', '2286-11-20 17:46:40']
+    assert get("G") == [
+        "1970-01-01 00:00:00",
+        "2001-09-09 01:46:40",
+        "2286-11-20 17:46:40",
+    ]
 
     assert get("pure_strings_1") == ["hello", "world", "a b c"]
     assert get("pure_strings_2") == ["1", "2", "3"]

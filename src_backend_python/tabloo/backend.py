@@ -1,11 +1,9 @@
-from __future__ import division, print_function
-
 import json
 import math
 import traceback
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 
 def to_json(data):
@@ -79,8 +77,8 @@ def convert_column(col):
         # Note that the c == +np.inf checks can fail with
         # 'ValueError: The truth value of an array with more than one element is ambiguous.'
         # in case the elements themselves are vectors/matrices.
-        is_pos_inf = (c == +np.inf)
-        is_neg_inf = (c == -np.inf)
+        is_pos_inf = c == +np.inf
+        is_neg_inf = c == -np.inf
 
         c[is_pos_inf] = "inf"
         c[is_neg_inf] = "-inf"

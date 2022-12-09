@@ -3,8 +3,6 @@
 Tabloo -- Minimalistic dashboard app for visualizing tabular data.
 """
 
-from __future__ import division, print_function
-
 import argparse
 import sys
 
