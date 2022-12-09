@@ -8,7 +8,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="tabloo",
-    version="0.0.15",
+    version="0.1.0",
     license="MIT",
     author="Fabian Keller",
     author_email="pypi.20.fkeller@spamgourmet.com",
