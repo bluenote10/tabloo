@@ -33,7 +33,7 @@
     "@types/leaflet": "^1.7.6",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
-    "babel-loader": "^8.2.3",
+    "babel-loader": "^8.3.0",
     "eslint": "^8.3.0",
     "node-sass": "^8.0.0",
     "prettier": "^2.4.1",
